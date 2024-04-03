@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdlib>
 #include <chrono>
-#include "..\Display_Module\Class_Render.h"
+#include "..\Display_Module_Class\Class_Render.h"
 
 using namespace std;
 
@@ -51,6 +51,7 @@ void test(){
             Main.Layer_list[no].Add_Textbox(Temp,St,En,1);
         }
     }
+    Main.Layer_list[0].Enable_Highlight=1;
     Main.Render_Output();
     Main.Render_Print();
     cin.get();

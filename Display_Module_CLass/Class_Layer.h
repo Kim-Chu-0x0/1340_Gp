@@ -7,15 +7,6 @@
 #include "Class_Pixel.h"
 // ╋ ┫ ┣ ┻ ┳ ┓ ┏ ┗ ┛ ┃ ━ 
 
-#define Black "\e[0;30m"
-#define Red "\e[0;31m"
-#define Green "\e[0;32m"
-#define Yellow "\e[0;33m"
-#define Blue "\e[0;34m"
-#define Purple "\e[0;35m"
-#define Cyan "\e[0;36m"
-#define White "\e[0;37m"
-
 using namespace std;
 
 class Layer
@@ -60,6 +51,13 @@ class Layer
         //Map_xy:{x,y}
         vector<int> Map_xy;
 
+    //Select Highlight
+    public:
+        bool Enable_Highlight=0;
+        int Highlight_no=0;
+    private:
+        void Highlight(vector <Pixel>&Map_);
+
     //Adding new textboxes
     public:
         void Add_Textbox(vector<Pixel> Text,vector<int> starting_xy,vector<int> endpt_xy,bool Whitespace);
@@ -98,6 +96,23 @@ void Layer::Print(){
             }
         }
         cout<<'\n';
+    }
+}
+
+void Layer::Highlight(vector <Pixel>&Map_){
+    vector <int> starting_xy=Textbox_St[Highlight_no];
+    vector <int> endpt_xy=Textbox_En[Highlight_no];
+    starting_xy[0]--;
+    starting_xy[1]--;
+    endpt_xy[0]++;
+    endpt_xy[1]++;
+    for (int x=starting_xy[0];x<=endpt_xy[0];x++){
+        Map_[starting_xy[1]*Map_xy[0]+x].set_colour(9);
+        Map_[endpt_xy[1]*Map_xy[0]+x].set_colour(9);
+    }
+    for (int y=starting_xy[1];y<=endpt_xy[1];y++){
+        Map_[y*Map_xy[0]+starting_xy[0]].set_colour(9);
+        Map_[y*Map_xy[0]+endpt_xy[0]].set_colour(9);
     }
 }
 
@@ -209,6 +224,9 @@ vector <Pixel> Layer::Outline(){
         Outline_Add(Textbox_St[id],Textbox_En[id],Outline_temp);
     }
     vector <Pixel> Output=Outline_Bool_Exchange(Outline_temp);
+    if (Enable_Highlight){
+        Highlight(Output);
+    }
     Outline_Format_Exchange(Output);
     if (TestOutline){
         cout<<endl<<"Outline done"<<endl;
@@ -328,6 +346,9 @@ void Layer::Outline_Format_Exchange(vector <Pixel>&Map_String){
             if ((Map_String[id-1].text=="┗")||(Map_String[id-1].text=="┏")||(Map_String[id-1].text=="┣")||(Map_String[id-1].text=="┻")||(Map_String[id-1].text=="┳")||(Map_String[id-1].text=="╋")||(Map_String[id-1].text=="━")){
                 //cout<<"  Line"<<endl;
                 temp.text="━";
+                if((Map_String[id-1].colour)==Highlightcolour){
+                    temp.set_colour(9);
+                }
             }
             else if((Map_String[id-1].text=="s/")||((id_x!=Map_xy[0]-1)&&(Map_String[id+1].text=="s/"))){
                 //cout<<"  Skip"<<endl;
@@ -339,6 +360,7 @@ void Layer::Outline_Format_Exchange(vector <Pixel>&Map_String){
                 
             }
             Map_String.insert(Map_String.begin()+id,temp);
+            temp.set_colour(8);
         }
     }
     Map_xy[0]*=2;

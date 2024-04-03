@@ -13,6 +13,8 @@
 #define Cyan "\e[0;36m"
 #define White "\e[0;37m"
 
+#define Highlightcolour "\e[1;95m"
+
 using namespace std;
 
 class Pixel
@@ -46,6 +48,9 @@ class Pixel
                 break;
             case 8:
                 colour=White;
+                break;
+            case 9:
+                colour=Highlightcolour;
                 break;
             
             default:
