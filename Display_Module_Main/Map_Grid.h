@@ -68,7 +68,27 @@ class Map_Grid{
         //-1 means the bottom most layer
         //-2 means the second layer from the bottom
         int Layer_no=-1;
+        vector <int> st_xy{0,0};
+        void Output();
 };
+
+void Map_Grid::Output(){
+    int temp_Layer_no=Layer_no;
+    if (Layer_no<0){
+        temp_Layer_no=Main.Layer_list.size()+Layer_no;
+    }
+    for (int x=0;x<Size[0];x++){
+        int x1=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x);
+        int x2=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x)+(Building_list[0].output_graphic_size_S[0]-1);
+        for (int y=0;y<Size[1];y++){
+            int y1=st_xy[1]+((Building_list[0].output_graphic_size_S[1]+1)*y);
+            int y2=st_xy[1]+((Building_list[0].output_graphic_size_S[1]+1)*y)+(Building_list[0].output_graphic_size_S[1]-1);
+            vector <int> temp_St{x1,y1};
+            vector <int> temp_En{x2,y2};
+            Main.Layer_list[temp_Layer_no].Add_Textbox(Building_list[x+y*Size[0]].graphic_S,temp_St,temp_En,0);
+        }
+    }
+}
 
 void Map_Grid::Set_Building(vector <int> xy, Building item){
     if (xy.size()==2){

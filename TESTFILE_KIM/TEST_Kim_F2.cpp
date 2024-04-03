@@ -4,17 +4,18 @@
 #include <vector>
 #include <cstdlib>
 #include <chrono>
-#include "..\Display_Module_Main\Map_Grid.h"
 #include "..\Display_Module_Class\Class_Render.h"
+Render Main;
+#include "..\Display_Module_Main\Map_Grid.h"
 
 using namespace std;
 
 void test();
 
-Render Main;
 Pixel Pixel_test;
 
 int main(){
+    Main.Set_Size(30,30);
     for (int x=0;x<99;x++){
         srand(x);
         test();
@@ -35,12 +36,8 @@ void test(){
     }
     Grid.CoverAll_Biulding(Item);
     cout<<"\x1B[2J\x1B[H";
-    vector<int> St{1,1};
-    vector<int> En{6,6};
-    TEMP.type(rand()%6);
-    Main.Set_Size(20,20);
     Main.Add_Layer();
-    Main.Layer_list[0].Add_Textbox(TEMP.graphic_S,St,En,0);
+    Grid.Output();
     Main.Render_Output();
     Main.Render_Print();
     cin.get();

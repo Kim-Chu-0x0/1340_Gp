@@ -29,7 +29,7 @@ class Building{
   public:
     string name;
     vector <Pixel> graphic_S;
-    vector <int> output_graphic_size{6,6};
+    vector <int> output_graphic_size_S{6,6};
     vector <io_building> input_list;
     vector <io_building> output_list;
     int duration=-1;
@@ -323,7 +323,7 @@ void Building::type(int id){
     vector <string> temp_vector{
       "0","╔","═","═","═","═","═","═","═","╗","0",
       "╔","╣","0","▲","0","▲","0","0","0","╠","╗",
-      "╠","╚","═","╦","═","═","═","╦","═","╝","╣",
+      "╠","╩","═","╦","═","═","═","╦","═","╩","╣",
       "╚","═","═","╝","0","0","0","╚","═","═","╝"};
     unprocessed_graphic=temp_vector;
     req_tier=1;
@@ -339,7 +339,7 @@ void Building::type(int id){
     vector <string> temp_vector{
       "0","╔","═","═","═","═","═","═","═","╗","0",
       "╔","╣","0","▲","0","▲","0","▲","0","╠","╗",
-      "╠","╚","╦","╦","═","╦","═","╦","╦","╝","╣",
+      "╠","╩","╦","╦","═","╦","═","╦","╦","╩","╣",
       "╚","═","╩","╝","0","╩","0","╚","╩","═","╝"};
     unprocessed_graphic=temp_vector;
     req_tier=2;
