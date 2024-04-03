@@ -27,7 +27,7 @@ class Building{
 
   public:
     string name;
-    vector <Pixel> graphic;
+    vector <Pixel> graphic_S;
     const vector <int> output_graphic_size{6,6};
     vector <io_building> input_list;
     vector <io_building> output_list;
@@ -61,25 +61,25 @@ void Building::finalstat_bounus(){
 
 void Building::refresh(){
   finalstat_bounus();
-  graphic.clear();
+  graphic_S.clear();
   Pixel temp_pixel;
   
   temp_pixel.colour=White;
   temp_pixel.text="⬇";
-  graphic.push_back(temp_pixel);
+  graphic_S.push_back(temp_pixel);
 
   for (int x=0;x<input_list.size();x++){
     temp_pixel.colour=White;
     temp_pixel.text="s/";
-    graphic.push_back(temp_pixel);
+    graphic_S.push_back(temp_pixel);
     temp_pixel.colour=Materials_Graphic(input_list[x].item).colour;
     temp_pixel.text=Materials_Graphic(input_list[x].item).text;
-    graphic.push_back(temp_pixel);
+    graphic_S.push_back(temp_pixel);
   }
   temp_pixel.colour=White;
   temp_pixel.text="s/";
   for (int x=1+(input_list.size()*2);x<graphic_size[0];x++){
-    graphic.push_back(temp_pixel);
+    graphic_S.push_back(temp_pixel);
   }
   
   vector <string> colour_tape(graphic_size[0],Black);
@@ -148,29 +148,29 @@ void Building::refresh(){
         temp_pixel.text="s/";
       }
       temp_pixel.colour=colour_tape[x];
-      graphic.push_back(temp_pixel);
+      graphic_S.push_back(temp_pixel);
     }
   }
 
   temp_pixel.colour=White;
   temp_pixel.text="⬇";
-  graphic.push_back(temp_pixel);
+  graphic_S.push_back(temp_pixel);
 
   for (int x=0;x<output_list.size();x++){
     temp_pixel.colour=White;
     temp_pixel.text="s/";
-    graphic.push_back(temp_pixel);
+    graphic_S.push_back(temp_pixel);
     temp_pixel.colour=Materials_Graphic(output_list[x].item).colour;
     temp_pixel.text=Materials_Graphic(output_list[x].item).text;
-    graphic.push_back(temp_pixel);
+    graphic_S.push_back(temp_pixel);
   }
   temp_pixel.colour=White;
   temp_pixel.text="s/";
   for (int x=1+(output_list.size()*2);x<graphic_size[0];x++){
-    graphic.push_back(temp_pixel);
+    graphic_S.push_back(temp_pixel);
   }
   if (TestMod){
-    cout<<endl<<"graphic size: "<<graphic.size()<<endl;
+    cout<<endl<<"graphic_S size: "<<graphic_S.size()<<endl;
   }
 }
 
