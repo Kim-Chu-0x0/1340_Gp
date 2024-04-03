@@ -4,8 +4,8 @@
 #include <vector>
 #include <cstdlib>
 #include <chrono>
-#include "..\Object\Class_Buildings.h"
-#include "..\Display_Module\Class_Render.h"
+#include "..\Display_Module_Main\Map_Grid.h"
+#include "..\Display_Module_Class\Class_Render.h"
 
 using namespace std;
 
@@ -23,14 +23,24 @@ int main(){
 }
 
 void test(){
-    cout<<"\x1B[2J\x1B[H";
+    int x=1+rand()%4;
+    int y=1+rand()%4;
+    Map_Grid Grid;
+    Grid.Set_Size(x,y);
+    vector <Building> Item;
     Building TEMP;
+    for (int id=0;id<x*y;id++){
+        TEMP.type(rand()%6);
+        Item.push_back(TEMP);
+    }
+    Grid.CoverAll_Biulding(Item);
+    cout<<"\x1B[2J\x1B[H";
     vector<int> St{1,1};
     vector<int> En{6,6};
-    TEMP.type(0);
+    TEMP.type(rand()%6);
     Main.Set_Size(20,20);
     Main.Add_Layer();
-    Main.Layer_list[0].Add_Textbox(TEMP.graphic,St,En,0);
+    Main.Layer_list[0].Add_Textbox(TEMP.graphic_S,St,En,0);
     Main.Render_Output();
     Main.Render_Print();
     cin.get();

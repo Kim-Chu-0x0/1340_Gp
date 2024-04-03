@@ -1,3 +1,9 @@
+Pixel object is a string object with colour:
+    i.e. White "D"
+expect some special characters, the string object should be a single character.
+special object list:
+"s/" : " " (single space) {During render process, normal space on upper layer will be ignored, use this to avoid}
+
 To use this module, at first, a render object must be created.
     Render (object name);  
 
@@ -13,11 +19,10 @@ Then user can add text box to Layer object using
     {Starting_pt} , {End_pt} should be vector<int> objects , with the structure of { {value of x} , {value of y} }
         * This fist element of the map is (0,0)
         so the range of value should be (0) to ({size of map} -1)
-    {Text} should be a vector<string> object with each element a single character
-        e.g:{"a","4","t"}
+    {Text} should be a vector <Pixel> object
         The size of the text should just fit in the box bounded by Starting_pt and End_pt
     {White_space} is a bool which represent wether whitespace will be inserted within elements
-        {Text}={"H","e","l","l","o"}
+        {"H","e","l","l","o"}
         if {White_space}=0:
             Hello
             -----

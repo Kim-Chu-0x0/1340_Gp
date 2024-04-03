@@ -2,7 +2,7 @@
 #define MATERIAL
 
 #include <string>
-#include "..\Display_Module\Class_Pixel.h"
+#include "..\Display_Module_Class\Class_Pixel.h"
 
 using namespace std;
 

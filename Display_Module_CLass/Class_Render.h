@@ -36,7 +36,7 @@ class Render{
     public:
         void Set_Size(int x_len,int y_len){
             if ((x_len<=0)||(y_len<=0)){
-                cout<<"Size error, input must be positive numbers"<<endl;
+                cout<<endl<<"Size error, input must be positive numbers"<<endl;
                 cout<<"Input: x="<<x_len<<" y="<<y_len<<endl;
                 exit(0);
             }

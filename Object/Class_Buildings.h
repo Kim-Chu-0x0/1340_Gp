@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 #include <math.h>
-#include "..\Display_Module\Class_Render.h"
-#include "..\Display_Module\Class_Pixel.h"
+#include "..\Display_Module_Class\Class_Render.h"
+#include "..\Display_Module_Class\Class_Pixel.h"
 #include "Materials.h"
 
 using namespace std;
@@ -23,17 +23,18 @@ class io_building{
 
 class Building{
   private:
-    bool TestMod=1;
+    bool TestMod=0;
+    bool TestRNG=0;
 
   public:
     string name;
     vector <Pixel> graphic_S;
-    const vector <int> output_graphic_size{6,6};
+    vector <int> output_graphic_size{6,6};
     vector <io_building> input_list;
     vector <io_building> output_list;
     int duration=-1;
   private:
-    const vector <int> graphic_size{11,4};
+    vector <int> graphic_size{11,4};
     vector <string> unprocessed_graphic;
     int req_tier;
     int req_constant;
@@ -105,40 +106,27 @@ void Building::refresh(){
     size_of_colour[2]=3;
     size_of_colour[3]=3;
     break;
+  default:
+    cout<<endl<<"Error: Unknown number of output item"<<endl;
   }
-  for (int id=0;id<output_list.size();id++){
 
+  for (int id=0;id<output_list.size();id++){
     string temp_colour;
     if (output_list[id].item < (no_each_tier*3)){
-      int temp=output_list[id].item%no_each_tier;
-      switch (temp)
-      {
-      case 0:
-        temp_colour=Red;
-        break;
-      case 1:
-        temp_colour=Yellow;
-        break;
-      case 2:
-        temp_colour=Blue;
-        break;
-      case 3:
-        temp_colour=Green;
-        break;
-      }
+      temp_colour=Default_colour[output_list[id].item%no_each_tier];
     }
     else{
       temp_colour=White;
     }
-
     for (int x=0;x<size_of_colour[id];x++){
       colour_tape[counter]=temp_colour;
       counter++;
     }
-
   }
+
   if ((counter!=graphic_size[0])){
-    cout<<"Building Colourtapes Error: Wrong Size"<<endl;
+    cout<<endl<<"Building Colourtapes Error: Wrong Size"<<endl;
+    cout<<"counter: "<<counter<<endl;
     exit(0);
   }
   for (int y=0;y<graphic_size[1];y++){
@@ -177,6 +165,8 @@ void Building::refresh(){
 void Building::type_process(){
   //id of item(int element) start at 0
   //input generation
+  input_list.clear();
+  output_list.clear();
   int input_variance=req_tier*no_each_tier;
   vector<int>element_used;
   for (int x=0;x<input_variance;x++){
@@ -184,7 +174,10 @@ void Building::type_process(){
   }
   int input_temp;
   io_building temp_io;
-  for (double x=1+((complexity-pow(complexity,0.7))*((rand()%101)+50)/100);x>=0;x--){
+  for (double x=1+((complexity-pow(complexity,0.7))*((rand()%101)+50)/100);x>0;x--){
+    if(TestMod&&TestRNG){
+      cout<<"inputRNG: "<<x<<endl;
+    }
     if ((element_used.size())>0){
       input_temp=rand()%element_used.size();
       temp_io.item=element_used[input_temp];
@@ -227,7 +220,10 @@ void Building::type_process(){
     element_used.push_back(x);
   }
   int output_temp;
-  for (double x=1+((complexity-pow(complexity,0.7))*((rand()%101)+50)/100);x>=0;x--){
+  for (double x=1+((complexity-pow(complexity,0.7))*((rand()%101)+50)/100);x>0;x--){
+    if(TestMod&&TestRNG){
+      cout<<"outputRNG: "<<x<<endl;
+    }
     if ((element_used.size())>0){
       output_temp=rand()%element_used.size();
       temp_io.item=element_used[output_temp];
@@ -353,6 +349,10 @@ void Building::type(int id){
     complexity=3;
     duration=14;
     
+  }
+  else{
+    cout<<"Input Error: Unknown Biulding id"<<endl;
+    exit(0);
   }
   if (TestMod){
     cout<<endl<<"name: "<<name<<endl;
