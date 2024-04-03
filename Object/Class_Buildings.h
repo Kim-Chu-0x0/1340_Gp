@@ -174,7 +174,7 @@ void Building::type_process(){
   }
   int input_temp;
   io_building temp_io;
-  for (double x=1+((complexity-pow(complexity,0.7))*((rand()%101)+50)/100);x>0;x--){
+  for (double x=1+((complexity-pow(complexity,0.7))*((rand()%81)+70)/100);x>0;x--){
     if(TestMod&&TestRNG){
       cout<<"inputRNG: "<<x<<endl;
     }
@@ -220,7 +220,7 @@ void Building::type_process(){
     element_used.push_back(x);
   }
   int output_temp;
-  for (double x=1+((complexity-pow(complexity,0.7))*((rand()%101)+50)/100);x>0;x--){
+  for (double x=1+((complexity-pow(complexity,0.7))*((rand()%81)+70)/100);x>0;x--){
     if(TestMod&&TestRNG){
       cout<<"outputRNG: "<<x<<endl;
     }
