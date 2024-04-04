@@ -13,9 +13,16 @@ using namespace std;
 //Render Main;
 
 class Map_Grid{
+    //testing
+    private:
+        bool TestMod=1;
     //item access
     public:
+        //change a single grid
+        //xy can be in form of{x_id,y_id} or {id}
         void Set_Building(vector <int> xy, Building item);
+        //re-input all building object
+        //previous data will be covered
         void CoverAll_Biulding(vector <Building> item_list);
     private:
         vector <Building> Building_list;
@@ -25,7 +32,7 @@ class Map_Grid{
     public:
         void Set_Size(int x,int y){
             if ( ! ((Size[0]==0)&&(Size[1]==0)) ){
-                cout<<endl<<"Error: Size can not be changed"<<endl;
+                cout<<'\n'<<"Error: Size can not be changed"<<'\n';
                 exit(0);
             }
             Size[0]=x;
@@ -49,20 +56,20 @@ class Map_Grid{
 
 void Map_Grid::Expand(int x,int y){
     if ( ! ((x>=0)&&(y>=0)) ){
-        cout<<endl<<"Error: Size can not be negative number"<<endl;
-        cout<<endl<<"Your input: x="<<x<<" y="<<y<<endl;
+        cout<<'\n'<<"Error: Size can not be negative number"<<'\n';
+        cout<<'\n'<<"Your input: x="<<x<<" y="<<y<<'\n';
         exit(0);
     }
     if ((Size[0]==0)&&(Size[1]==0)){
-        cout<<endl<<"Error: Set the size first"<<endl;
+        cout<<'\n'<<"Error: Set the size first"<<'\n';
         exit(0);
     }
     //rightward
     Building temp;
     for (int id_y=Size[1]-1;id_y>=0;id_y--){
         for (int id_x=0;id_x<x;id_x++){
-            Building_list.insert(Building_list.begin()+id_y*Size[0],temp);
-            Highlight_Data.insert(Highlight_Data.begin()+id_y*Size[0],0);
+            Building_list.insert(Building_list.begin()+id_y*Size[0]+Size[0],temp);
+            Highlight_Data.insert(Highlight_Data.begin()+id_y*Size[0]+Size[0],0);
         }
     }
     Size[0]+=x;
@@ -70,12 +77,20 @@ void Map_Grid::Expand(int x,int y){
     for (int id_y=0;id_y<y;id_y++){
         for (int id_x=0;id_x<Size[0];id_x++){
             Building_list.push_back(temp);
+            Highlight_Data.push_back(0);
         }
     }
     Size[1]+=y;
 }
 
 void Map_Grid::Output(){
+    if (TestMod){
+        cout<<'\n'<<"Building ID: "<<'\n';
+        for (int x=0;x<Highlight_Data.size();x++){
+            cout<<Highlight_Data[x]<<" ";
+        }
+        cout<<'\n';
+    }
     for (int x=0;x<Size[0];x++){
         int x1=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x);
         int x2=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x)+(Building_list[0].output_graphic_size_S[0]-1);
@@ -90,6 +105,14 @@ void Map_Grid::Output(){
             }
         }
     }
+    if (TestMod){
+        cout<<"Output done"<<'\n';
+        cout<<'\n'<<"Building ID: "<<'\n';
+        for (int x=0;x<Highlight_Data.size();x++){
+            cout<<Highlight_Data[x]<<" ";
+        }
+        cout<<'\n';
+    }
 }
 
 void Map_Grid::Set_Building(vector <int> xy, Building item){
@@ -97,9 +120,10 @@ void Map_Grid::Set_Building(vector <int> xy, Building item){
         int x=xy[0];
         int y=xy[1];
         if ((x>=Size[0])||(y>=Size[1])){
-            cout<<endl<<"Coordinates Error: x and y should locate within the grid system"<<endl;
-            cout<<"input x: "<<x<<" y: "<<y<<endl;
-            cout<<"Grid size x: "<<Size[0]<<" y: "<<Size[1]<<endl;
+            cout<<'\n'<<"Coordinates Error: x and y should locate within the grid system"<<'\n';
+            cout<<"input x: "<<x<<" y: "<<y<<'\n';
+            cout<<"Grid size x: "<<Size[0]<<" y: "<<Size[1]<<'\n';
+            exit(0);
         }
         Building_list[Size[0]*y+x]=item;
     }
@@ -110,9 +134,10 @@ void Map_Grid::Set_Building(vector <int> xy, Building item){
 
 void Map_Grid::CoverAll_Biulding(vector <Building> item_list){
     if (item_list.size()!=Size[0]*Size[1]){
-        cout<<endl<<"Input Error: Size of input vector should equal to the size of the grid"<<endl;
-        cout<<"input size: "<<item_list.size()<<endl;
-        cout<<"Grid size : "<<Size[0]*Size[1]<<endl;
+        cout<<'\n'<<"Input Error: Size of input vector should equal to the size of the grid"<<'\n';
+        cout<<"input size: "<<item_list.size()<<'\n';
+        cout<<"Grid size : "<<Size[0]*Size[1]<<'\n';
+        exit(0);
     }
     for (int id=0;id<item_list.size();id++){
         vector <int> temp{id};

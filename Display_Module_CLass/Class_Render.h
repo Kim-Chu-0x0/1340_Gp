@@ -14,7 +14,9 @@ class Render{
     public:
         Render(){
         }
-    
+    //testing
+    private:
+        bool TestMod=1;
     //Add textbox
     public:
         //Add textbox to a specific Layer object
@@ -43,7 +45,7 @@ class Render{
 
     //ID cache
     private:
-        //check if any textbox being highlighted
+        //check if any textbox being highlighted yet
         bool Highlight_occ=0;
         //store the id of Layer objects
         vector <string> Layer_id;
@@ -61,8 +63,8 @@ class Render{
         //can only be used once
         void Set_Size(int x_len,int y_len){
             if ((x_len<=0)||(y_len<=0)){
-                cout<<endl<<"Size error, input must be positive numbers"<<endl;
-                cout<<"Input: x="<<x_len<<" y="<<y_len<<endl;
+                cout<<'\n'<<"Size error, input must be positive numbers"<<'\n';
+                cout<<"Input: x="<<x_len<<" y="<<y_len<<'\n';
                 exit(0);
             }
             Screen_Size[0]=x_len;
@@ -88,7 +90,7 @@ class Render{
 void Render::Add_Layer_object(string id,int position){
     for (int x=0;x<Layer_no;x++){
         if (Layer_position[x]==position){
-            cout<<endl<<"Error: Layer position occupied"<<endl;
+            cout<<'\n'<<"Error: Layer position occupied"<<'\n';
             exit(0);
         }
     }
@@ -112,7 +114,7 @@ void Render::Remove_Layer_object(string id){
         }
     }
     if(!suc){
-        cout<<endl<<"Error: Layer ID not found"<<endl;
+        cout<<'\n'<<"Error: Layer ID not found"<<'\n';
         exit(0);
     }
     Layer_no--;
@@ -133,13 +135,17 @@ int Render::Add_Textbox(int input_Textbox_id,string input_Layer_id,vector<Pixel>
             }
             else{
                 Layer_Textbox_id[id].push_back(Layer_Textbox_id[id].size()+1);
+                if(TestMod){
+                    cout<<"Textbox id:"<<Layer_Textbox_id[id].size()<<'\n';
+                }
+                return Layer_Textbox_id[id][Layer_Textbox_id[id].size()-1];
             }
             suc=1;
             break;
         }
     }
     if(!suc){
-        cout<<endl<<"Error: Layer ID not found"<<endl;
+        cout<<'\n'<<"Error: Layer ID not found"<<'\n';
         exit(0);
     }
     return 0;

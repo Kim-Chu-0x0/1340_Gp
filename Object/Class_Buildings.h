@@ -107,7 +107,7 @@ void Building::refresh(){
     size_of_colour[3]=3;
     break;
   default:
-    cout<<endl<<"Error: Unknown number of output item"<<endl;
+    cout<<'\n'<<"Error: Unknown number of output item"<<'\n';
   }
 
   for (int id=0;id<output_list.size();id++){
@@ -125,8 +125,8 @@ void Building::refresh(){
   }
 
   if ((counter!=graphic_size[0])){
-    cout<<endl<<"Building Colourtapes Error: Wrong Size"<<endl;
-    cout<<"counter: "<<counter<<endl;
+    cout<<'\n'<<"Building Colourtapes Error: Wrong Size"<<'\n';
+    cout<<"counter: "<<counter<<'\n';
     exit(0);
   }
   for (int y=0;y<graphic_size[1];y++){
@@ -158,7 +158,7 @@ void Building::refresh(){
     graphic_S.push_back(temp_pixel);
   }
   if (TestMod){
-    cout<<endl<<"graphic_S size: "<<graphic_S.size()<<endl;
+    cout<<'\n'<<"graphic_S size: "<<graphic_S.size()<<'\n';
   }
 }
 
@@ -176,7 +176,7 @@ void Building::type_process(){
   io_building temp_io;
   for (double x=1+((complexity-pow(complexity,0.7))*((rand()%81)+70)/100);x>0;x--){
     if(TestMod&&TestRNG){
-      cout<<"inputRNG: "<<x<<endl;
+      cout<<"inputRNG: "<<x<<'\n';
     }
     if ((element_used.size())>0){
       input_temp=rand()%element_used.size();
@@ -222,7 +222,7 @@ void Building::type_process(){
   int output_temp;
   for (double x=1+((complexity-pow(complexity,0.7))*((rand()%81)+70)/100);x>0;x--){
     if(TestMod&&TestRNG){
-      cout<<"outputRNG: "<<x<<endl;
+      cout<<"outputRNG: "<<x<<'\n';
     }
     if ((element_used.size())>0){
       output_temp=rand()%element_used.size();
@@ -240,8 +240,8 @@ void Building::type_process(){
     out_constant-=cost;
   }
   if (TestMod){
-    cout<<endl<<"Input size: "<<input_list.size()<<endl;
-    cout<<"Output size: "<<output_list.size()<<endl;
+    cout<<'\n'<<"Input size: "<<input_list.size()<<'\n';
+    cout<<"Output size: "<<output_list.size()<<'\n';
   }
   refresh();
 }
@@ -351,17 +351,17 @@ void Building::type(int id){
     
   }
   else{
-    cout<<"Input Error: Unknown Biulding id"<<endl;
+    cout<<"Input Error: Unknown Biulding id"<<'\n';
     exit(0);
   }
   if (TestMod){
-    cout<<endl<<"name: "<<name<<endl;
-    cout<<"req_tier: "<<req_tier<<endl;
-    cout<<"req_constant: "<<req_constant<<endl;
-    cout<<"out_tier: "<<out_tier<<endl;
-    cout<<"out_constant: "<<out_constant<<endl;
-    cout<<"complexity: "<<complexity<<endl;
-    cout<<"duration: "<<duration<<endl;
+    cout<<'\n'<<"name: "<<name<<'\n';
+    cout<<"req_tier: "<<req_tier<<'\n';
+    cout<<"req_constant: "<<req_constant<<'\n';
+    cout<<"out_tier: "<<out_tier<<'\n';
+    cout<<"out_constant: "<<out_constant<<'\n';
+    cout<<"complexity: "<<complexity<<'\n';
+    cout<<"duration: "<<duration<<'\n';
   }
   basestat_bounus();
   type_process();

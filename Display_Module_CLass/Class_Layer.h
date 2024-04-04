@@ -83,8 +83,8 @@ class Layer
 
 void Layer::Print(){
     if (TestMod){
-        cout<<endl<<"Printing started"<<endl;
-        cout<<"Graphic size: "<<Output_Map.size()<<endl;
+        cout<<'\n'<<"Printing started"<<'\n';
+        cout<<"Graphic size: "<<Output_Map.size()<<'\n';
     }
     for (int id_y=0;id_y<Map_xy[1];id_y++){
         for (int id_x=0;id_x<Map_xy[0];id_x++){
@@ -118,15 +118,15 @@ void Layer::Highlight(vector <Pixel>&Map_){
 
 void Layer::Output(){
     if (TestMod){
-        cout<<endl<<"Map_xy:"<<Map_xy[0]<<"  "<<Map_xy[1]<<endl;
-        cout<<"St:"<<Textbox_St.size()<<"  "<<"En:"<<Textbox_En.size()<<"  "<<"Textbox:"<<Textbox.size()<<"  "<<"Textbox_Whitespace:"<<Textbox_Whitespace.size()<<"  "<<endl;
+        cout<<'\n'<<"Map_xy:"<<Map_xy[0]<<"  "<<Map_xy[1]<<'\n';
+        cout<<"St:"<<Textbox_St.size()<<"  "<<"En:"<<Textbox_En.size()<<"  "<<"Textbox:"<<Textbox.size()<<"  "<<"Textbox_Whitespace:"<<Textbox_Whitespace.size()<<"  "<<'\n';
     }
     vector<Pixel> Output=Outline();
     for (int id=0;id<Text_no;id++){
         Text_Implant(Textbox_St[id],Textbox_En[id],Textbox[id],Output,Textbox_Whitespace[id]);
     }
     if (TestMod){
-        cout<<endl<<"Map processing done"<<endl;
+        cout<<'\n'<<"Map processing done"<<'\n';
     }
     for (int i=0; i<Output.size(); i++){
         Output_Map.push_back(Output[i]);
@@ -160,7 +160,7 @@ void Layer::Text_Implant(vector<int> starting_xy, vector<int> endpt_xy, vector <
         Map_String[id_y*Map_xy[0]+endpt_xy[0]+1]=whispc;
     }
     if(TestMod){
-        cout<<"Text_Implant done"<<endl;
+        cout<<"Text_Implant done"<<'\n';
     }
 }
 
@@ -168,35 +168,35 @@ void Layer::Add_Textbox(vector<Pixel> Text,vector<int> starting_xy,vector<int> e
     //starting_xy:(x1,y1)is the top-left coordinate of the outline box, endpt_xy:(x2,y2)is the bottom-right one
     //Whitespace =1: hv whitespace between words,Whitespace =0: no whitespace
     if ((starting_xy[0]>endpt_xy[0])||(starting_xy[1]>endpt_xy[1])){
-        cout<<endl<<"Location error, Starting_pt should be smaller than End_pt"<<endl;
-        cout<<"St: "<<starting_xy[0]<<"  "<<starting_xy[1]<<endl;
-        cout<<"En: "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<endl;
+        cout<<'\n'<<"Location error, Starting_pt should be smaller than End_pt"<<'\n';
+        cout<<"St: "<<starting_xy[0]<<"  "<<starting_xy[1]<<'\n';
+        cout<<"En: "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<'\n';
         exit(0);
     }
     if (((starting_xy[0]<0)||(starting_xy[1]<0))||((endpt_xy[0]<0)||(endpt_xy[1]<0))){
-        cout<<endl<<"Location error, Starting_pt and End_pt should be positive"<<endl;
-        cout<<"St: "<<starting_xy[0]<<"  "<<starting_xy[1]<<endl;
-        cout<<"En: "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<endl;
+        cout<<'\n'<<"Location error, Starting_pt and End_pt should be positive"<<'\n';
+        cout<<"St: "<<starting_xy[0]<<"  "<<starting_xy[1]<<'\n';
+        cout<<"En: "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<'\n';
         exit(0);
     }
     if (((starting_xy[0]+3>Map_xy[0])||(starting_xy[1]+3>Map_xy[1]))||((endpt_xy[0]+3>Map_xy[0])||(endpt_xy[1]+3>Map_xy[1]))){
-        cout<<endl<<"Location error, Starting_pt and End_pt should locate within the map"<<endl;
-        cout<<"St: "<<starting_xy[0]<<"  "<<starting_xy[1]<<endl;
-        cout<<"En: "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<endl;
+        cout<<'\n'<<"Location error, Starting_pt and End_pt should locate within the map"<<'\n';
+        cout<<"St: "<<starting_xy[0]<<"  "<<starting_xy[1]<<'\n';
+        cout<<"En: "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<'\n';
         cout<<"Map Size: "<<Map_xy[0]-2<<" "<<Map_xy[1]-2;
         exit(0);
     }
     if (((Whitespace)&&((endpt_xy[0]-starting_xy[0]+1)*(endpt_xy[1]-starting_xy[1]+1)!=Text.size()))||((!Whitespace)&&(((endpt_xy[0]-starting_xy[0])*2+1)*(endpt_xy[1]-starting_xy[1]+1)!=Text.size()))){
-        cout<<endl<<"Input error, length of text didn't match the size of the box"<<endl;
-        cout<<"St: "<<starting_xy[0]<<"  "<<starting_xy[1]<<endl;
-        cout<<"En: "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<endl;
-        cout<<"Input Text Length: "<<Text.size()<<endl;
+        cout<<'\n'<<"Input error, length of text didn't match the size of the box"<<'\n';
+        cout<<"St: "<<starting_xy[0]<<"  "<<starting_xy[1]<<'\n';
+        cout<<"En: "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<'\n';
+        cout<<"Input Text Length: "<<Text.size()<<'\n';
         cout<<"Proper length: ";
         if (Whitespace){
-            cout<<(endpt_xy[0]-starting_xy[0]+1)*(endpt_xy[1]-starting_xy[1]+1)<<endl;
+            cout<<(endpt_xy[0]-starting_xy[0]+1)*(endpt_xy[1]-starting_xy[1]+1)<<'\n';
         }
         else{
-            cout<<((endpt_xy[0]-starting_xy[0])*2+1)*(endpt_xy[1]-starting_xy[1]+1)<<endl;
+            cout<<((endpt_xy[0]-starting_xy[0])*2+1)*(endpt_xy[1]-starting_xy[1]+1)<<'\n';
         }
         exit(0);
     }
@@ -209,11 +209,11 @@ void Layer::Add_Textbox(vector<Pixel> Text,vector<int> starting_xy,vector<int> e
     Textbox_En[Text_no][0]++;
     Textbox_En[Text_no][1]++;
     if (TestMod){
-        cout<<endl<<"Text size: "<<Textbox[Text_no].size()<<endl;
-        cout<<"St: "<<Textbox_St[Text_no][0]<<"  "<<Textbox_St[Text_no][1]<<endl;
-        cout<<"En: "<<Textbox_En[Text_no][0]<<"  "<<Textbox_En[Text_no][1]<<endl;
-        cout<<"Whitespace: "<<Textbox_Whitespace[Text_no]<<endl;
-        cout<<"Textbox addition done"<<endl;
+        cout<<'\n'<<"Text size: "<<Textbox[Text_no].size()<<'\n';
+        cout<<"St: "<<Textbox_St[Text_no][0]<<"  "<<Textbox_St[Text_no][1]<<'\n';
+        cout<<"En: "<<Textbox_En[Text_no][0]<<"  "<<Textbox_En[Text_no][1]<<'\n';
+        cout<<"Whitespace: "<<Textbox_Whitespace[Text_no]<<'\n';
+        cout<<"Textbox addition done"<<'\n';
     }
     Text_no++;
 }
@@ -229,7 +229,7 @@ vector <Pixel> Layer::Outline(){
     }
     Outline_Format_Exchange(Output);
     if (TestOutline){
-        cout<<endl<<"Outline done"<<endl;
+        cout<<'\n'<<"Outline done"<<'\n';
     }
     return Output;
 }
@@ -240,7 +240,7 @@ vector <vector <bool>> Layer::Outline_New(){
     vector <bool> Map_bool_l1(4,false);
     vector <vector <bool>> Map_bool(Map_xy[0]*Map_xy[1],Map_bool_l1);
     if (TestOutline){
-        cout<<endl<<"New Outline done"<<endl;
+        cout<<'\n'<<"New Outline done"<<'\n';
     }
     return Map_bool;
 }
@@ -253,7 +253,7 @@ void Layer::Outline_Add(vector<int> starting_xy,vector<int> endpt_xy,vector <vec
     endpt_xy[0]++;
     endpt_xy[1]++;
     if (TestOutline){
-        cout<<starting_xy[0]<<"  "<<starting_xy[1]<<"  "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<endl;
+        cout<<starting_xy[0]<<"  "<<starting_xy[1]<<"  "<<endpt_xy[0]<<"  "<<endpt_xy[1]<<'\n';
     }
     for (int x=starting_xy[0];x<endpt_xy[0];x++){
         Map_bool [starting_xy[1]*Map_xy[0]+x] [3]=1;
@@ -331,7 +331,7 @@ vector <Pixel> Layer::Outline_Bool_Exchange(vector <vector <bool>> Map_bool){
         }
     }
     if (TestOutline){
-        cout<<endl<<"Bool Trans done"<<endl;
+        cout<<'\n'<<"Bool Trans done"<<'\n';
     }
     return Map_String;
 }
@@ -344,18 +344,18 @@ void Layer::Outline_Format_Exchange(vector <Pixel>&Map_String){
             id=id_y*Map_xy[0]+id_x;
             //cout<<"x:"<<id_x<<"  "<<"y:"<<id_y<<"  "<<"id:"<<id<<"  "<<"-1:"<<Map_String[id-1]<<"  "<<"0:"<<Map_String[id];
             if ((Map_String[id-1].text=="┗")||(Map_String[id-1].text=="┏")||(Map_String[id-1].text=="┣")||(Map_String[id-1].text=="┻")||(Map_String[id-1].text=="┳")||(Map_String[id-1].text=="╋")||(Map_String[id-1].text=="━")){
-                //cout<<"  Line"<<endl;
+                //cout<<"  Line"<<'\n';
                 temp.text="━";
                 if((Map_String[id-1].colour)==Highlightcolour){
                     temp.set_colour(9);
                 }
             }
             else if((Map_String[id-1].text=="s/")||((id_x!=Map_xy[0]-1)&&(Map_String[id+1].text=="s/"))){
-                //cout<<"  Skip"<<endl;
+                //cout<<"  Skip"<<'\n';
                 temp.text="s/";
             }
             else{
-                //cout<<"  Space"<<endl;
+                //cout<<"  Space"<<'\n';
                 temp.text=" ";
                 
             }
@@ -366,7 +366,7 @@ void Layer::Outline_Format_Exchange(vector <Pixel>&Map_String){
     Map_xy[0]*=2;
     Map_xy[0]-=1;
     if (TestOutline){
-        cout<<endl<<"Map extend done"<<endl;
+        cout<<'\n'<<"Map extend done"<<'\n';
     }
 }
 

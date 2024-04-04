@@ -17,6 +17,8 @@
 
 using namespace std;
 
+//contains 2 string object
+//text and colour
 class Pixel
 {
     public:

@@ -12,8 +12,6 @@ using namespace std;
 
 void test();
 
-Pixel Pixel_test;
-
 int main(){
     Main.Set_Size(30,30);
     Main.Add_Layer_object("Map",0);
@@ -36,7 +34,7 @@ void test(){
         Item.push_back(TEMP);
     }
     Grid.CoverAll_Biulding(Item);
-    cout<<"\x1B[2J\x1B[H";
+    cout<<"\x1B[2J\x1B[H"<<flush;
     Grid.Output();
     Main.Render_Output();
     Main.Render_Print();
