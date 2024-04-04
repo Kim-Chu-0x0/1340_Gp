@@ -5,8 +5,10 @@
 #include <cstdlib>
 #include <chrono>
 #include "..\Display_Module_Class\Class_Render.h"
-Render Main;
+Render R_Main;
+Action_Processor A_P_Main;
 #include "..\Display_Module_Main\Map_Grid.h"
+#include "..\Control_Module_Main\Action_Process.h"
 
 using namespace std;
 
@@ -15,8 +17,8 @@ void test(int x,int y);
 Map_Grid Grid;
 
 int main(){
-    Main.Set_Size(50,50);
-    Main.Add_Layer_object("Map",0);
+    R_Main.Set_Size(50,50);
+    R_Main.Add_Layer_object("Map",0);
     int x=1+rand()%4;
     int y=1+rand()%4;
     Grid.Set_Size(x,y);
@@ -43,8 +45,8 @@ void test(int x,int y){
     }
     Grid.CoverAll_Biulding(Item);
     Grid.Output();
-    Main.Render_Output();
-    Main.Render_Print();
+    R_Main.Render_Output();
+    R_Main.Render_Print();
     cin.get();
     cin.get();
     //for(int x=0;x<22;x++){

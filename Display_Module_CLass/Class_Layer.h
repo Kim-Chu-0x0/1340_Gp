@@ -100,6 +100,9 @@ void Layer::Print(){
 }
 
 void Layer::Highlight(vector <Pixel>&Map_){
+    if (TestMod){
+        cout<<'\n'<<"Highlight done"<<'\n';
+    }
     vector <int> starting_xy=Textbox_St[Highlight_no];
     vector <int> endpt_xy=Textbox_En[Highlight_no];
     starting_xy[0]--;
@@ -346,11 +349,11 @@ void Layer::Outline_Format_Exchange(vector <Pixel>&Map_String){
             if ((Map_String[id-1].text=="┗")||(Map_String[id-1].text=="┏")||(Map_String[id-1].text=="┣")||(Map_String[id-1].text=="┻")||(Map_String[id-1].text=="┳")||(Map_String[id-1].text=="╋")||(Map_String[id-1].text=="━")){
                 //cout<<"  Line"<<'\n';
                 temp.text="━";
-                if((Map_String[id-1].colour)==Highlightcolour){
+                if(((Map_String[id-1].colour)==Highlightcolour) && ( (id_x!=Map_xy[0]-1) && (Map_String[id].colour)==Highlightcolour )){
                     temp.set_colour(9);
                 }
             }
-            else if((Map_String[id-1].text=="s/")||((id_x!=Map_xy[0]-1)&&(Map_String[id+1].text=="s/"))){
+            else if((Map_String[id-1].text=="s/")||((id_x!=Map_xy[0]-1)&&(Map_String[id].text=="s/"))){
                 //cout<<"  Skip"<<'\n';
                 temp.text="s/";
             }

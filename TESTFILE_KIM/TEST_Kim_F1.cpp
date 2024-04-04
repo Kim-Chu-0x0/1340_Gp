@@ -14,11 +14,11 @@ using namespace std;
 
 void test();
 
-Render Main;
+Render R_Main;
 Pixel Pixel_test;
 
 int main(){
-    Main.Add_Layer_object("Map",0);
+    R_Main.Add_Layer_object("Map",0);
     for (int x=0;x<99;x++){
         test();
     }
@@ -31,7 +31,7 @@ void test(){
     for (int x=0;x<20;x++){
         cout<<"\e[A";
     }
-    Main.Set_Size(Size[0],Size[1]);
+    R_Main.Set_Size(Size[0],Size[1]);
     vector<int> St(2,0);
     vector<int> En(2,0);
     for (int no1=0;no1<3+rand()%3;no1++){
@@ -47,10 +47,10 @@ void test(){
             Temp[id].text=to_string(rand()%7);
             Temp[id].set_colour(1+rand()%8);
         }
-        Main.Add_Textbox(0,"Map",Temp,St,En,1);
+        R_Main.Add_Textbox(0,"Map",Temp,St,En,1);
     }
-    Main.Render_Output();
-    Main.Render_Print();
+    R_Main.Render_Output();
+    R_Main.Render_Print();
     cin.get();
     cin.get();
     //for(int x=0;x<22;x++){

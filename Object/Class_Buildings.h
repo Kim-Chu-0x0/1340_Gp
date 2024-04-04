@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <math.h>
-#include "..\Display_Module_Class\Class_Render.h"
 #include "..\Display_Module_Class\Class_Pixel.h"
 #include "Materials.h"
 

@@ -35,7 +35,6 @@ class Render{
             Layer_list.push_back(temp);
         }
         void Clear(){
-            Highlight_occ=0;
             Layer_list.clear();
             for (int id=0;id<Layer_no;id++){
                 Add_Layer();
@@ -45,16 +44,18 @@ class Render{
 
     //ID cache
     private:
-        //check if any textbox being highlighted yet
-        bool Highlight_occ=0;
+        //switch on/off highlight
+        bool Enable_Highlight=1;
         //store the id of Layer objects
         vector <string> Layer_id;
         //store the position of Layer objects
         vector <int> Layer_position;
-        //store id of Textboxed of Layer objects
+        //store unique id of Textboxed of Layer objects
         vector <vector <int> > Layer_Textbox_id;
+        //store position of Textboxed located in Textbox list in Layer objects
+        vector <vector <int> > Layer_Textbox_position;
         //store which textbox is chosen to be highlighted
-        int Highlight_Choice_Textbox=0;
+        int Highlight_Choice_Textbox_id=1;
         //store which Layer's highlight will be triggered 
         string Highlight_Choice_Layer="Map";
 
@@ -98,6 +99,7 @@ void Render::Add_Layer_object(string id,int position){
     Layer_position.push_back(position);
     vector <int> temp;
     Layer_Textbox_id.push_back(temp);
+    Layer_Textbox_position.push_back(temp);
     Layer_no++;
     Clear();
 }
@@ -109,6 +111,7 @@ void Render::Remove_Layer_object(string id){
             Layer_id.erase(Layer_id.begin()+x);
             Layer_position.erase(Layer_position.begin()+x);
             Layer_Textbox_id.erase(Layer_Textbox_id.begin()+x);
+            Layer_Textbox_position.erase(Layer_Textbox_position.begin()+x);
             suc=1;
             break;
         }
@@ -127,14 +130,15 @@ int Render::Add_Textbox(int input_Textbox_id,string input_Layer_id,vector<Pixel>
         if (Layer_id[id]==input_Layer_id){
             Layer_list[Layer_position[id]].Add_Textbox(Text,starting_xy,endpt_xy,Whitespace);
             if(input_Textbox_id!=0){
-                if ((input_Layer_id == Highlight_Choice_Layer) && ( Highlight_Choice_Textbox == input_Textbox_id )){
-                Layer_list[Layer_position[id]].Enable_Highlight=1;
-                Layer_list[Layer_position[id]].Highlight_no=Layer_list[Layer_position[id]].Text_no;
-                Highlight_occ=1;
+                for (int id_ex=0;id_ex<Layer_Textbox_id[id].size();id_ex++){
+                    if(Layer_Textbox_id[id][id_ex]==input_Textbox_id){
+                        Layer_Textbox_position[id][id_ex]=Layer_list[Layer_position[id]].Text_no-1;
+                    }
                 }
             }
             else{
                 Layer_Textbox_id[id].push_back(Layer_Textbox_id[id].size()+1);
+                Layer_Textbox_position[id].push_back(Layer_list[Layer_position[id]].Text_no-1);
                 if(TestMod){
                     cout<<"Textbox id:"<<Layer_Textbox_id[id].size()<<'\n';
                 }
@@ -153,11 +157,21 @@ int Render::Add_Textbox(int input_Textbox_id,string input_Layer_id,vector<Pixel>
         
 
 void Render::Render_Output(){
-    if (!Highlight_occ){
+    if (Enable_Highlight&&(Highlight_Choice_Textbox_id!=0)){
+        if(TestMod){
+            cout<<'\n'<<"Highlight started"<<'\n';
+        }
         for (int id=0;id<Layer_no;id++){
             if (Layer_id[id]==Highlight_Choice_Layer){
-                Layer_list[id].Enable_Highlight=1;
-                Layer_list[id].Highlight_no=0;
+                for (int id_ex=0;id_ex<Layer_Textbox_id[id].size();id_ex++){
+                    if(Layer_Textbox_id[id][id_ex]==Highlight_Choice_Textbox_id){
+                        if(TestMod){
+                            cout<<'\n'<<"Highlight object "<<Layer_id[id]<<" "<<Layer_Textbox_id[id][id_ex]<<'\n';
+                        }
+                        Layer_list[id].Enable_Highlight=1;
+                        Layer_list[id].Highlight_no=Layer_Textbox_position[id][id_ex];
+                    }
+                }
             }
         }
     }

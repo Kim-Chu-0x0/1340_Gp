@@ -9,8 +9,8 @@
 
 using namespace std;
 
-//a render object Main must be created before this headfile is called
-//Render Main;
+//a render object R_Main must be created before this headfile is called
+//Render R_Main;
 
 class Map_Grid{
     //testing
@@ -99,7 +99,7 @@ void Map_Grid::Output(){
             int y2=st_xy[1]+((Building_list[0].output_graphic_size_S[1]+1)*y)+(Building_list[0].output_graphic_size_S[1]-1);
             vector <int> temp_St{x1,y1};
             vector <int> temp_En{x2,y2};
-            int temp_highlight_id=Main.Add_Textbox(Highlight_Data[x+y*Size[0]],Layer_name,Building_list[x+y*Size[0]].graphic_S,temp_St,temp_En,0);
+            int temp_highlight_id=R_Main.Add_Textbox(Highlight_Data[x+y*Size[0]],Layer_name,Building_list[x+y*Size[0]].graphic_S,temp_St,temp_En,0);
             if (temp_highlight_id!=0){
                 Highlight_Data[x+y*Size[0]]=temp_highlight_id;
             }

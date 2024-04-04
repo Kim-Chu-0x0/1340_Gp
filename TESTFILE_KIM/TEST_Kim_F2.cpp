@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <chrono>
 #include "..\Display_Module_Class\Class_Render.h"
-Render Main;
+Render R_Main;
 #include "..\Display_Module_Main\Map_Grid.h"
 
 using namespace std;
@@ -13,8 +13,8 @@ using namespace std;
 void test();
 
 int main(){
-    Main.Set_Size(30,30);
-    Main.Add_Layer_object("Map",0);
+    R_Main.Set_Size(30,30);
+    R_Main.Add_Layer_object("Map",0);
     for (int x=0;x<99;x++){
         srand(x);
         test();
@@ -36,8 +36,8 @@ void test(){
     Grid.CoverAll_Biulding(Item);
     cout<<"\x1B[2J\x1B[H"<<flush;
     Grid.Output();
-    Main.Render_Output();
-    Main.Render_Print();
+    R_Main.Render_Output();
+    R_Main.Render_Print();
     cin.get();
     cin.get();
     //for(int x=0;x<22;x++){
