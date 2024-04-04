@@ -16,6 +16,7 @@ Pixel Pixel_test;
 
 int main(){
     Main.Set_Size(30,30);
+    Main.Add_Layer_object("Map",0);
     for (int x=0;x<99;x++){
         srand(x);
         test();
@@ -36,7 +37,6 @@ void test(){
     }
     Grid.CoverAll_Biulding(Item);
     cout<<"\x1B[2J\x1B[H";
-    Main.Add_Layer();
     Grid.Output();
     Main.Render_Output();
     Main.Render_Print();

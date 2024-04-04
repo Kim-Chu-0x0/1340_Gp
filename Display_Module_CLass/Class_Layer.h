@@ -61,8 +61,8 @@ class Layer
     //Adding new textboxes
     public:
         void Add_Textbox(vector<Pixel> Text,vector<int> starting_xy,vector<int> endpt_xy,bool Whitespace);
-    private:
-        int Text_no=0;    
+        int Text_no=0; 
+    private:   
         vector<vector<Pixel>> Textbox;
         vector<vector<int>> Textbox_St;
         vector<vector<int>> Textbox_En;

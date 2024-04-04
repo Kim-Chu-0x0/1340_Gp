@@ -18,6 +18,7 @@ Render Main;
 Pixel Pixel_test;
 
 int main(){
+    Main.Add_Layer_object("Map",0);
     for (int x=0;x<99;x++){
         test();
     }
@@ -33,25 +34,21 @@ void test(){
     Main.Set_Size(Size[0],Size[1]);
     vector<int> St(2,0);
     vector<int> En(2,0);
-    for (int no=0;no<2+rand()%3;no++){
-        Main.Add_Layer();
-        for (int no1=0;no1<3+rand()%3;no1++){
-            St[0]=rand()%(Size[0]-1);
-            St[1]=rand()%(Size[1]-1);
-            En[0]=St[0]+rand()%(Size[0]-St[0]-1);
-            En[1]=St[1]+rand()%(Size[1]-St[1]-1);
-            vector<Pixel> Temp;
-            for (int x=0;x<(En[1]-St[1]+1)*(En[0]-St[0]+1);x++){
-                Temp.push_back(Pixel_test);
-            }
-            for (int id=0;id<Temp.size();id++){
-                Temp[id].text=to_string(rand()%7);
-                Temp[id].set_colour(1+rand()%8);
-            }
-            Main.Layer_list[no].Add_Textbox(Temp,St,En,1);
+    for (int no1=0;no1<3+rand()%3;no1++){
+        St[0]=rand()%(Size[0]-1);
+        St[1]=rand()%(Size[1]-1);
+        En[0]=St[0]+rand()%(Size[0]-St[0]-1);
+        En[1]=St[1]+rand()%(Size[1]-St[1]-1);
+        vector<Pixel> Temp;
+        for (int x=0;x<(En[1]-St[1]+1)*(En[0]-St[0]+1);x++){
+            Temp.push_back(Pixel_test);
         }
+        for (int id=0;id<Temp.size();id++){
+            Temp[id].text=to_string(rand()%7);
+            Temp[id].set_colour(1+rand()%8);
+        }
+        Main.Add_Textbox(0,"Map",Temp,St,En,1);
     }
-    Main.Layer_list[0].Enable_Highlight=1;
     Main.Render_Output();
     Main.Render_Print();
     cin.get();

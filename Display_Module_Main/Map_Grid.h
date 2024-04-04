@@ -19,6 +19,7 @@ class Map_Grid{
         void CoverAll_Biulding(vector <Building> item_list);
     private:
         vector <Building> Building_list;
+        vector <int> Highlight_Data;
 
     //size control
     public:
@@ -32,51 +33,49 @@ class Map_Grid{
             Building temp;
             for (int x=0;x<Size[0]*Size[1];x++){
                 Building_list.push_back(temp);
+                Highlight_Data.push_back(0);
             }
         }
-        void Expand(int x,int y){
-            if ( ! ((x>=0)&&(y>=0)) ){
-                cout<<endl<<"Error: Size can not be negative number"<<endl;
-                cout<<endl<<"Your input: x="<<x<<" y="<<y<<endl;
-                exit(0);
-            }
-            if ((Size[0]==0)&&(Size[1]==0)){
-                cout<<endl<<"Error: Set the size first"<<endl;
-                exit(0);
-            }
-            //rightward
-            Building temp;
-            for (int id_y=Size[1]-1;id_y>=0;id_y--){
-                for (int id_x=0;id_x<x;id_x++){
-                    Building_list.insert(Building_list.begin()+id_y*Size[0],temp);
-                }
-            }
-            Size[0]+=x;
-            //downward
-            for (int id_y=0;id_y<y;id_y++){
-                for (int id_x=0;id_x<Size[0];id_x++){
-                    Building_list.push_back(temp);
-                }
-            }
-            Size[1]+=y;
-        }
+        void Expand(int x,int y);
     private:
         vector <int> Size{0,0};
     
     //output control
     public:
-        //-1 means the bottom most layer
-        //-2 means the second layer from the bottom
-        int Layer_no=-1;
+        string Layer_name="Map";
         vector <int> st_xy{0,0};
         void Output();
 };
 
-void Map_Grid::Output(){
-    int temp_Layer_no=Layer_no;
-    if (Layer_no<0){
-        temp_Layer_no=Main.Layer_list.size()+Layer_no;
+void Map_Grid::Expand(int x,int y){
+    if ( ! ((x>=0)&&(y>=0)) ){
+        cout<<endl<<"Error: Size can not be negative number"<<endl;
+        cout<<endl<<"Your input: x="<<x<<" y="<<y<<endl;
+        exit(0);
     }
+    if ((Size[0]==0)&&(Size[1]==0)){
+        cout<<endl<<"Error: Set the size first"<<endl;
+        exit(0);
+    }
+    //rightward
+    Building temp;
+    for (int id_y=Size[1]-1;id_y>=0;id_y--){
+        for (int id_x=0;id_x<x;id_x++){
+            Building_list.insert(Building_list.begin()+id_y*Size[0],temp);
+            Highlight_Data.insert(Highlight_Data.begin()+id_y*Size[0],0);
+        }
+    }
+    Size[0]+=x;
+    //downward
+    for (int id_y=0;id_y<y;id_y++){
+        for (int id_x=0;id_x<Size[0];id_x++){
+            Building_list.push_back(temp);
+        }
+    }
+    Size[1]+=y;
+}
+
+void Map_Grid::Output(){
     for (int x=0;x<Size[0];x++){
         int x1=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x);
         int x2=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x)+(Building_list[0].output_graphic_size_S[0]-1);
@@ -85,7 +84,10 @@ void Map_Grid::Output(){
             int y2=st_xy[1]+((Building_list[0].output_graphic_size_S[1]+1)*y)+(Building_list[0].output_graphic_size_S[1]-1);
             vector <int> temp_St{x1,y1};
             vector <int> temp_En{x2,y2};
-            Main.Layer_list[temp_Layer_no].Add_Textbox(Building_list[x+y*Size[0]].graphic_S,temp_St,temp_En,0);
+            int temp_highlight_id=Main.Add_Textbox(Highlight_Data[x+y*Size[0]],Layer_name,Building_list[x+y*Size[0]].graphic_S,temp_St,temp_En,0);
+            if (temp_highlight_id!=0){
+                Highlight_Data[x+y*Size[0]]=temp_highlight_id;
+            }
         }
     }
 }
