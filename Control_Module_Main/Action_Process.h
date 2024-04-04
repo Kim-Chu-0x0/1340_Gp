@@ -14,7 +14,10 @@ class Action_Processor: public Render{
         bool A_P_TestMod=1;
 
     private:
-        vector <string> Layer_List;
+        void Move(int direction){
+            int Layer_Location=Layer_id_search(Highlight_Choice_Layer);
+            int Textbox_Location=Textbox_id_search(Highlight_Choice_Textbox_id,Layer_Location);
+        }
 };
 
 #endif

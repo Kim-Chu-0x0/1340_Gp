@@ -15,7 +15,7 @@ class Render{
         Render(){
         }
     //testing
-    private:
+    protected:
         bool TestMod=0;
     //Add textbox
     public:
@@ -27,7 +27,7 @@ class Render{
         void Add_Layer_object(string id,int position);
         void Remove_Layer_object(string id);
         vector<Layer> Layer_list;
-    private:
+    protected:
         //Layer_list[0] will be the layer on top
         //Top [0]->[1]->...->[x]Bottom
         void Add_Layer(){
@@ -43,7 +43,7 @@ class Render{
         int Layer_no=0;
 
     //ID cache
-    private:
+    protected:
         //switch on/off highlight
         bool Enable_Highlight=1;
         //store the id of Layer objects
@@ -58,6 +58,8 @@ class Render{
         int Highlight_Choice_Textbox_id=1;
         //store which Layer's highlight will be triggered 
         string Highlight_Choice_Layer="Map";
+        int Layer_id_search(string input_Layer_id);
+        int Textbox_id_search(int input_Textbox_id, int ifany_Layer_Location);
 
     //Set screen size
     public:
@@ -72,7 +74,7 @@ class Render{
             Screen_Size[1]=y_len;
             Clear();
         }
-    private:
+    protected:
         //Size of the Screen
         vector <int> Screen_Size {0,0};
 
@@ -84,9 +86,29 @@ class Render{
         vector <Pixel> Output;
         //Render_Output must be used before Print
         void Render_Print();
-    private:
+    protected:
         void Stack_Layer(vector <Pixel> Upper_Stack);
 };
+
+int Render::Layer_id_search(string input_Layer_id){
+    for (int id=0;id<Layer_no;id++){
+        if (Layer_id[id]==input_Layer_id){
+            return id;
+        }
+    }
+    cout<<'\n'<<"Error: Layer ID not found"<<'\n';
+    exit(0);
+}
+
+int Render::Textbox_id_search(int input_Textbox_id, int Layer_Location){
+    for (int id=0;id<Layer_Textbox_id[Layer_Location].size();id++){
+        if(Layer_Textbox_id[Layer_Location][id]==input_Textbox_id){
+            return id;
+        }
+    }
+    cout<<'\n'<<"Error: Textbox ID not found"<<'\n';
+    exit(0);
+}
 
 void Render::Add_Layer_object(string id,int position){
     for (int x=0;x<Layer_no;x++){
@@ -125,32 +147,19 @@ void Render::Remove_Layer_object(string id){
 }
 
 int Render::Add_Textbox(int input_Textbox_id,string input_Layer_id,vector<Pixel> Text,vector<int> starting_xy,vector<int> endpt_xy,bool Whitespace){
-    bool suc=0;
-    for (int id=0;id<Layer_no;id++){
-        if (Layer_id[id]==input_Layer_id){
-            Layer_list[Layer_position[id]].Add_Textbox(Text,starting_xy,endpt_xy,Whitespace);
-            if(input_Textbox_id!=0){
-                for (int id_ex=0;id_ex<Layer_Textbox_id[id].size();id_ex++){
-                    if(Layer_Textbox_id[id][id_ex]==input_Textbox_id){
-                        Layer_Textbox_position[id][id_ex]=Layer_list[Layer_position[id]].Text_no-1;
-                    }
-                }
-            }
-            else{
-                Layer_Textbox_id[id].push_back(Layer_Textbox_id[id].size()+1);
-                Layer_Textbox_position[id].push_back(Layer_list[Layer_position[id]].Text_no-1);
-                if(TestMod){
-                    cout<<"Textbox id:"<<Layer_Textbox_id[id].size()<<'\n';
-                }
-                return Layer_Textbox_id[id][Layer_Textbox_id[id].size()-1];
-            }
-            suc=1;
-            break;
-        }
+    int Layer_Location=Layer_id_search(input_Layer_id);
+    Layer_list[Layer_position[Layer_Location]].Add_Textbox(Text,starting_xy,endpt_xy,Whitespace);
+    if(input_Textbox_id!=0){
+        int Textbox_Location=Textbox_id_search(input_Textbox_id,Layer_Location);
+        Layer_Textbox_position[Layer_Location][Textbox_Location]=Layer_list[Layer_position[Layer_Location]].Text_no-1;
     }
-    if(!suc){
-        cout<<'\n'<<"Error: Layer ID not found"<<'\n';
-        exit(0);
+    else{
+        Layer_Textbox_id[Layer_Location].push_back(Layer_Textbox_id[Layer_Location].size()+1);
+        Layer_Textbox_position[Layer_Location].push_back(Layer_list[Layer_position[Layer_Location]].Text_no-1);
+        if(TestMod){
+            cout<<"Textbox id:"<<Layer_Textbox_id[Layer_Location].size()<<'\n';
+        }
+        return Layer_Textbox_id[Layer_Location][Layer_Textbox_id[Layer_Location].size()-1];
     }
     return 0;
 }
@@ -161,19 +170,13 @@ void Render::Render_Output(){
         if(TestMod){
             cout<<'\n'<<"Highlight started"<<'\n';
         }
-        for (int id=0;id<Layer_no;id++){
-            if (Layer_id[id]==Highlight_Choice_Layer){
-                for (int id_ex=0;id_ex<Layer_Textbox_id[id].size();id_ex++){
-                    if(Layer_Textbox_id[id][id_ex]==Highlight_Choice_Textbox_id){
-                        if(TestMod){
-                            cout<<'\n'<<"Highlight object "<<Layer_id[id]<<" "<<Layer_Textbox_id[id][id_ex]<<'\n';
-                        }
-                        Layer_list[id].Enable_Highlight=1;
-                        Layer_list[id].Highlight_no=Layer_Textbox_position[id][id_ex];
-                    }
-                }
-            }
+        int Layer_Location=Layer_id_search(Highlight_Choice_Layer);
+        int Textbox_Location=Textbox_id_search(Highlight_Choice_Textbox_id,Layer_Location);
+        if(TestMod){
+            cout<<'\n'<<"Highlight object "<<Layer_id[Layer_Location]<<" "<<Layer_Textbox_id[Layer_Location][Textbox_Location]<<'\n';
         }
+        Layer_list[Layer_Location].Enable_Highlight=1;
+        Layer_list[Layer_Location].Highlight_no=Layer_Textbox_position[Layer_Location][Textbox_Location];
     }
     Pixel temp;
     temp.text=" ";
