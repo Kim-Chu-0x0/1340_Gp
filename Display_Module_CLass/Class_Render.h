@@ -16,7 +16,7 @@ class Render{
         }
     //testing
     private:
-        bool TestMod=1;
+        bool TestMod=0;
     //Add textbox
     public:
         //Add textbox to a specific Layer object

@@ -5,10 +5,9 @@
 #include <cstdlib>
 #include <chrono>
 #include "..\Display_Module_Class\Class_Render.h"
-Render R_Main;
-Action_Processor A_P_Main;
-#include "..\Display_Module_Main\Map_Grid.h"
 #include "..\Control_Module_Main\Action_Process.h"
+Action_Processor R_Main;
+#include "..\Display_Module_Main\Map_Grid.h"
 
 using namespace std;
 

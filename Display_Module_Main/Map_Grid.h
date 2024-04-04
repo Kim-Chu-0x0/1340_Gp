@@ -9,13 +9,13 @@
 
 using namespace std;
 
-//a render object R_Main must be created before this headfile is called
+//a Render object(or Sub class of Render) R_Main must be created before this headfile is called
 //Render R_Main;
 
 class Map_Grid{
     //testing
     private:
-        bool TestMod=1;
+        bool TestMod=0;
     //item access
     public:
         //change a single grid
