@@ -20,7 +20,7 @@ class Render{
     //Add textbox
     public:
         //Add textbox to a specific Layer object
-        int Add_Textbox(int input_Textbox_id,string input_Layer_id,vector<Pixel> Text,vector<int> starting_xy,vector<int> endpt_xy,bool Whitespace);
+        int Add_Textbox(bool Selectable,int input_Textbox_id,string input_Layer_id,vector<Pixel> Text,vector<int> starting_xy,vector<int> endpt_xy,bool Whitespace);
 
     //Mutate Layer object
     public:
@@ -106,8 +106,7 @@ int Render::Textbox_id_search(int input_Textbox_id, int Layer_Location){
             return id;
         }
     }
-    cout<<'\n'<<"Error: Textbox ID not found"<<'\n';
-    exit(0);
+    return -1;
 }
 
 void Render::Add_Layer_object(string id,int position){
@@ -146,20 +145,22 @@ void Render::Remove_Layer_object(string id){
     Clear();
 }
 
-int Render::Add_Textbox(int input_Textbox_id,string input_Layer_id,vector<Pixel> Text,vector<int> starting_xy,vector<int> endpt_xy,bool Whitespace){
+int Render::Add_Textbox(bool Selectable,int input_Textbox_id,string input_Layer_id,vector<Pixel> Text,vector<int> starting_xy,vector<int> endpt_xy,bool Whitespace){
     int Layer_Location=Layer_id_search(input_Layer_id);
     Layer_list[Layer_position[Layer_Location]].Add_Textbox(Text,starting_xy,endpt_xy,Whitespace);
-    if(input_Textbox_id!=0){
-        int Textbox_Location=Textbox_id_search(input_Textbox_id,Layer_Location);
-        Layer_Textbox_position[Layer_Location][Textbox_Location]=Layer_list[Layer_position[Layer_Location]].Text_no-1;
-    }
-    else{
-        Layer_Textbox_id[Layer_Location].push_back(Layer_Textbox_id[Layer_Location].size()+1);
-        Layer_Textbox_position[Layer_Location].push_back(Layer_list[Layer_position[Layer_Location]].Text_no-1);
-        if(TestMod){
-            cout<<"Textbox id:"<<Layer_Textbox_id[Layer_Location].size()<<'\n';
+    if(Selectable){
+        if(input_Textbox_id!=0){
+            int Textbox_Location=Textbox_id_search(input_Textbox_id,Layer_Location);
+            Layer_Textbox_position[Layer_Location][Textbox_Location]=Layer_list[Layer_position[Layer_Location]].Text_no-1;
         }
-        return Layer_Textbox_id[Layer_Location][Layer_Textbox_id[Layer_Location].size()-1];
+        else{
+            Layer_Textbox_id[Layer_Location].push_back(Layer_Textbox_id[Layer_Location].size()+1);
+            Layer_Textbox_position[Layer_Location].push_back(Layer_list[Layer_position[Layer_Location]].Text_no-1);
+            if(TestMod){
+                cout<<"Textbox id:"<<Layer_Textbox_id[Layer_Location].size()<<'\n';
+            }
+            return Layer_Textbox_id[Layer_Location][Layer_Textbox_id[Layer_Location].size()-1];
+        }
     }
     return 0;
 }
@@ -172,11 +173,13 @@ void Render::Render_Output(){
         }
         int Layer_Location=Layer_id_search(Highlight_Choice_Layer);
         int Textbox_Location=Textbox_id_search(Highlight_Choice_Textbox_id,Layer_Location);
-        if(TestMod){
-            cout<<'\n'<<"Highlight object "<<Layer_id[Layer_Location]<<" "<<Layer_Textbox_id[Layer_Location][Textbox_Location]<<'\n';
+        if(Textbox_Location!=-1){
+            if(TestMod){
+                cout<<'\n'<<"Highlight object "<<Layer_id[Layer_Location]<<" "<<Layer_Textbox_id[Layer_Location][Textbox_Location]<<'\n';
+            }
+            Layer_list[Layer_Location].Enable_Highlight=1;
+            Layer_list[Layer_Location].Highlight_no=Layer_Textbox_position[Layer_Location][Textbox_Location];
         }
-        Layer_list[Layer_Location].Enable_Highlight=1;
-        Layer_list[Layer_Location].Highlight_no=Layer_Textbox_position[Layer_Location][Textbox_Location];
     }
     Pixel temp;
     temp.text=" ";

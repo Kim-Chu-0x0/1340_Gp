@@ -117,6 +117,10 @@ void Layer::Highlight(vector <Pixel>&Map_){
         Map_[y*Map_xy[0]+starting_xy[0]].set_colour(9);
         Map_[y*Map_xy[0]+endpt_xy[0]].set_colour(9);
     }
+    Map_[starting_xy[1]*Map_xy[0]+starting_xy[0]].text="┏";
+    Map_[starting_xy[1]*Map_xy[0]+endpt_xy[0]].text="┓";
+    Map_[endpt_xy[1]*Map_xy[0]+starting_xy[0]].text="┗";
+    Map_[endpt_xy[1]*Map_xy[0]+endpt_xy[0]].text="┛";
 }
 
 void Layer::Output(){
