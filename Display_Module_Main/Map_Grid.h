@@ -15,7 +15,7 @@ using namespace std;
 class Map_Grid{
     //testing
     private:
-        bool TestMod=0;
+        bool TestMod=1;
     //item access
     public:
         //change a single grid
@@ -91,12 +91,12 @@ void Map_Grid::Output(){
         }
         cout<<'\n';
     }
-    for (int x=0;x<Size[0];x++){
-        int x1=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x);
-        int x2=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x)+(Building_list[0].output_graphic_size_S[0]-1);
-        for (int y=0;y<Size[1];y++){
-            int y1=st_xy[1]+((Building_list[0].output_graphic_size_S[1]+1)*y);
-            int y2=st_xy[1]+((Building_list[0].output_graphic_size_S[1]+1)*y)+(Building_list[0].output_graphic_size_S[1]-1);
+    for (int y=0;y<Size[1];y++){
+        int y1=st_xy[1]+((Building_list[0].output_graphic_size_S[1]+1)*y);
+        int y2=st_xy[1]+((Building_list[0].output_graphic_size_S[1]+1)*y)+(Building_list[0].output_graphic_size_S[1]-1);
+        for (int x=0;x<Size[0];x++){
+            int x1=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x);
+            int x2=st_xy[0]+((Building_list[0].output_graphic_size_S[0]+1)*x)+(Building_list[0].output_graphic_size_S[0]-1);
             vector <int> temp_St{x1,y1};
             vector <int> temp_En{x2,y2};
             int temp_highlight_id=R_Main.Add_Textbox(1,Highlight_Data[x+y*Size[0]],Layer_name,Building_list[x+y*Size[0]].graphic_S,temp_St,temp_En,0);

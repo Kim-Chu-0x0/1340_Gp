@@ -36,6 +36,8 @@ int main(){
 void test(int x,int y){
     cout<<"\x1B[2J\x1B[H"<<flush;
     cout<<"\x1B[2J\x1B[H"<<flush;
+    cout<<"\x1B[2J\x1B[H"<<flush;
+    cout<<"\x1B[2J\x1B[H"<<flush;
     vector <Building> Item;
     Building TEMP;
     for (int id=0;id<x*y;id++){
@@ -44,6 +46,7 @@ void test(int x,int y){
     }
     Grid.CoverAll_Biulding(Item);
     Grid.Output();
+    R_Main.Move(1+rand()%4);
     R_Main.Render_Output();
     R_Main.Render_Print();
     cin.get();
