@@ -2,9 +2,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cstdlib>
-#include <chrono>
-#include "..\Display_Module_Class\Class_Render.h"
 #include "..\Control_Module_Main\Action_Process.h"
 Action_Processor R_Main;
 #include "..\Display_Module_Main\Map_Grid.h"

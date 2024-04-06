@@ -2,8 +2,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cstdlib>
-#include <chrono>
 #include "..\Display_Module_Class\Class_Render.h"
 
 using namespace std;

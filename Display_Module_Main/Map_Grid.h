@@ -11,7 +11,6 @@ using namespace std;
 
 // a Render object(or Sub class of Render) R_Main must be created before this headfile is called
 // Render R_Main;
-
 class Map_Grid
 {
     // testing
