@@ -11,14 +11,15 @@ using namespace std;
 
 class Action_Processor: public Render{
     private:
-        bool A_P_TestMod=1;
-        bool A_P_TestMod_detail=1;
+        bool A_P_TestMod=0;
+        bool A_P_TestMod_detail=0;
 
     public:
         int Move(int direction);
 };
 
 //Move between selectable textboxes
+//1:Up 2:Down 3:Left 4:Right
 int Action_Processor::Move(int direction){
     if(A_P_TestMod){
         switch (direction)
@@ -46,10 +47,10 @@ int Action_Processor::Move(int direction){
     int Textbox_Location=Textbox_id_search(Highlight_Choice_Textbox_id,Layer_Location);
     //This list is not in order, plz do not use id to access it
     //To get the correct item, plz use A_P_Textbox_position[id]
-    vector<vector <int>> A_P_st_pt=Layer_list[Layer_Location].Textbox_St;
+    vector<vector <int>> A_P_st_pt=Layer_list[Layer_position[Layer_Location]].Textbox_St;
     //This list is not in order, plz do not use id to access it
     //To get the correct item, plz use A_P_Textbox_position[id]
-    vector<vector <int>> A_P_en_pt=Layer_list[Layer_Location].Textbox_En;
+    vector<vector <int>> A_P_en_pt=Layer_list[Layer_position[Layer_Location]].Textbox_En;
     vector <int> A_P_Layer_Textbox_id=Layer_Textbox_id[Layer_Location];
     vector <int> A_P_Textbox_position=Layer_Textbox_position[Layer_Location];
     vector <int> Present_st_pt=A_P_st_pt[A_P_Textbox_position[Textbox_Location]];
@@ -64,8 +65,8 @@ int Action_Processor::Move(int direction){
         for (int id=0;id<A_P_Textbox_position.size();id++){
             cout<<'\n'<<"Item id: "<<A_P_Layer_Textbox_id[id]<<'\n';
             cout<<"Position: "<<A_P_Textbox_position[id]<<'\n';
-            cout<<"Stpt: "<<Layer_list[Layer_Location].Textbox_St[A_P_Textbox_position[id]][0]<<" "<<Layer_list[Layer_Location].Textbox_St[A_P_Textbox_position[id]][1]<<'\n';
-            cout<<"Enpt: "<<Layer_list[Layer_Location].Textbox_En[A_P_Textbox_position[id]][0]<<" "<<Layer_list[Layer_Location].Textbox_En[A_P_Textbox_position[id]][1]<<'\n';
+            cout<<"Stpt: "<<Layer_list[Layer_position[Layer_Location]].Textbox_St[A_P_Textbox_position[id]][0]<<" "<<Layer_list[Layer_position[Layer_Location]].Textbox_St[A_P_Textbox_position[id]][1]<<'\n';
+            cout<<"Enpt: "<<Layer_list[Layer_position[Layer_Location]].Textbox_En[A_P_Textbox_position[id]][0]<<" "<<Layer_list[Layer_position[Layer_Location]].Textbox_En[A_P_Textbox_position[id]][1]<<'\n';
         }
     }
     //Filter unavalible textbox
@@ -183,10 +184,10 @@ int Action_Processor::Move(int direction){
             min_id=id;
         }
     }
+    Highlight_Choice_Textbox_id=A_P_Layer_Textbox_id[min_id];
     if (A_P_TestMod){
         cout<<'\n'<<"Result id: "<<A_P_Layer_Textbox_id[min_id]<<'\n';
     }
-    Highlight_Choice_Textbox_id=A_P_Layer_Textbox_id[min_id];
     return 0;
 }
 

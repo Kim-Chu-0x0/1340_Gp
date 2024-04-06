@@ -90,6 +90,7 @@ class Render{
         void Stack_Layer(vector <Pixel> Upper_Stack);
 };
 
+//Search for the id of Layer object in vector <string> Layer_id
 int Render::Layer_id_search(string input_Layer_id){
     for (int id=0;id<Layer_no;id++){
         if (Layer_id[id]==input_Layer_id){
@@ -100,6 +101,7 @@ int Render::Layer_id_search(string input_Layer_id){
     exit(0);
 }
 
+//Search for the id of Textbox in a Layer in vector <vector <int> > Layer_Textbox_id
 int Render::Textbox_id_search(int input_Textbox_id, int Layer_Location){
     for (int id=0;id<Layer_Textbox_id[Layer_Location].size();id++){
         if(Layer_Textbox_id[Layer_Location][id]==input_Textbox_id){
@@ -177,8 +179,8 @@ void Render::Render_Output(){
             if(TestMod){
                 cout<<'\n'<<"Highlight object "<<Layer_id[Layer_Location]<<" "<<Layer_Textbox_id[Layer_Location][Textbox_Location]<<'\n';
             }
-            Layer_list[Layer_Location].Enable_Highlight=1;
-            Layer_list[Layer_Location].Highlight_no=Layer_Textbox_position[Layer_Location][Textbox_Location];
+            Layer_list[Layer_position[Layer_Location]].Enable_Highlight=1;
+            Layer_list[Layer_position[Layer_Location]].Highlight_no=Layer_Textbox_position[Layer_Location][Textbox_Location];
         }
     }
     Pixel temp;
