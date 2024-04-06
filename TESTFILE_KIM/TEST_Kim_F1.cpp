@@ -27,6 +27,7 @@ int main(){
 
 void test(){
     vector<int> Size{15+rand()%20,15+rand()%20};
+    system("chcp 65001");
     cout<<"\x1B[2J\x1B[H";
     for (int x=0;x<20;x++){
         cout<<"\e[A";
