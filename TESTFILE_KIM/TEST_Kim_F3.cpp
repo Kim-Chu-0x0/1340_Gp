@@ -37,11 +37,17 @@ int main(){
 
 void test(int x,int y){
     cout<<"\x1B[2J\x1B[H"<<flush;
-    cout<<"\x1B[2J\x1B[H"<<flush;
-    cout<<"\x1B[2J\x1B[H"<<flush;
-    cout<<"\x1B[2J\x1B[H"<<flush;
     vector <Building> Item;
     Building TEMP;
+    for (int id=0;id<x*y;id++){
+        TEMP.type(rand()%6);
+        Item.push_back(TEMP);
+    }
+    Grid.CoverAll_Biulding(Item);
+    Grid.Output();
+    R_Main.Move(1+rand()%4);
+    R_Main.Clear();
+    Item.clear();
     for (int id=0;id<x*y;id++){
         TEMP.type(rand()%6);
         Item.push_back(TEMP);

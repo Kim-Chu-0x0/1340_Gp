@@ -17,51 +17,53 @@
 
 using namespace std;
 
-//contains 2 string object
-//text and colour
+// contains 2 string object
+// text and colour
 class Pixel
 {
-    public:
-        string text;
-        string colour=White;
-        void set_colour(int id){
-            switch (id)
-            {
-            case 1:
-                colour=Black;
-                break;
-            case 2:
-                colour=Red;
-                break;
-            case 3:
-                colour=Green;
-                break;
-            case 4:
-                colour=Yellow;
-                break;
-            case 5:
-                colour=Blue;
-                break;
-            case 6:
-                colour=Purple;
-                break;
-            case 7:
-                colour=Cyan;
-                break;
-            case 8:
-                colour=White;
-                break;
-            case 9:
-                colour=Highlightcolour;
-                break;
-            
-            default:
-                colour=White;
-                break;
-            }
+public:
+    string text;
+    string colour = White;
+    void set_colour(int id)
+    {
+        switch (id)
+        {
+        case 1:
+            colour = Black;
+            break;
+        case 2:
+            colour = Red;
+            break;
+        case 3:
+            colour = Green;
+            break;
+        case 4:
+            colour = Yellow;
+            break;
+        case 5:
+            colour = Blue;
+            break;
+        case 6:
+            colour = Purple;
+            break;
+        case 7:
+            colour = Cyan;
+            break;
+        case 8:
+            colour = White;
+            break;
+        case 9:
+            colour = Highlightcolour;
+            break;
+
+        default:
+            colour = White;
+            break;
         }
-    void print(){
-        cout<<colour+text;
+    }
+    void print()
+    {
+        cout << colour + text;
     }
 };
 
