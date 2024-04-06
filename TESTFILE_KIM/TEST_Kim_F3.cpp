@@ -17,7 +17,9 @@ Map_Grid Grid;
 
 int main(){
     R_Main.Set_Size(50,50);
-    R_Main.Add_Layer_object("Map",0);
+    R_Main.Add_Layer_object("Map",2);
+    R_Main.Add_Layer_object("PopUp",1);
+    R_Main.Add_Layer_object("Setting",0);
     int x=1+rand()%4;
     int y=1+rand()%4;
     Grid.Set_Size(x,y);

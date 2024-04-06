@@ -15,7 +15,7 @@ using namespace std;
 class Map_Grid{
     //testing
     private:
-        bool TestMod=1;
+        bool TestMod=0;
     //item access
     public:
         //change a single grid
