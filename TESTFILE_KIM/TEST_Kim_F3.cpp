@@ -5,12 +5,13 @@
 #include "..\Control_Module_Main\Action_Process.h"
 Action_Processor R_Main;
 #include "..\Display_Module_Main\Map_Grid.h"
+Map_Grid Grid;
+#include "..\Control_Module_Main\Input.h"
 
 using namespace std;
 
 void test(int x,int y);
 
-Map_Grid Grid;
 
 int main(){
     R_Main.Set_Size(50,50);
