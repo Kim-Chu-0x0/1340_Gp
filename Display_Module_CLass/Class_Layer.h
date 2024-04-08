@@ -14,17 +14,6 @@ class Layer
     // create object :
     //   Layer(length on x-axis,length on y-axis)
 
-    // Layer_object.Add_Textbox(vector<string> Text,vector<int> startingpt coordinates(x,y),vector<int> endpt coordinates(x,y),bool whitespacing)
-
-    // Layer_object.Output():
-    //   generate processed map layer
-
-    // Layer_object.Print():
-    //   print out the layer object(for testing)
-
-    // Layer_object.Output_Map :
-    //   the processed map
-
 public:
     Layer(int x_len, int y_len)
     {
@@ -48,8 +37,14 @@ private:
 
     // trigger the output
 public:
+    //   generate processed map layer
     void Output();
+    //   the processed map
     vector<Pixel> Output_Map;
+    //  Size of map removing space on edge
+    vector<int> Output_Map_NWT_Size{0, 0};
+    //  St_pt of map after removing space on edge
+    vector<int> Output_Map_NWT_ST_pt{0, 0};
 
 private:
     // Map_xy:{x,y}
@@ -166,6 +161,57 @@ void Layer::Output()
     {
         Output_Map.push_back(Output[i]);
     }
+    int Max_x = Textbox_En[0][0];
+    int Max_y = Textbox_En[0][1];
+    int Min_x = Textbox_St[0][0];
+    int Min_y = Textbox_St[0][1];
+    for (int i = 1; i < Textbox_St.size(); i++)
+    {
+        if (Textbox_St[i][0] > Max_x)
+        {
+            Max_x = Textbox_St[i][0];
+        }
+        if (Textbox_St[i][0] < Min_x)
+        {
+            Min_x = Textbox_St[i][0];
+        }
+        if (Textbox_St[i][1] > Max_y)
+        {
+            Max_y = Textbox_St[i][1];
+        }
+        if (Textbox_St[i][1] < Min_y)
+        {
+            Min_y = Textbox_St[i][1];
+        }
+        if (Textbox_En[i][0] > Max_x)
+        {
+            Max_x = Textbox_En[i][0];
+        }
+        if (Textbox_En[i][0] < Min_x)
+        {
+            Min_x = Textbox_En[i][0];
+        }
+        if (Textbox_En[i][1] > Max_y)
+        {
+            Max_y = Textbox_En[i][1];
+        }
+        if (Textbox_En[i][1] < Min_y)
+        {
+            Min_y = Textbox_En[i][1];
+        }
+    }
+    Output_Map_NWT_ST_pt[0] = Min_x - 1;
+    Output_Map_NWT_ST_pt[1] = Min_y - 1;
+    Output_Map_NWT_Size[0] = Max_x - Min_x + 3;
+    Output_Map_NWT_Size[1] = Max_y - Min_y + 3;
+    if (TestMod)
+    {
+        cout << '\n'
+             << "St_NWT:" << Output_Map_NWT_ST_pt[0] << "  " << Output_Map_NWT_ST_pt[1] << '\n';
+        cout << "Size_NWT:" << Output_Map_NWT_Size[0] << "  " << Output_Map_NWT_Size[1] << '\n';
+    }
+    Output_Map_NWT_ST_pt[0] *= 2;
+    Output_Map_NWT_Size[0] *= 2;
 }
 
 void Layer::Text_Implant(vector<int> starting_xy, vector<int> endpt_xy, vector<Pixel> Text, vector<Pixel> &Map_String, bool Whitespace)

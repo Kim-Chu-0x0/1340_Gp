@@ -12,7 +12,7 @@ Input I_Main;
 using namespace std;
 
 int main(){
-    R_Main.Set_Size(50,50);
+    R_Main.Set_Size(50,30);
     R_Main.Add_Layer_object("Map",2);
     R_Main.Add_Layer_object("PopUp",1);
     R_Main.Add_Layer_object("Setting",0);
@@ -26,7 +26,6 @@ int main(){
     }
     Grid.Set_Size(x,y);
     Grid.CoverAll_Biulding(Item);
-    cout<<"\e[A";
     for (int ff=0;ff<20;ff++){
         I_Main.Read_input();
         I_Main.Execute_Command();

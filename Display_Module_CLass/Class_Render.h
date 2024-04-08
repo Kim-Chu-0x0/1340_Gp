@@ -38,6 +38,7 @@ protected:
         Layer temp(Screen_Size[0], Screen_Size[1]);
         Layer_list.push_back(temp);
     }
+
 public:
     void Clear()
     {
@@ -99,7 +100,7 @@ public:
     void Render_Print();
 
 protected:
-    void Stack_Layer(vector<Pixel> Upper_Stack);
+    void Stack_Layer(int id);
 };
 
 // Search for the id of Layer object in vector <string> Layer_id
@@ -231,21 +232,26 @@ void Render::Render_Output()
     }
     for (int id = Layer_no - 1; id >= 0; id--)
     {
-        if (Layer_list[id].Text_no!=0){
+        if (Layer_list[id].Text_no != 0)
+        {
             Layer_list[id].Output();
-            Stack_Layer(Layer_list[id].Output_Map);
+            Stack_Layer(id);
         }
     }
     Clear();
 }
 
-void Render::Stack_Layer(vector<Pixel> Upper_Stack)
+void Render::Stack_Layer(int id)
 {
-    for (int id = 0; id < Output.size(); id++)
+    for (int y = Layer_list[id].Output_Map_NWT_ST_pt[1]; y < Layer_list[id].Output_Map_NWT_ST_pt[1] + Layer_list[id].Output_Map_NWT_Size[1]; y++)
     {
-        if (!(Upper_Stack[id].text == "s/"))
+        for (int x = Layer_list[id].Output_Map_NWT_ST_pt[0]; x < Layer_list[id].Output_Map_NWT_ST_pt[0] + Layer_list[id].Output_Map_NWT_Size[0]; x++)
         {
-            Output[id] = Upper_Stack[id];
+            int ID = y * ((Screen_Size[0] + 2) * 2 - 1) + x;
+            if (!(Layer_list[id].Output_Map[ID].text == " "))
+            {
+                Output[ID] = Layer_list[id].Output_Map[ID];
+            }
         }
     }
 }
