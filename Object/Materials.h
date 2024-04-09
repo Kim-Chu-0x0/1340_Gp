@@ -61,7 +61,7 @@ Pixel Materials_Graphic(int id)
         output.text = "✇";
         break;
     case 12:
-        output.text = "𖦹";
+        output.text = "☊";
         break;
     case 13:
         output.text = "♬";
@@ -70,7 +70,11 @@ Pixel Materials_Graphic(int id)
         output.text = "☁";
         break;
     case 15:
-        output.text = "𖤘";
+        output.text = "⇕";
+        break;
+    case 16:
+        output.colour = Yellow;
+        output.text = "⧰";
         break;
     }
     return output;

@@ -36,7 +36,7 @@ void Input::I_Refresh()
              << "Refreshed" << '\n';
     }
     R_Main.Clear();
-    Grid.Output();
+    D_Main.Refresh();
 }
 
 void Input::I_Output()
@@ -47,7 +47,7 @@ void Input::I_Output()
              << "Outputed" << '\n';
     }
     R_Main.Render_Output();
-    cout<<"\x1B[2J\x1B[H"<<flush;
+    cout << "\x1B[2J\x1B[H" << flush;
     R_Main.Render_Print();
 }
 

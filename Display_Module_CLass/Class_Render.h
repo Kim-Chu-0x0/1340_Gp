@@ -186,6 +186,10 @@ int Render::Add_Textbox(bool Selectable, int input_Textbox_id, string input_Laye
         {
             int Textbox_Location = Textbox_id_search(input_Textbox_id, Layer_Location);
             Layer_Textbox_position[Layer_Location][Textbox_Location] = Layer_list[Layer_position[Layer_Location]].Text_no - 1;
+            if (TestMod)
+            {
+                cout << "Textbox pos:" << Layer_Textbox_position[Layer_Location][Textbox_Location] << '\n';
+            }
         }
         else
         {
@@ -194,11 +198,12 @@ int Render::Add_Textbox(bool Selectable, int input_Textbox_id, string input_Laye
             if (TestMod)
             {
                 cout << "Textbox id:" << Layer_Textbox_id[Layer_Location].size() << '\n';
+                cout << "Textbox pos:" << Layer_Textbox_position[Layer_Location][Layer_Textbox_position[Layer_Location].size()] << '\n';
             }
             return Layer_Textbox_id[Layer_Location][Layer_Textbox_id[Layer_Location].size() - 1];
         }
     }
-    return 0;
+    return input_Textbox_id;
 }
 
 void Render::Render_Output()

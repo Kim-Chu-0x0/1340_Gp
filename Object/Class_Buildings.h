@@ -53,6 +53,7 @@ private:
   void refresh();
   void basestat_bounus();
   void finalstat_bounus();
+  void Costume_initialize();
 };
 
 void Building::basestat_bounus()
@@ -180,6 +181,22 @@ void Building::refresh()
   if (TestMod)
   {
     cout << '\n'
+         << "graphic_S size: " << graphic_S.size() << '\n';
+  }
+}
+
+void Building::Costume_initialize(){
+  graphic_S.clear();
+  if (name=="Empty Space"){
+    Pixel temp;
+    temp.text="s/";
+    for (int id=0;id<graphic_size[0]*(graphic_size[1]+2);id++){
+      graphic_S.push_back(temp);
+    }
+  }
+  if (TestMod)
+  {
+    cout << '\n'<<"Blank object created"<<'\n'
          << "graphic_S size: " << graphic_S.size() << '\n';
   }
 }
@@ -390,6 +407,11 @@ void Building::type(int id)
     complexity = 3;
     duration = 14;
   }
+  else if (id == 6)
+  {
+    name = "Empty Space";
+    costume=1;
+  }
   else
   {
     cout << "Input Error: Unknown Biulding id" << '\n';
@@ -406,8 +428,13 @@ void Building::type(int id)
     cout << "complexity: " << complexity << '\n';
     cout << "duration: " << duration << '\n';
   }
-  basestat_bounus();
-  type_process();
+  if (!costume){
+    basestat_bounus();
+    type_process();
+  }
+  else{
+    Costume_initialize();
+  }
 }
 
 #endif
