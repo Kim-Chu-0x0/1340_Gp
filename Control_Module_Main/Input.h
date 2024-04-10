@@ -19,6 +19,8 @@ private:
 public:
     void Read_input();
     void Execute_Command();
+    void Initialize();
+    int Key_to_Action(string type,char Input_Key);
 
 private:
     void I_Refresh();
@@ -26,59 +28,102 @@ private:
     vector<char> input_stack;
 };
 
+int Input::Key_to_Action(string type,char Input_Key){
+    int Command;
+    switch (Input_Key)
+    {
+    case 'W':
+        Command=0;
+        break;
+    case 'S':
+        Command=2;
+        break;
+    case 'A':
+        Command=1;
+        break;
+    case 'D':
+        Command=3;
+        break;
+    default:
+        if (I_TestMod)
+        {
+            cout << '\n'
+                 << "Command not found" << '\n';
+        }
+        break;
+    }
+    int W=1;
+    int S=2;
+    int A=3;
+    int D=4;
+    int Q=0;
+    int E=0;
+    //*****************Edit what action to be taken after a key is pressed here***************************
+    if (type=="Building"){
+        E=5;
+    }
+    else if (type=="Draw"){
+        E=6;
+    }
+    vector <int> Key{W,A,S,D,Q,E};
+    return Key[Command];
+}
+
+void Input::Initialize(){
+    I_Refresh();
+    I_Output();
+}
+
 // Clear all temp data stored in Main
 // Then re-input all needed data
 void Input::I_Refresh()
 {
+    R_Main.Clear();
+    D_Main.Refresh();
     if (I_TestMod)
     {
         cout << '\n'
              << "Refreshed" << '\n';
     }
-    R_Main.Clear();
-    D_Main.Refresh();
 }
 
 void Input::I_Output()
 {
+    R_Main.Render_Output();
+    cout << "\x1B[2J\x1B[H" << flush;
+    R_Main.Render_Print();
     if (I_TestMod)
     {
         cout << '\n'
              << "Outputed" << '\n';
     }
-    R_Main.Render_Output();
-    cout << "\x1B[2J\x1B[H" << flush;
-    R_Main.Render_Print();
 }
 
 void Input::Execute_Command()
 {
     for (int id = 0; id < input_stack.size(); id++)
     {
-        switch (toupper(input_stack[id]))
+        R_Main.Refresh_Current_Name();
+        //*****************Edit action here***************************
+        switch (Key_to_Action(R_Main.Current_Item_Name,input_stack[id]))
         {
-        case 'W':
+        case 0:
+            break;
+        case 1:
             I_Refresh();
             R_Main.Move(1);
             break;
-        case 'S':
+        case 2:
             I_Refresh();
             R_Main.Move(2);
             break;
-        case 'A':
+        case 3:
             I_Refresh();
             R_Main.Move(3);
             break;
-        case 'D':
+        case 4:
             I_Refresh();
             R_Main.Move(4);
-            break;
-        default:
-            if (I_TestMod)
-            {
-                cout << '\n'
-                     << "Command not found" << '\n';
-            }
             break;
         }
         if (id == input_stack.size() - 1)
@@ -105,7 +150,7 @@ void Input::Read_input()
         {
             if (input[id] == Available_char[id_2])
             {
-                input_stack.push_back(input[id]);
+                input_stack.push_back(toupper(input[id]));
                 if (I_TestMod)
                 {
                     cout << "Stack: " << input[id] << '\n';

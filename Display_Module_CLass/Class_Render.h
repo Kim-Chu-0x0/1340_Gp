@@ -22,7 +22,7 @@ protected:
     // Add textbox
 public:
     // Add textbox to a specific Layer object
-    int Add_Textbox(bool Selectable, int input_Textbox_id, string input_Layer_id, vector<Pixel> Text, vector<int> starting_xy, vector<int> endpt_xy, bool Whitespace);
+    int Add_Textbox(string Item_name, bool Selectable, int input_Textbox_id, string input_Layer_id, vector<Pixel> Text, vector<int> starting_xy, vector<int> endpt_xy, bool Whitespace);
 
     // Mutate Layer object
 public:
@@ -58,9 +58,11 @@ protected:
     vector<string> Layer_id;
     // store the position of Layer objects
     vector<int> Layer_position;
-    // store unique id of Textboxed of Layer objects
+    // store unique id of Textboxes of Layer objects
     vector<vector<int>> Layer_Textbox_id;
-    // store position of Textboxed located in Textbox list in Layer objects
+    // store type of Textboxes of Layer objects
+    vector<vector<string>> Layer_Textbox_name;
+    // store position of Textboxes located in Textbox list in Layer objects
     vector<vector<int>> Layer_Textbox_position;
     // store which textbox is chosen to be highlighted
     int Highlight_Choice_Textbox_id = 1;
@@ -147,36 +149,25 @@ void Render::Add_Layer_object(string id, int position)
     vector<int> temp;
     Layer_Textbox_id.push_back(temp);
     Layer_Textbox_position.push_back(temp);
+    vector<string> st_temp;
+    Layer_Textbox_name.push_back(st_temp);
     Layer_no++;
     Clear();
 }
 
 void Render::Remove_Layer_object(string id)
 {
-    bool suc = 0;
-    for (int x = 0; x < Layer_no; x++)
-    {
-        if (Layer_id[x] == id)
-        {
-            Layer_id.erase(Layer_id.begin() + x);
-            Layer_position.erase(Layer_position.begin() + x);
-            Layer_Textbox_id.erase(Layer_Textbox_id.begin() + x);
-            Layer_Textbox_position.erase(Layer_Textbox_position.begin() + x);
-            suc = 1;
-            break;
-        }
-    }
-    if (!suc)
-    {
-        cout << '\n'
-             << "Error: Layer ID not found" << '\n';
-        exit(0);
-    }
+    int Layer_Location = Layer_id_search(id);
+    Layer_id.erase(Layer_id.begin() + Layer_Location);
+    Layer_position.erase(Layer_position.begin() + Layer_Location);
+    Layer_Textbox_id.erase(Layer_Textbox_id.begin() + Layer_Location);
+    Layer_Textbox_name.erase(Layer_Textbox_name.begin() + Layer_Location);
+    Layer_Textbox_position.erase(Layer_Textbox_position.begin() + Layer_Location);
     Layer_no--;
     Clear();
 }
 
-int Render::Add_Textbox(bool Selectable, int input_Textbox_id, string input_Layer_id, vector<Pixel> Text, vector<int> starting_xy, vector<int> endpt_xy, bool Whitespace)
+int Render::Add_Textbox(string Item_name, bool Selectable, int input_Textbox_id, string input_Layer_id, vector<Pixel> Text, vector<int> starting_xy, vector<int> endpt_xy, bool Whitespace)
 {
     int Layer_Location = Layer_id_search(input_Layer_id);
     Layer_list[Layer_position[Layer_Location]].Add_Textbox(Text, starting_xy, endpt_xy, Whitespace);
@@ -194,6 +185,7 @@ int Render::Add_Textbox(bool Selectable, int input_Textbox_id, string input_Laye
         else
         {
             Layer_Textbox_id[Layer_Location].push_back(Layer_Textbox_id[Layer_Location].size() + 1);
+            Layer_Textbox_name[Layer_Location].push_back(Item_name);
             Layer_Textbox_position[Layer_Location].push_back(Layer_list[Layer_position[Layer_Location]].Text_no - 1);
             if (TestMod)
             {

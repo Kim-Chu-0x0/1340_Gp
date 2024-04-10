@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "..\Control_Module_Class\Class_Action.h"
 #include "..\Display_Module_Class\Class_Render.h"
 
 using namespace std;
@@ -17,7 +16,28 @@ private:
 
 public:
     int Move(int direction);
+
+public:
+    void Initialize();
+    string Current_Item_Name;
+    void Refresh_Current_Name()
+    {
+        Layer_Location = Layer_id_search(Highlight_Choice_Layer);
+        Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id, Layer_Location);
+        Current_Item_Name = Layer_Textbox_name[Layer_Location][Textbox_Location];
+    }
+
+private:
+    int Layer_Location;
+    int Textbox_Location;
 };
+
+void Action_Processor::Initialize(){
+    Set_Size(50,30);
+    Add_Layer_object("Map",2);
+    Add_Layer_object("PopUp",1);
+    Add_Layer_object("Setting",0);
+    }
 
 // Move between selectable textboxes
 // 1:Up 2:Down 3:Left 4:Right
@@ -50,9 +70,8 @@ int Action_Processor::Move(int direction)
     }
     const int Distance_threshold_1 = 0;
     const int Distance_threshold_2 = 10;
-    // fetch all data required
-    int Layer_Location = Layer_id_search(Highlight_Choice_Layer);
-    int Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id, Layer_Location);
+    // fetch all required data
+
     // This list is not in order, plz do not use id to access it
     // To get the correct item, plz use A_P_Textbox_position[id]
     vector<vector<int>> A_P_st_pt = Layer_list[Layer_position[Layer_Location]].Textbox_St;
