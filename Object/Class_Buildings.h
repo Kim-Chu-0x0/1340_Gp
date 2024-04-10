@@ -185,18 +185,22 @@ void Building::refresh()
   }
 }
 
-void Building::Costume_initialize(){
+void Building::Costume_initialize()
+{
   graphic_S.clear();
-  if (name=="Empty Space"){
+  if (name == "Empty Space")
+  {
     Pixel temp;
-    temp.text="s/";
-    for (int id=0;id<graphic_size[0]*(graphic_size[1]+2);id++){
+    temp.text = "s/";
+    for (int id = 0; id < graphic_size[0] * (graphic_size[1] + 2); id++)
+    {
       graphic_S.push_back(temp);
     }
   }
   if (TestMod)
   {
-    cout << '\n'<<"Blank object created"<<'\n'
+    cout << '\n'
+         << "Blank object created" << '\n'
          << "graphic_S size: " << graphic_S.size() << '\n';
   }
 }
@@ -410,7 +414,7 @@ void Building::type(int id)
   else if (id == 6)
   {
     name = "Empty Space";
-    costume=1;
+    costume = 1;
   }
   else
   {
@@ -428,11 +432,13 @@ void Building::type(int id)
     cout << "complexity: " << complexity << '\n';
     cout << "duration: " << duration << '\n';
   }
-  if (!costume){
+  if (!costume)
+  {
     basestat_bounus();
     type_process();
   }
-  else{
+  else
+  {
     Costume_initialize();
   }
 }

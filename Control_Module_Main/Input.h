@@ -20,7 +20,7 @@ public:
     void Read_input();
     void Execute_Command();
     void Initialize();
-    int Key_to_Action(string type,char Input_Key);
+    int Key_to_Action(string type, char Input_Key);
 
 private:
     void I_Refresh();
@@ -28,21 +28,22 @@ private:
     vector<char> input_stack;
 };
 
-int Input::Key_to_Action(string type,char Input_Key){
+int Input::Key_to_Action(string type, char Input_Key)
+{
     int Command;
     switch (Input_Key)
     {
     case 'W':
-        Command=0;
+        Command = 0;
         break;
     case 'S':
-        Command=2;
+        Command = 2;
         break;
     case 'A':
-        Command=1;
+        Command = 1;
         break;
     case 'D':
-        Command=3;
+        Command = 3;
         break;
     default:
         if (I_TestMod)
@@ -52,24 +53,27 @@ int Input::Key_to_Action(string type,char Input_Key){
         }
         break;
     }
-    int W=1;
-    int S=2;
-    int A=3;
-    int D=4;
-    int Q=0;
-    int E=0;
+    int W = 1;
+    int S = 2;
+    int A = 3;
+    int D = 4;
+    int Q = 0;
+    int E = 0;
     //*****************Edit what action to be taken after a key is pressed here***************************
-    if (type=="Building"){
-        E=5;
+    if (type == "Building")
+    {
+        E = 5;
     }
-    else if (type=="Draw"){
-        E=6;
+    else if (type == "Draw")
+    {
+        E = 6;
     }
-    vector <int> Key{W,A,S,D,Q,E};
+    vector<int> Key{W, A, S, D, Q, E};
     return Key[Command];
 }
 
-void Input::Initialize(){
+void Input::Initialize()
+{
     I_Refresh();
     I_Output();
 }
@@ -105,7 +109,7 @@ void Input::Execute_Command()
     {
         R_Main.Refresh_Current_Name();
         //*****************Edit action here***************************
-        switch (Key_to_Action(R_Main.Current_Item_Name,input_stack[id]))
+        switch (Key_to_Action(R_Main.Current_Item_Name, input_stack[id]))
         {
         case 0:
             break;

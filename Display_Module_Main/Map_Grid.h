@@ -49,8 +49,8 @@ protected:
             Grid_Building_list.push_back(temp);
             Grid_Highlight_Data.push_back(0);
         }
-        Grid_Size[0]=Grid_Grid_Size[0]*7-1;
-        Grid_Size[1]=Grid_Grid_Size[1]*7-1;
+        Grid_Size[0] = Grid_Grid_Size[0] * 7 - 1;
+        Grid_Size[1] = Grid_Grid_Size[1] * 7 - 1;
     }
     void Grid_Expand(int x, int y);
 
@@ -65,7 +65,8 @@ private:
     vector<int> Grid_Grid_Size{0, 0};
 };
 
-void Map_Grid::Grid_Reset(){
+void Map_Grid::Grid_Reset()
+{
     Building Null;
     Null.type(6);
     for (int id = 0; id < Grid_Grid_Size[0] * Grid_Grid_Size[1]; id++)
@@ -112,8 +113,8 @@ void Map_Grid::Grid_Expand(int x, int y)
         }
     }
     Grid_Grid_Size[1] += y;
-    Grid_Size[0]=Grid_Grid_Size[0]*7-1;
-    Grid_Size[1]=Grid_Grid_Size[1]*7-1;
+    Grid_Size[0] = Grid_Grid_Size[0] * 7 - 1;
+    Grid_Size[1] = Grid_Grid_Size[1] * 7 - 1;
 }
 
 void Map_Grid::Grid_Output()
@@ -138,7 +139,7 @@ void Map_Grid::Grid_Output()
             int x2 = Grid_st_xy[0] + ((Grid_Building_list[0].output_graphic_size_S[0] + 1) * x) + (Grid_Building_list[0].output_graphic_size_S[0] - 1);
             vector<int> temp_St{x1, y1};
             vector<int> temp_En{x2, y2};
-            Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building",1, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+            Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building", 1, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
         }
     }
     if (Grid_TestMod)

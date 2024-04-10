@@ -13,14 +13,23 @@
 #define Cyan "\e[0;36m"
 #define White "\e[0;37m"
 
-#define	B_Black "\e[1;30m"
-#define	B_Red "\e[1;31m"
-#define	B_Green "\e[1;32m"
-#define	B_Yellow "\e[1;33m"
-#define	B_Blue "\e[1;34m"
-#define	B_Purple "\e[1;35m"
-#define	B_Cyan "\e[1;36m"
-#define	B_White "\e[1;37m"
+#define B_Black "\e[1;30m"
+#define B_Red "\e[1;31m"
+#define B_Green "\e[1;32m"
+#define B_Yellow "\e[1;33m"
+#define B_Blue "\e[1;34m"
+#define B_Purple "\e[1;35m"
+#define B_Cyan "\e[1;36m"
+#define B_White "\e[1;37m"
+
+#define H_Black "\e[0;90m"
+#define H_Red "\e[0;91m"
+#define H_Green "\e[0;92m"
+#define H_Yellow "\e[0;93m"
+#define H_Blue "\e[0;94m"
+#define H_Purple "\e[0;95m"
+#define H_Cyan "\e[0;96m"
+#define H_White "\e[0;97m"
 
 #define Highlightcolour "\e[1;95m"
 
@@ -87,6 +96,30 @@ public:
             break;
         case 17:
             colour = B_White;
+            break;
+        case 18:
+            colour = H_Black;
+            break;
+        case 19:
+            colour = H_Red;
+            break;
+        case 20:
+            colour = H_Green;
+            break;
+        case 21:
+            colour = H_Yellow;
+            break;
+        case 22:
+            colour = H_Blue;
+            break;
+        case 23:
+            colour = H_Purple;
+            break;
+        case 24:
+            colour = H_Cyan;
+            break;
+        case 25:
+            colour = H_White;
             break;
         default:
             colour = White;

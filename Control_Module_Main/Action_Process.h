@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 #include "..\Display_Module_Class\Class_Render.h"
 
 using namespace std;
@@ -32,12 +33,13 @@ private:
     int Textbox_Location;
 };
 
-void Action_Processor::Initialize(){
-    Set_Size(50,30);
-    Add_Layer_object("Map",2);
-    Add_Layer_object("PopUp",1);
-    Add_Layer_object("Setting",0);
-    }
+void Action_Processor::Initialize()
+{
+    Set_Size(50, 30);
+    Add_Layer_object("Map", 2);
+    Add_Layer_object("PopUp", 1);
+    Add_Layer_object("Setting", 0);
+}
 
 // Move between selectable textboxes
 // 1:Up 2:Down 3:Left 4:Right
@@ -101,7 +103,7 @@ int Action_Processor::Move(int direction)
         }
     }
     // Filter unavalible textbox
-    vector<int> perpendicular_distance;
+    vector<int> perpendicular_distance, parallel_distance;
     vector<bool> pass(A_P_Layer_Textbox_id.size(), 1);
     switch (direction)
     {
@@ -129,7 +131,27 @@ int Action_Processor::Move(int direction)
             }
             else
             {
-                perpendicular_distance.push_back(Present_st_pt[1] - A_P_en_pt[A_P_Textbox_position[id]][1]);
+                if (Present_st_pt[1] - A_P_en_pt[A_P_Textbox_position[id]][1] > Distance_threshold_2)
+                {
+                    if (A_P_TestMod_detail)
+                    {
+                        cout << '\n'
+                             << "Item id: " << A_P_Layer_Textbox_id[id] << " was removed in step3" << '\n';
+                    }
+                    pass[id] = 0;
+                }
+                else
+                {
+                    perpendicular_distance.push_back(Present_st_pt[1] - A_P_en_pt[A_P_Textbox_position[id]][1]);
+                    if (A_P_st_pt[A_P_Textbox_position[id]][0] > (Present_st_pt[0] + Present_en_pt[0]) / 2)
+                    {
+                        parallel_distance.push_back(A_P_st_pt[A_P_Textbox_position[id]][0] - ((Present_st_pt[0] + Present_en_pt[0]) / 2));
+                    }
+                    else
+                    {
+                        parallel_distance.push_back(((Present_st_pt[0] + Present_en_pt[0]) / 2) - A_P_en_pt[A_P_Textbox_position[id]][0]);
+                    }
+                }
             }
         }
         break;
@@ -157,7 +179,27 @@ int Action_Processor::Move(int direction)
             }
             else
             {
-                perpendicular_distance.push_back(A_P_st_pt[A_P_Textbox_position[id]][1] - Present_en_pt[1]);
+                if (A_P_st_pt[A_P_Textbox_position[id]][1] - Present_en_pt[1] > Distance_threshold_2)
+                {
+                    if (A_P_TestMod_detail)
+                    {
+                        cout << '\n'
+                             << "Item id: " << A_P_Layer_Textbox_id[id] << " was removed in step3" << '\n';
+                    }
+                    pass[id] = 0;
+                }
+                else
+                {
+                    perpendicular_distance.push_back(A_P_st_pt[A_P_Textbox_position[id]][1] - Present_en_pt[1]);
+                    if (A_P_st_pt[A_P_Textbox_position[id]][0] > (Present_st_pt[0] + Present_en_pt[0]) / 2)
+                    {
+                        parallel_distance.push_back(A_P_st_pt[A_P_Textbox_position[id]][0] - ((Present_st_pt[0] + Present_en_pt[0]) / 2));
+                    }
+                    else
+                    {
+                        parallel_distance.push_back(((Present_st_pt[0] + Present_en_pt[0]) / 2) - A_P_en_pt[A_P_Textbox_position[id]][0]);
+                    }
+                }
             }
         }
         break;
@@ -185,7 +227,27 @@ int Action_Processor::Move(int direction)
             }
             else
             {
-                perpendicular_distance.push_back(Present_st_pt[0] - A_P_en_pt[A_P_Textbox_position[id]][0]);
+                if (Present_st_pt[0] - A_P_en_pt[A_P_Textbox_position[id]][0] > Distance_threshold_2)
+                {
+                    if (A_P_TestMod_detail)
+                    {
+                        cout << '\n'
+                             << "Item id: " << A_P_Layer_Textbox_id[id] << " was removed in step3" << '\n';
+                    }
+                    pass[id] = 0;
+                }
+                else
+                {
+                    perpendicular_distance.push_back(Present_st_pt[0] - A_P_en_pt[A_P_Textbox_position[id]][0]);
+                    if (A_P_st_pt[A_P_Textbox_position[id]][1] > (Present_st_pt[1] + Present_en_pt[1]) / 2)
+                    {
+                        parallel_distance.push_back(A_P_st_pt[A_P_Textbox_position[id]][1] - ((Present_st_pt[1] + Present_en_pt[1]) / 2));
+                    }
+                    else
+                    {
+                        parallel_distance.push_back(((Present_st_pt[1] + Present_en_pt[1]) / 2) - A_P_en_pt[A_P_Textbox_position[id]][1]);
+                    }
+                }
             }
         }
         break;
@@ -213,7 +275,27 @@ int Action_Processor::Move(int direction)
             }
             else
             {
-                perpendicular_distance.push_back(A_P_st_pt[A_P_Textbox_position[id]][0] - Present_en_pt[0]);
+                if (A_P_st_pt[A_P_Textbox_position[id]][0] - Present_en_pt[0] > Distance_threshold_2)
+                {
+                    if (A_P_TestMod_detail)
+                    {
+                        cout << '\n'
+                             << "Item id: " << A_P_Layer_Textbox_id[id] << " was removed in step3" << '\n';
+                    }
+                    pass[id] = 0;
+                }
+                else
+                {
+                    perpendicular_distance.push_back(A_P_st_pt[A_P_Textbox_position[id]][0] - Present_en_pt[0]);
+                    if (A_P_st_pt[A_P_Textbox_position[id]][1] > (Present_st_pt[1] + Present_en_pt[1]) / 2)
+                    {
+                        parallel_distance.push_back(A_P_st_pt[A_P_Textbox_position[id]][1] - ((Present_st_pt[1] + Present_en_pt[1]) / 2));
+                    }
+                    else
+                    {
+                        parallel_distance.push_back(((Present_st_pt[1] + Present_en_pt[1]) / 2) - A_P_en_pt[A_P_Textbox_position[id]][1]);
+                    }
+                }
             }
         }
         break;
@@ -222,20 +304,6 @@ int Action_Processor::Move(int direction)
     {
         if (!pass[id])
         {
-            A_P_Layer_Textbox_id.erase(A_P_Layer_Textbox_id.begin() + id);
-            A_P_st_pt.erase(A_P_st_pt.begin() + A_P_Textbox_position[id]);
-            A_P_en_pt.erase(A_P_en_pt.begin() + A_P_Textbox_position[id]);
-        }
-    }
-    for (int id = 0; id < perpendicular_distance.size(); id++)
-    {
-        if (perpendicular_distance[id] > Distance_threshold_2)
-        {
-            if (A_P_TestMod_detail)
-            {
-                cout << '\n'
-                     << "Item id: " << A_P_Layer_Textbox_id[id] << " was removed in step3" << '\n';
-            }
             A_P_Layer_Textbox_id.erase(A_P_Layer_Textbox_id.begin() + id);
             A_P_st_pt.erase(A_P_st_pt.begin() + A_P_Textbox_position[id]);
             A_P_en_pt.erase(A_P_en_pt.begin() + A_P_Textbox_position[id]);
@@ -254,6 +322,26 @@ int Action_Processor::Move(int direction)
     for (int id = 0; id < A_P_Layer_Textbox_id.size(); id++)
     {
         if (perpendicular_distance[id] < perpendicular_distance[min_id])
+        {
+            min_id = id;
+        }
+    }
+    int min_value = perpendicular_distance[min_id];
+    for (int id = A_P_Layer_Textbox_id.size() - 1; id >= 0; id--)
+    {
+        if (perpendicular_distance[id] > min_value)
+        {
+            A_P_Layer_Textbox_id.erase(A_P_Layer_Textbox_id.begin() + id);
+            A_P_st_pt.erase(A_P_st_pt.begin() + A_P_Textbox_position[id]);
+            A_P_en_pt.erase(A_P_en_pt.begin() + A_P_Textbox_position[id]);
+            parallel_distance.erase(parallel_distance.begin() + id);
+            perpendicular_distance.erase(perpendicular_distance.begin() + id);
+        }
+    }
+    min_id = 0;
+    for (int id = 0; id < A_P_Layer_Textbox_id.size(); id++)
+    {
+        if (parallel_distance[id] < parallel_distance[min_id])
         {
             min_id = id;
         }
