@@ -52,7 +52,7 @@ void Data_Storage::Relocate()
 
 void Data_Storage::Initialize()
 {
-    Grid_Set_Size(5, 4);
+    Grid_Set_Size(4, 4);
     Res_Future_List[0] = 10;
     Res_Future_List[5] = -999;
     EGY_Energy=50;

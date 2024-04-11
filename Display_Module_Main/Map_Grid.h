@@ -59,6 +59,7 @@ protected:
     void Grid_Output();
     vector<int> Grid_st_xy{0, 0};
     vector<int> Grid_Size{0, 0};
+    vector<int> Grid_Maximum_Size{8, 5};
 
 private:
     string Grid_Layer_name = "Map";
