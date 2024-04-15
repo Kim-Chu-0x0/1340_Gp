@@ -69,7 +69,7 @@ private:
 void Map_Grid::Grid_Reset()
 {
     Building Null;
-    Null.type(6);
+    Null.Input_type(6);
     for (int id = 0; id < Grid_Grid_Size[0] * Grid_Grid_Size[1]; id++)
     {
         vector<int> temp{id};

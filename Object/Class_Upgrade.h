@@ -38,6 +38,13 @@ private:
 public:
     int type=0;
     int level=0;
+
+public:
+    void Input_type(int id);
 };
+
+void Upgrade::Input_type(int id){
+    ;
+}
 
 #endif

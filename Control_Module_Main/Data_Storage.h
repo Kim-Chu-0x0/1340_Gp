@@ -110,6 +110,8 @@ vector<int> Upgrade_Weighting{
 
 int Sum_Upgrade_Weighting,Sum_Building_Weighting,Sum_Tool_Weighting;
 
+vector <int> Screen_Size{0,0};
+
 #include "..\Display_Module_Main\Draw_Button.h"
 #include "..\Display_Module_Main\Map_Grid.h"
 #include "..\Display_Module_Main\Resources_Display.h"
@@ -146,10 +148,12 @@ void Data_Storage::Draw()
     for (int id = 0;id<Tool_Weighting.size();id++){
         Sum_Tool_Weighting+=Tool_Weighting[id];
     }
+    DUI_Draw_Card();
 }
 
 void Data_Storage::Refresh()
 {
+    //DUI_Output();
     Grid_Output();
     Res_Output();
     EGY_Output();
@@ -172,6 +176,8 @@ void Data_Storage::Relocate()
     EGY_st_xy[0] = Res_st_xy[0];
     EGY_st_xy[1] = Grid_st_xy[1] + Grid_Size[1] + 1;
     EGY_Size[0] = Grid_st_xy[0] + Grid_Size[0] - EGY_st_xy[0];
+    Screen_Size[0]=EGY_Size[0];
+    Screen_Size[1]=EGY_st_xy[1]+EGY_Size[1];
 }
 
 void Data_Storage::Initialize()

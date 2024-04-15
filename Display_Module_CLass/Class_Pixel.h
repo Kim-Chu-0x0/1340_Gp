@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 #define Black "\e[0;30m"
 #define Red "\e[0;31m"

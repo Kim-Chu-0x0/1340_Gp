@@ -49,7 +49,7 @@ private:
   bool costume = 0;
 
 public:
-  void type(int id);
+  void Input_type(int id);
 
 private:
   void type_process();
@@ -310,7 +310,7 @@ void Building::type_process()
 }
 
 // Generate a building item in random
-void Building::type(int id)
+void Building::Input_type(int id)
 {
   // output/input tier:
   // 0:no in/output
