@@ -10,6 +10,8 @@
 
 using namespace std;
 
+const int Production_Building_type = 2;
+const int Production_Building_number = 6;
 const int no_each_tier = 4;
 const int no_of_t4 = 4;
 const vector<string> Default_colour{Red, Yellow, Blue, Green};
@@ -42,7 +44,8 @@ private:
   int req_constant;
   int out_tier;
   int out_constant;
-  int complexity;
+  int in_complexity;
+  int out_complexity;
   bool costume = 0;
 
 public:
@@ -219,7 +222,7 @@ void Building::type_process()
   }
   int input_temp;
   io_building temp_io;
-  for (double x = 1 + ((complexity - pow(complexity, 0.7)) * ((rand() % 81) + 70) / 100); x > 0; x--)
+  for (double x = 1 + ((in_complexity - pow(in_complexity, 0.7)) * ((rand() % 81) + 70) / 100); x > 0; x--)
   {
     if (TestMod && TestRNG)
     {
@@ -243,7 +246,7 @@ void Building::type_process()
   }
   // output generation
   int output_variance, output_st;
-  if (out_tier < complexity + 1)
+  if (out_tier < out_complexity + 1)
   {
     output_st = 0;
     if (out_tier > 3)
@@ -258,16 +261,16 @@ void Building::type_process()
   }
   else
   {
-    if (complexity > 2)
+    if (out_complexity > 2)
     {
       output_variance = 3 * no_each_tier;
       output_variance += no_of_t4;
     }
     else
     {
-      output_variance = (complexity + 1) * no_each_tier;
+      output_variance = (out_complexity + 1) * no_each_tier;
     }
-    output_st = (out_tier - complexity - 1) * no_each_tier;
+    output_st = (out_tier - out_complexity - 1) * no_each_tier;
   }
   element_used.clear();
   for (int x = output_st; x < output_st + output_variance; x++)
@@ -275,7 +278,7 @@ void Building::type_process()
     element_used.push_back(x);
   }
   int output_temp;
-  for (double x = 1 + ((complexity - pow(complexity, 0.7)) * ((rand() % 81) + 70) / 100); x > 0; x--)
+  for (double x = 1 + ((out_complexity - pow(out_complexity, 0.7)) * ((rand() % 81) + 70) / 100); x > 0; x--)
   {
     if (TestMod && TestRNG)
     {
@@ -306,7 +309,7 @@ void Building::type_process()
   refresh();
 }
 
-// ╦ ╩ ╬ ╣ ╠ ═ ║ ╔ ╗ ╚ ╝
+// Generate a building item in random
 void Building::type(int id)
 {
   // output/input tier:
@@ -328,7 +331,8 @@ void Building::type(int id)
     req_constant = 0;
     out_tier = 1;
     out_constant = 10;
-    complexity = 1;
+    in_complexity = 1;
+    out_complexity = 1;
     duration = 10;
   }
   else if (id == 1)
@@ -344,7 +348,8 @@ void Building::type(int id)
     req_constant = 0;
     out_tier = 1;
     out_constant = 13;
-    complexity = 2;
+    in_complexity = 2;
+    out_complexity = 2;
     duration = 12;
   }
   else if (id == 2)
@@ -360,7 +365,8 @@ void Building::type(int id)
     req_constant = 0;
     out_tier = 2;
     out_constant = 18;
-    complexity = 3;
+    in_complexity = 3;
+    out_complexity = 3;
     duration = 14;
   }
   else if (id == 3)
@@ -376,7 +382,8 @@ void Building::type(int id)
     req_constant = 10;
     out_tier = 2;
     out_constant = 10;
-    complexity = 1;
+    in_complexity = 1;
+    out_complexity = 1;
     duration = 10;
   }
   else if (id == 4)
@@ -392,7 +399,8 @@ void Building::type(int id)
     req_constant = 10;
     out_tier = 2;
     out_constant = 14;
-    complexity = 2;
+    in_complexity = 2;
+    out_complexity = 2;
     duration = 12;
   }
   else if (id == 5)
@@ -408,7 +416,8 @@ void Building::type(int id)
     req_constant = 12;
     out_tier = 3;
     out_constant = 20;
-    complexity = 3;
+    in_complexity = 3;
+    out_complexity = 3;
     duration = 14;
   }
   else if (id == 6)
@@ -429,7 +438,8 @@ void Building::type(int id)
     cout << "req_constant: " << req_constant << '\n';
     cout << "out_tier: " << out_tier << '\n';
     cout << "out_constant: " << out_constant << '\n';
-    cout << "complexity: " << complexity << '\n';
+    cout << "in_complexity: " << in_complexity << '\n';
+    cout << "out_complexity: " << out_complexity << '\n';
     cout << "duration: " << duration << '\n';
   }
   if (!costume)

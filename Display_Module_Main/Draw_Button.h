@@ -14,7 +14,7 @@ using namespace std;
 class Draw_Button
 {
 private:
-    bool Draw_Testmod = 1;
+    bool Draw_Testmod = 0;
 
 protected:
     int Draw_Draw_cost = 10;
