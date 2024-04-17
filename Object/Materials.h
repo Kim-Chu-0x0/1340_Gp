@@ -81,18 +81,27 @@ Pixel Materials_Graphic(int id)
 }
 
 //Special escapes:
-// "/"+(0-16)
+// "/"+(00-16)
+// "/s"
 vector <Pixel> To_Pixel(string Input){
     vector <Pixel> Output;
     Pixel temp;
     for (int id =0;id<Input.size();id++){
-        if (Input[id]!='/'){
-            temp.text=Input[id];
-            Output.push_back(temp);
+        if (Input[id]=='/'){
+            if (Input[id+1]=='s'){
+                temp.text="/s";
+                Output.push_back(temp);
+                id++;
+            }
+            else{
+            id++;
+            id++;
+            Output.push_back(Materials_Graphic((int(Input[id-1]-'0')*10)+int(Input[id]-'0')));
+            }
         }
         else{
-            id++;
-            Output.push_back(Materials_Graphic(int(Input[id]-'0')));
+            temp.text=Input[id];
+            Output.push_back(temp);
         }
     }
     return Output;

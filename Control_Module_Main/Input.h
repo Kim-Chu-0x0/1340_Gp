@@ -45,6 +45,12 @@ int Input::Key_to_Action(string type, char Input_Key)
     case 'D':
         Command = 3;
         break;
+    case 'Q':
+        Command = 4;
+        break;
+    case 'E':
+        Command = 5;
+        break;
     default:
         if (I_TestMod)
         {
@@ -94,7 +100,9 @@ void Input::I_Refresh()
 void Input::I_Output()
 {
     R_Main.Render_Output();
-    cout << "\x1B[2J\x1B[H" << flush;
+    if (!I_TestMod){
+        cout << "\x1B[2J\x1B[H" << flush;
+    }
     R_Main.Render_Print();
     if (I_TestMod)
     {
@@ -113,21 +121,30 @@ void Input::Execute_Command()
         {
         case 0:
             break;
+        // UP
         case 1:
             I_Refresh();
             R_Main.Move(1);
             break;
+        // DOWN
         case 2:
             I_Refresh();
             R_Main.Move(2);
             break;
+        // LEFT
         case 3:
             I_Refresh();
             R_Main.Move(3);
             break;
+        // RIGHT
         case 4:
             I_Refresh();
             R_Main.Move(4);
+            break;
+        // DRAW CARD
+        case 6:
+            D_Main.Draw();
+            I_Refresh();
             break;
         }
         if (id == input_stack.size() - 1)
@@ -140,7 +157,7 @@ void Input::Execute_Command()
 
 void Input::Read_input()
 {
-    const vector<char> Available_char{'w', 'W', 'a', 'A', 's', 'S', 'd', 'D'};
+    const vector<char> Available_char{'w', 'W', 'a', 'A', 's', 'S', 'd', 'D', 'q', 'Q', 'e', 'E'};
     string input;
     getline(cin, input);
     if (I_TestMod)

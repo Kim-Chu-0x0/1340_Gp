@@ -10,8 +10,44 @@
 
 using namespace std;
 
+const int Processing_Building_type = 1;
+const int Processing_Building_number = 3;
+const vector<string> Processing_Building_type_list{
+  "Processor"
+  };
+const vector<string> Processing_Building_name_list{
+  "Tier/s0/sprocessor",
+  "Tier/s1/sprocessor",
+  "Tier/s2/sprocessor"
+};
 const int Production_Building_type = 2;
 const int Production_Building_number = 6;
+const vector<string> Production_Building_type_list{
+  "Producer",
+  "Processor"
+  };
+const vector<string> Production_Building_name_list{
+  "Tier/s0/sproducer",
+  "Tier/s1/sproducer",
+  "Tier/s2/sproducer",
+  "Tier/s0/sprocessor",
+  "Tier/s1/sprocessor",
+  "Tier/s2/sprocessor"
+};
+const int All_Building_type = 2;
+const int All_Building_number = 6;
+const vector<string> All_Building_type_list{
+  "Producer",
+  "Processor"
+  };
+const vector<string> All_Building_name_list{
+  "Tier/s0/sproducer",
+  "Tier/s1/sproducer",
+  "Tier/s2/sproducer",
+  "Tier/s0/sprocessor",
+  "Tier/s1/sprocessor",
+  "Tier/s2/sprocessor"
+};
 const int no_each_tier = 4;
 const int no_of_t4 = 4;
 const vector<string> Default_colour{Red, Yellow, Blue, Green};
@@ -27,11 +63,13 @@ class Building
 {
 private:
   bool TestMod = 0;
+  bool TestTEXT = 0;
   bool TestRNG = 0;
 
 public:
   string name;
   vector<Pixel> graphic_S;
+  vector<Pixel> description;
   vector<int> output_graphic_size_S{6, 6};
   vector<io_building> input_list;
   vector<io_building> output_list;
@@ -53,10 +91,11 @@ public:
 
 private:
   void type_process();
-  void refresh();
+  void normal_refresh();
   void basestat_bounus();
   void finalstat_bounus();
   void Costume_initialize();
+  void Generate_Description();
 };
 
 void Building::basestat_bounus()
@@ -69,7 +108,7 @@ void Building::finalstat_bounus()
   1;
 }
 
-void Building::refresh()
+void Building::normal_refresh()
 {
   finalstat_bounus();
   graphic_S.clear();
@@ -81,15 +120,12 @@ void Building::refresh()
 
   for (int x = 0; x < input_list.size(); x++)
   {
-    temp_pixel.colour = White;
-    temp_pixel.text = "s/";
+    temp_pixel.text = "/s";
     graphic_S.push_back(temp_pixel);
-    temp_pixel.colour = Materials_Graphic(input_list[x].item).colour;
-    temp_pixel.text = Materials_Graphic(input_list[x].item).text;
-    graphic_S.push_back(temp_pixel);
+    graphic_S.push_back(Materials_Graphic(input_list[x].item));
   }
   temp_pixel.colour = White;
-  temp_pixel.text = "s/";
+  temp_pixel.text = "/s";
   for (int x = 1 + (input_list.size() * 2); x < graphic_size[0]; x++)
   {
     graphic_S.push_back(temp_pixel);
@@ -155,7 +191,7 @@ void Building::refresh()
       temp_pixel.text = unprocessed_graphic[y * graphic_size[0] + x];
       if (temp_pixel.text == "0")
       {
-        temp_pixel.text = "s/";
+        temp_pixel.text = "/s";
       }
       temp_pixel.colour = colour_tape[x];
       graphic_S.push_back(temp_pixel);
@@ -168,15 +204,12 @@ void Building::refresh()
 
   for (int x = 0; x < output_list.size(); x++)
   {
-    temp_pixel.colour = White;
-    temp_pixel.text = "s/";
+    temp_pixel.text = "/s";
     graphic_S.push_back(temp_pixel);
-    temp_pixel.colour = Materials_Graphic(output_list[x].item).colour;
-    temp_pixel.text = Materials_Graphic(output_list[x].item).text;
-    graphic_S.push_back(temp_pixel);
+    graphic_S.push_back(Materials_Graphic(output_list[x].item));
   }
   temp_pixel.colour = White;
-  temp_pixel.text = "s/";
+  temp_pixel.text = "/s";
   for (int x = 1 + (output_list.size() * 2); x < graphic_size[0]; x++)
   {
     graphic_S.push_back(temp_pixel);
@@ -186,15 +219,16 @@ void Building::refresh()
     cout << '\n'
          << "graphic_S size: " << graphic_S.size() << '\n';
   }
+  Generate_Description();
 }
 
 void Building::Costume_initialize()
 {
   graphic_S.clear();
-  if (name == "Empty Space")
+  if (name == "Empty/sSpace")
   {
     Pixel temp;
-    temp.text = "s/";
+    temp.text = "/s";
     for (int id = 0; id < graphic_size[0] * (graphic_size[1] + 2); id++)
     {
       graphic_S.push_back(temp);
@@ -206,6 +240,84 @@ void Building::Costume_initialize()
          << "Blank object created" << '\n'
          << "graphic_S size: " << graphic_S.size() << '\n';
   }
+}
+
+void Building::Generate_Description()
+{
+  description.clear();
+  vector<string> text_raw_1;
+  if (!costume)
+  {
+    vector<string> text_temp{
+        "Name:",
+        "Input:",
+        "Output:",
+        "Duration:"};
+    text_temp[0] += name;
+    text_temp[3] += to_string(duration);
+    if (input_list.size()==0){
+      text_temp[1] += "/s";
+      text_temp[1] += "None";
+    }
+    for (int x = 0; x < input_list.size(); x++)
+    {
+      text_temp[1] += "/s";
+      text_temp[1] += to_string(input_list[x].quantity);
+      text_temp[1] += "/";
+      if (input_list[x].item<10){
+        text_temp[1]+="0";
+      }
+      text_temp[1] += to_string(input_list[x].item);
+    }
+    for (int x = 0; x < output_list.size(); x++)
+    {
+      text_temp[2] += "/s";
+      text_temp[2] += to_string(output_list[x].quantity);
+      text_temp[2] += "/";
+      if (output_list[x].item<10){
+        text_temp[2]+="0";
+      }
+      text_temp[2] += to_string(output_list[x].item);
+    }
+    if (TestTEXT){
+      cout<<'\n';
+      for (int id = 0;id<text_temp.size();id++){
+        cout<<"line "<<id<<' '<<text_temp[id]<<'\n';
+      }
+    }
+    text_raw_1=text_temp;
+  }
+  else
+  {
+    ;
+  }
+  string text_raw_2;
+  for (int id = 0; id < text_raw_1.size(); id++)
+  {
+    int count = 0;
+    for (int length = 0; length < text_raw_1[id].size(); length++)
+    {
+      if (text_raw_1[id][length] == '/')
+      {
+        if (text_raw_1[id][length+1] == 's'){
+          count++;
+        }
+        else{
+          count++;
+          count++;
+        }
+      }
+    }
+    text_raw_2 += text_raw_1[id];
+    for (int length = text_raw_1[id].size() - count; length < 33; length++)
+    {
+      text_raw_2 += "/s";
+    }
+  }
+  if (TestTEXT){
+    cout<<'\n'<<text_raw_2<<'\n';
+  }
+  description = To_Pixel(text_raw_2);
 }
 
 void Building::type_process()
@@ -306,7 +418,7 @@ void Building::type_process()
          << "Input size: " << input_list.size() << '\n';
     cout << "Output size: " << output_list.size() << '\n';
   }
-  refresh();
+  normal_refresh();
 }
 
 // Generate a building item in random
@@ -320,7 +432,7 @@ void Building::Input_type(int id)
   // 4:can in/output tier4 materials
   if (id == 0)
   {
-    name = "Tier 0 producer";
+    name = "Tier/s0/sproducer";
     vector<string> temp_vector{
         "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
         "0", "╔", "╣", "0", "0", "0", "■", "0", "0", "0", "║",
@@ -337,7 +449,7 @@ void Building::Input_type(int id)
   }
   else if (id == 1)
   {
-    name = "Tier 1 producer";
+    name = "Tier/s1/sproducer";
     vector<string> temp_vector{
         "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
         "0", "╔", "╣", "0", "■", "0", "■", "0", "0", "0", "║",
@@ -354,7 +466,7 @@ void Building::Input_type(int id)
   }
   else if (id == 2)
   {
-    name = "Tier 2 producer";
+    name = "Tier/s2/sproducer";
     vector<string> temp_vector{
         "0", "0", "╔", "╩", "═", "╬", "═", "╦", "═", "═", "╗",
         "0", "╔", "╣", "0", "■", "║", "■", "║", "■", "0", "║",
@@ -371,7 +483,7 @@ void Building::Input_type(int id)
   }
   else if (id == 3)
   {
-    name = "Tier 0 processor";
+    name = "Tier/s0/sprocessor";
     vector<string> temp_vector{
         "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
         "╔", "╝", "0", "0", "0", "▲", "0", "0", "0", "╚", "╗",
@@ -388,7 +500,7 @@ void Building::Input_type(int id)
   }
   else if (id == 4)
   {
-    name = "Tier 1 processor";
+    name = "Tier/s1/sprocessor";
     vector<string> temp_vector{
         "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
         "╔", "╣", "0", "▲", "0", "▲", "0", "0", "0", "╠", "╗",
@@ -405,7 +517,7 @@ void Building::Input_type(int id)
   }
   else if (id == 5)
   {
-    name = "Tier 2 processor";
+    name = "Tier/s2/sprocessor";
     vector<string> temp_vector{
         "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
         "╔", "╣", "0", "▲", "0", "▲", "0", "▲", "0", "╠", "╗",
@@ -422,12 +534,12 @@ void Building::Input_type(int id)
   }
   else if (id == 6)
   {
-    name = "Empty Space";
+    name = "Empty/sSpace";
     costume = 1;
   }
   else
   {
-    cout << "Input Error: Unknown Biulding id" << '\n';
+    cout << "Input Error: Unknown Building id" << '\n';
     exit(0);
   }
   if (TestMod)

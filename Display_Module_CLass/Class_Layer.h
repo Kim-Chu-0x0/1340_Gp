@@ -94,7 +94,7 @@ void Layer::Print()
     {
         for (int id_x = 0; id_x < Map_xy[0]; id_x++)
         {
-            if (Output_Map[id_y * Map_xy[0] + id_x].text == "s/")
+            if (Output_Map[id_y * Map_xy[0] + id_x].text == "/s")
             {
                 cout << " ";
             }
@@ -120,15 +120,21 @@ void Layer::Highlight(vector<Pixel> &Map_)
     starting_xy[1]--;
     endpt_xy[0]++;
     endpt_xy[1]++;
+    starting_xy[0]*=2;
+    endpt_xy[0]*=2;
     for (int x = starting_xy[0]; x <= endpt_xy[0]; x++)
     {
         Map_[starting_xy[1] * Map_xy[0] + x].set_colour(9);
         Map_[endpt_xy[1] * Map_xy[0] + x].set_colour(9);
+        Map_[starting_xy[1] * Map_xy[0] + x].text = "━";
+        Map_[endpt_xy[1] * Map_xy[0] + x].text = "━";
     }
     for (int y = starting_xy[1]; y <= endpt_xy[1]; y++)
     {
         Map_[y * Map_xy[0] + starting_xy[0]].set_colour(9);
         Map_[y * Map_xy[0] + endpt_xy[0]].set_colour(9);
+        Map_[y * Map_xy[0] + starting_xy[0]].text = "┃";
+        Map_[y * Map_xy[0] + endpt_xy[0]].text = "┃";
     }
     Map_[starting_xy[1] * Map_xy[0] + starting_xy[0]].text = "┏";
     Map_[starting_xy[1] * Map_xy[0] + endpt_xy[0]].text = "┓";
@@ -220,7 +226,7 @@ void Layer::Text_Implant(vector<int> starting_xy, vector<int> endpt_xy, vector<P
     int x_len = endpt_xy[0] - starting_xy[0] + 1;
     int id_addition;
     Pixel whispc;
-    whispc.text = " ";
+    whispc.text = "/s";
     if (Whitespace)
     {
         for (int id_y = y_len - 1; id_y >= 0; id_y--)
@@ -328,11 +334,11 @@ vector<Pixel> Layer::Outline()
         Outline_Add(Textbox_St[id], Textbox_En[id], Outline_temp);
     }
     vector<Pixel> Output = Outline_Bool_Exchange(Outline_temp);
+    Outline_Format_Exchange(Output);
     if (Enable_Highlight)
     {
         Highlight(Output);
     }
-    Outline_Format_Exchange(Output);
     if (TestOutline)
     {
         cout << '\n'
@@ -388,7 +394,7 @@ vector<Pixel> Layer::Outline_Bool_Exchange(vector<vector<bool>> Map_bool)
     int Sum = 0;
     vector<Pixel> Map_String;
     Pixel temp;
-    temp.text = "s/";
+    temp.text = " ";
     for (int x = 0; x < Map_xy[0] * Map_xy[1]; x++)
     {
         Map_String.push_back(temp);
@@ -478,15 +484,15 @@ void Layer::Outline_Format_Exchange(vector<Pixel> &Map_String)
                     temp.set_colour(9);
                 }
             }
-            else if ((Map_String[id - 1].text == "s/") || ((id_x != Map_xy[0] - 1) && (Map_String[id].text == "s/")))
-            {
-                // cout<<"  Skip"<<'\n';
-                temp.text = "s/";
-            }
-            else
+            else if ((Map_String[id - 1].text == " ") || ((id_x != Map_xy[0] - 1) && (Map_String[id].text == " ")))
             {
                 // cout<<"  Space"<<'\n';
                 temp.text = " ";
+            }
+            else
+            {
+                // cout<<"  Skip"<<'\n';
+                temp.text = "/s";
             }
             Map_String.insert(Map_String.begin() + id, temp);
             temp.set_colour(8);

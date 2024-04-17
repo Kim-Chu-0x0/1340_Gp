@@ -46,7 +46,7 @@ void Resources_Display::Res_Output()
 {
     vector<Pixel> Output_Map;
     Pixel Space, Semicolon;
-    Space.text = " ";
+    Space.text = "/s";
     Semicolon.text = ":";
     int Y_Size = (Res_Size[1] / 2) + (Res_Resource_List.size() % 2);
     if (Res_TestMod)

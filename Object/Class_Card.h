@@ -21,7 +21,7 @@ public:
 
 public:
     vector <Pixel> Graphic,Description,Detail_in_Inv;
-    vector <int> Size_of_Description{0,0};
+    vector <int> Size_of_Description{17,0};
 private:
     int Type = 0;
     Building B_Data;
@@ -49,9 +49,16 @@ void Card::Random(){
         Pixel temp;
         temp.colour=Green;
         for (int id=0;id<temp_vector.size();id++){
+            if (temp_vector[id]=="0"){
+                temp.text="/s";
+            }
+            else{
             temp.text=temp_vector[id];
+            }
             Graphic.push_back(temp);
         }
+        Description=U_Data.description;
+        Size_of_Description[1]=U_Data.description.size()/33;
     }
     else if(RNG<(Sum_Upgrade_Weighting+Sum_Tool_Weighting)){//Tool
         RNG-=Sum_Upgrade_Weighting;
@@ -69,9 +76,15 @@ void Card::Random(){
         Pixel temp;
         temp.colour=Blue;
         for (int id=0;id<temp_vector.size();id++){
+            if (temp_vector[id]=="0"){
+                temp.text="/s";
+            }
+            else{
             temp.text=temp_vector[id];
+            }
             Graphic.push_back(temp);
         }
+        Size_of_Description[1]=0;
     }
     else{//Building
         RNG-=Sum_Upgrade_Weighting;
@@ -90,9 +103,20 @@ void Card::Random(){
         Pixel temp;
         temp.colour=Yellow;
         for (int id=0;id<temp_vector.size();id++){
+            if (temp_vector[id]=="0"){
+                temp.text="/s";
+            }
+            else{
             temp.text=temp_vector[id];
+            }
             Graphic.push_back(temp);
         }
+        Description=B_Data.description;
+        Size_of_Description[1]=B_Data.description.size()/33;
+    }
+    if (TestMod){
+        cout<<'\n'<<"Card type "<<Type<<" generated"<<'\n';
+        cout<<"Description Size: "<<Size_of_Description[0]<<' '<<Size_of_Description[1]<<'\n';
     }
 }
 

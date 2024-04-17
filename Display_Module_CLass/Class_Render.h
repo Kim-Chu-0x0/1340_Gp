@@ -259,7 +259,7 @@ void Render::Render_Print()
     {
         for (int id_x = 0; id_x < (Screen_Size[0] * 2 + 3); id_x++)
         {
-            if (Output[id_y * (Screen_Size[0] * 2 + 3) + id_x].text == "s/")
+            if (Output[id_y * (Screen_Size[0] * 2 + 3) + id_x].text == "/s")
             {
                 cout << " ";
             }

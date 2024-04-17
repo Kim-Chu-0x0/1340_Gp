@@ -37,10 +37,15 @@ void Draw_Button::Draw_Output()
     vector<int> en_xy{Draw_st_xy[0] + Draw_Size[0] - 1, Draw_st_xy[1] + Draw_Size[1] - 1};
     Pixel temp_pixel;
     temp_pixel.colour = B_White;
-    string temp = string("                 ") + "    Draw Card    " + "                 " + "                 ";
+    string temp = string("00000000000000000") + "0000Draw Card0000" + "00000000000000000" + "00000000000000000";
     for (int id = 0; id < temp.size(); id++)
     {
+        if(temp[id]=='0'){
+            temp_pixel.text="/s";
+        }
+        else{
         temp_pixel.text = temp[id];
+        }
         Output_Map.push_back(temp_pixel);
     }
     temp_pixel.colour = B_Green;

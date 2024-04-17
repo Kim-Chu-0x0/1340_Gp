@@ -45,7 +45,7 @@ void test(){
             Temp[id].text=to_string(rand()%7);
             Temp[id].set_colour(1+rand()%8);
         }
-        R_Main.Add_Textbox(0,0,"Map",Temp,St,En,1);
+        R_Main.Add_Textbox("",0,0,"Map",Temp,St,En,1);
     }
     R_Main.Render_Output();
     R_Main.Render_Print();

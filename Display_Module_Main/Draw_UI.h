@@ -59,6 +59,9 @@ void Draw_UI::DUI_Output()
         vector <int>temp_En{temp_St[0]+4,temp_St[1]+3};
         DUI_highlight_id[id] = R_Main.Add_Textbox("Card_Draw", 1, DUI_highlight_id[id], DUI_Layer_name, DUI_item_list[id].Graphic, temp_St, temp_En, 0);
     }
+    if(DUI_Testmod){
+        cout<<'\n'<<"DUI first part Outputed"<<'\n';
+    }
     vector <int>temp_St{DUI_st_xy[0]+((selection-1)*6),DUI_st_xy[1]+5};
     if (selection==0){
         temp_St[0]+=6;
@@ -68,6 +71,9 @@ void Draw_UI::DUI_Output()
     }
     vector <int>temp_En{temp_St[0]+16,temp_St[0]+DUI_item_list[selection].Size_of_Description[1]-1};
     R_Main.Add_Textbox("Card_Draw", 0, 0, DUI_Layer_name, DUI_item_list[selection].Description, temp_St, temp_En, 0);
+    if(DUI_Testmod){
+        cout<<'\n'<<"DUI Output completed"<<'\n';
+    }
 }
 
 #endif

@@ -25,6 +25,7 @@
 //  16 : Gain Extra Life
 //  17 : Less Draw Consumption
 //  18 : Receive T1 Resource Every Turn
+//  19 : Increase Duration (Specific Type)
 // Format:
 //{0:level,1:value 2:level,3:value......}
 vector<vector<int>> Upgrade_List;
@@ -47,7 +48,7 @@ vector<int> Tool_Weighting{
     // Gain T2 Resources
     Weighting_Tier_List[3],
     // Gain T3 Resources
-    Weighting_Tier_List[2],
+    Weighting_Tier_List[2]
 };
 
 vector<int> Building_Weighting{
@@ -62,7 +63,7 @@ vector<int> Building_Weighting{
     // Tier 1 processor
     Weighting_Tier_List[6],
     // Tier 2 processor
-    Weighting_Tier_List[4],
+    Weighting_Tier_List[4]
 };
 
 vector<int> Upgrade_Weighting{
@@ -104,13 +105,24 @@ vector<int> Upgrade_Weighting{
     Weighting_Tier_List[3],
     // 18 : Receive T1 Resource Every Turn
     Weighting_Tier_List[1],
-    // 19 : Receive 2 Random Upgrade
+    // 19 : Receive 2 Random Upgrades
     Weighting_Tier_List[2],
+    // 20 : Increase Duration (Specific Type)
+    Weighting_Tier_List[2]
 };
 
 int Sum_Upgrade_Weighting,Sum_Building_Weighting,Sum_Tool_Weighting;
 
 vector <int> Screen_Size{0,0};
+
+//0:Draw_Button
+//1:Draw_UI
+//2:Energy_Bar
+//3:Inventory
+//4:Map_Grid
+//5:Resources_Display
+vector <vector <bool>> Accessable{{0},{0},{0},{0},{0},{0}};
+vector <bool> Visible{0,0,0,0,0,0};
 
 #include "..\Display_Module_Main\Draw_Button.h"
 #include "..\Display_Module_Main\Map_Grid.h"
@@ -149,15 +161,31 @@ void Data_Storage::Draw()
         Sum_Tool_Weighting+=Tool_Weighting[id];
     }
     DUI_Draw_Card();
+    Visible[1]=1;
 }
 
 void Data_Storage::Refresh()
 {
-    //DUI_Output();
-    Grid_Output();
-    Res_Output();
-    EGY_Output();
-    Draw_Output();
+    if ( Visible[0] ){
+        Draw_Output();
+    }
+    if ( Visible[1] ){
+        DUI_Output();
+    }
+    if ( Visible[2] ){
+        EGY_Output();
+    }
+    if ( Visible[3] ){
+        //;
+    }
+    if ( Visible[4] ){
+        Grid_Output();
+    }
+    if ( Visible[5] ){
+        Res_Output();
+    }
+    
+    
     if (Testmod)
     {
         cout << '\n'
@@ -182,12 +210,40 @@ void Data_Storage::Relocate()
 
 void Data_Storage::Initialize()
 {
+    Visible[0]=1;
+    Visible[2]=1;
+    Visible[4]=1;
+    Visible[5]=1;
     // Upgrade Data Initialize
     vector <int> temp{0,0};
-    for (int id;id<18;id++){
+    for (int id;id<20;id++){
         Upgrade_List.push_back(temp);
     }
     Upgrade_List[0][1]=3;
+    for (int id=1;id<Production_Building_type;id++){
+        Upgrade_List[14].push_back(0);
+        Upgrade_List[14].push_back(0);
+    }
+    for (int id=1;id<Production_Building_number;id++){
+        Upgrade_List[4].push_back(0);
+        Upgrade_List[4].push_back(0);
+    }
+    for (int id=1;id<Processing_Building_type;id++){
+        Upgrade_List[15].push_back(0);
+        Upgrade_List[15].push_back(0);
+    }
+    for (int id=1;id<Processing_Building_number;id++){
+        Upgrade_List[6].push_back(0);
+        Upgrade_List[6].push_back(0);
+    }
+    for (int id=1;id<All_Building_type;id++){
+        Upgrade_List[19].push_back(0);
+        Upgrade_List[19].push_back(0);
+    }
+    for (int id=1;id<All_Building_number;id++){
+        Upgrade_List[7].push_back(0);
+        Upgrade_List[7].push_back(0);
+    }
     // UI Setup
     Grid_Set_Size(4, 4);
     Res_Future_List[0] = 10;
