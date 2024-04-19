@@ -37,6 +37,21 @@ protected:
     string INV_Layer_name = "Map";
 };
 
+void Inventory::INV_Fill_Item(int pos, Card item){
+    if (pos==-1){
+        bool Found = 0;
+        for (int id = 0; (id < Upgrade_List[9][1]) && (!Found); id++){
+            if (INV_item_list[id].Type==0){
+                INV_item_list[id]=item;
+                Found = 1;
+            }
+        }
+    }
+    else{
+        INV_item_list[pos]=item;
+    }
+}
+
 void Inventory::INV_Reset()
 {
     Card temp;

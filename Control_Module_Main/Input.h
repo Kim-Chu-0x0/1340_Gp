@@ -14,7 +14,7 @@ using namespace std;
 class Input
 {
 private:
-    bool I_TestMod = 0;
+    bool I_TestMod = 1;
 
 public:
     void Read_input();
@@ -31,6 +31,11 @@ private:
 
 int Input::Key_to_Action(string type, char Input_Key)
 {
+    if (I_TestMod)
+    {
+        cout << '\n'
+             << "Selecting type: " <<type<< '\n';
+    }
     int Command;
     switch (Input_Key)
     {
@@ -79,6 +84,11 @@ int Input::Key_to_Action(string type, char Input_Key)
     {
         E = 7;
     }
+    else if (type == "Card_Draw_CFM")
+    {
+        Q = 8;
+        E = 9;
+    }
     vector<int> Key{W, A, S, D, Q, E};
     return Key[Command];
 }
@@ -102,7 +112,8 @@ void Input::I_Refresh()
     }
 }
 
-void Input::Refresh_Layer(string id){
+void Input::Refresh_Layer(string id)
+{
     R_Main.Refresh_Layer(id);
     D_Main.Refresh_Layer(id);
 }
@@ -110,7 +121,8 @@ void Input::Refresh_Layer(string id){
 void Input::I_Output()
 {
     R_Main.Render_Output();
-    if (!I_TestMod){
+    if (!I_TestMod)
+    {
         cout << "\x1B[2J\x1B[H" << flush;
     }
     R_Main.Render_Print();
@@ -123,9 +135,9 @@ void Input::I_Output()
 
 void Input::Execute_Command()
 {
+    R_Main.Refresh_Current_Name();
     for (int id = 0; id < input_stack.size(); id++)
     {
-        R_Main.Refresh_Current_Name();
         //*****************Edit action here***************************
         switch (Key_to_Action(R_Main.Current_Item_Name, input_stack[id]))
         {
@@ -157,13 +169,29 @@ void Input::Execute_Command()
             break;
         // DRAW CARD
         case 6:
-            D_Main.Draw();
-            R_Main.Switch_Layer("PopUp");
+            D_Main.Draw(0);
+            R_Main.Switch_Layer("PopUp_1");
             I_Refresh();
-            input_stack.clear();
-            I_Output();
+            id=input_stack.size()-1;
             break;
+        // DRAW CARD Confirm Selection
         case 7:
+            D_Main.Draw(2);
+            I_Refresh();
+            id=input_stack.size()-1;
+            break;
+        // DRAW CARD Reverse Selection
+        case 8:
+            D_Main.Draw(1);
+            I_Refresh();
+            id=input_stack.size()-1;
+            break;
+        // DRAW CARD DONE
+        case 9:
+            D_Main.Draw(3);
+            R_Main.Switch_Layer("Map");
+            I_Refresh();
+            id=input_stack.size()-1;
             break;
         }
         if (id == input_stack.size() - 1)

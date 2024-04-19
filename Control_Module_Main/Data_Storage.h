@@ -141,29 +141,42 @@ public:
     void Refresh_Layer(string id);
 
 public:
-    void Draw();
+    void Draw(int id);
 
 private:
     void Relocate();
 };
 
-void Data_Storage::Draw()
+void Data_Storage::Draw(int id)
 {
-    Sum_Upgrade_Weighting = Sum_Building_Weighting = Sum_Tool_Weighting = 0;
-    for (int id = 0; id < Upgrade_Weighting.size(); id++)
-    {
-        Sum_Upgrade_Weighting += Upgrade_Weighting[id];
+    if (id==0){
+        Sum_Upgrade_Weighting = Sum_Building_Weighting = Sum_Tool_Weighting = 0;
+        for (int id = 0; id < Upgrade_Weighting.size(); id++)
+        {
+            Sum_Upgrade_Weighting += Upgrade_Weighting[id];
+        }
+        for (int id = 0; id < Building_Weighting.size(); id++)
+        {
+            Sum_Building_Weighting += Building_Weighting[id];
+        }
+        for (int id = 0; id < Tool_Weighting.size(); id++)
+        {
+            Sum_Tool_Weighting += Tool_Weighting[id];
+        }
+        DUI_Draw_Card();
+        Visible[1] = 1;
     }
-    for (int id = 0; id < Building_Weighting.size(); id++)
-    {
-        Sum_Building_Weighting += Building_Weighting[id];
+    else if (id==1){
+        DUI_Phase=0;
     }
-    for (int id = 0; id < Tool_Weighting.size(); id++)
-    {
-        Sum_Tool_Weighting += Tool_Weighting[id];
+    else if (id==2){
+        DUI_Phase=1;
     }
-    DUI_Draw_Card();
-    Visible[1] = 1;
+    else if (id==3){
+        INV_Fill_Item(-1,DUI_item_list[DUI_selection]);
+        DUI_Clear();
+        Visible[1] = 0;
+    }
 }
 
 void Data_Storage::Refresh_Layer(string id)

@@ -59,6 +59,8 @@ protected:
     vector<string> Layer_id;
     // store the position of Layer objects
     vector<int> Layer_position;
+    // store new id of Textboxes of Layer objects
+    vector<int> Layer_Textbox_counter;
     // store unique id of Textboxes of Layer objects
     vector<vector<int>> Layer_Textbox_id;
     // store type of Textboxes of Layer objects
@@ -138,7 +140,7 @@ int Render::Textbox_id_search(int input_Textbox_id, int Layer_Location)
 void Render::Refresh_Layer(string id)
 {
     Layer Temp(Screen_Size[0], Screen_Size[1]);
-    Layer_list[Layer_id_search(id)]=Temp;
+    Layer_list[Layer_position[Layer_id_search(id)]] = Temp;
 }
 
 void Render::Add_Layer_object(string id, int position)
@@ -156,6 +158,7 @@ void Render::Add_Layer_object(string id, int position)
     Layer_position.push_back(position);
     vector<int> temp;
     Layer_Textbox_id.push_back(temp);
+    Layer_Textbox_counter.push_back(0);
     Layer_Textbox_position.push_back(temp);
     vector<string> st_temp;
     Layer_Textbox_name.push_back(st_temp);
@@ -169,6 +172,7 @@ void Render::Remove_Layer_object(string id)
     Layer_id.erase(Layer_id.begin() + Layer_Location);
     Layer_position.erase(Layer_position.begin() + Layer_Location);
     Layer_Textbox_id.erase(Layer_Textbox_id.begin() + Layer_Location);
+    Layer_Textbox_counter.erase(Layer_Textbox_counter.begin() + Layer_Location);
     Layer_Textbox_name.erase(Layer_Textbox_name.begin() + Layer_Location);
     Layer_Textbox_position.erase(Layer_Textbox_position.begin() + Layer_Location);
     Layer_no--;
@@ -183,22 +187,24 @@ int Render::Add_Textbox(string Item_name, bool Selectable, int input_Textbox_id,
     {
         if (input_Textbox_id != 0)
         {
-            int Textbox_Location = Textbox_id_search(input_Textbox_id, Layer_Location);
-            Layer_Textbox_position[Layer_Location][Textbox_Location] = Layer_list[Layer_position[Layer_Location]].Text_no - 1;
+            Layer_Textbox_id[Layer_Location].push_back(input_Textbox_id);
+            Layer_Textbox_name[Layer_Location].push_back(Item_name);
+            Layer_Textbox_position[Layer_Location].push_back(Layer_list[Layer_position[Layer_Location]].Text_no - 1);
             if (TestMod)
             {
-                cout << "Textbox pos:" << Layer_Textbox_position[Layer_Location][Textbox_Location] << '\n';
+                cout << "Textbox pos:" << Layer_Textbox_position[Layer_Location][Layer_Textbox_id[Layer_Location].size() - 1] << '\n';
             }
         }
         else
         {
-            Layer_Textbox_id[Layer_Location].push_back(Layer_Textbox_id[Layer_Location].size() + 1);
+            Layer_Textbox_counter[Layer_Location] += 1;
+            Layer_Textbox_id[Layer_Location].push_back(Layer_Textbox_counter[Layer_Location]);
             Layer_Textbox_name[Layer_Location].push_back(Item_name);
             Layer_Textbox_position[Layer_Location].push_back(Layer_list[Layer_position[Layer_Location]].Text_no - 1);
             if (TestMod)
             {
                 cout << "Textbox id:" << Layer_Textbox_id[Layer_Location].size() << '\n';
-                cout << "Textbox pos:" << Layer_Textbox_position[Layer_Location][Layer_Textbox_position[Layer_Location].size()] << '\n';
+                cout << "Textbox pos:" << Layer_Textbox_position[Layer_Location][Layer_Textbox_position[Layer_Location].size() - 1] << '\n';
             }
             return Layer_Textbox_id[Layer_Location][Layer_Textbox_id[Layer_Location].size() - 1];
         }
@@ -217,8 +223,13 @@ void Render::Highlight_Refresh()
         }
         int Layer_Location = Layer_id_search(Highlight_Choice_Layer);
         int Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id, Layer_Location);
-        if (Textbox_Location != -1)
+        if (Layer_Textbox_id[Layer_Location].size() != 0)
         {
+            if (Textbox_Location == -1)
+            {
+                Highlight_Choice_Textbox_id = Layer_Textbox_id[Layer_Location][0];
+                Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id, Layer_Location);
+            }
             if (TestMod)
             {
                 cout << '\n'

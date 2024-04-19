@@ -27,6 +27,12 @@ public:
         Layer_Location = Layer_id_search(Highlight_Choice_Layer);
         Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id, Layer_Location);
         Current_Item_Name = Layer_Textbox_name[Layer_Location][Textbox_Location];
+        for (int id = 0; id < Layer_no; id++)
+        {
+            Layer_Textbox_id[id].clear();
+            Layer_Textbox_position[id].clear();
+            Layer_Textbox_name[id].clear();
+        }
     }
 
 private:
@@ -38,8 +44,8 @@ void Action_Processor::Initialize()
 {
     Set_Size(80, 42);
     Add_Layer_object("Map", 3);
-    Add_Layer_object("PopUp_1", 2);
-    Add_Layer_object("PopUp_2", 1);
+    Add_Layer_object("PopUp_2", 2);
+    Add_Layer_object("PopUp_1", 1);
     Add_Layer_object("Setting", 0);
 }
 
