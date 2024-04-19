@@ -48,8 +48,7 @@ vector<int> Tool_Weighting{
     // Gain T2 Resources
     Weighting_Tier_List[3],
     // Gain T3 Resources
-    Weighting_Tier_List[2]
-};
+    Weighting_Tier_List[2]};
 
 vector<int> Building_Weighting{
     // Tier 0 producer
@@ -63,8 +62,7 @@ vector<int> Building_Weighting{
     // Tier 1 processor
     Weighting_Tier_List[6],
     // Tier 2 processor
-    Weighting_Tier_List[4]
-};
+    Weighting_Tier_List[4]};
 
 vector<int> Upgrade_Weighting{
     // 0 : Extra Card per draw (Min3 Max5)
@@ -108,31 +106,31 @@ vector<int> Upgrade_Weighting{
     // 19 : Receive 2 Random Upgrades
     Weighting_Tier_List[2],
     // 20 : Increase Duration (Specific Type)
-    Weighting_Tier_List[2]
-};
+    Weighting_Tier_List[2]};
 
-int Sum_Upgrade_Weighting,Sum_Building_Weighting,Sum_Tool_Weighting;
+int Sum_Upgrade_Weighting, Sum_Building_Weighting, Sum_Tool_Weighting;
 
-vector <int> Screen_Size{0,0};
+vector<int> Screen_Size{0, 0};
 
-//0:Draw_Button
-//1:Draw_UI
-//2:Energy_Bar
-//3:Inventory
-//4:Map_Grid
-//5:Resources_Display
-vector <vector <bool>> Accessable{{0},{0},{0},{0},{0},{0}};
-vector <bool> Visible{0,0,0,0,0,0};
+// 0:Draw_Button
+// 1:Draw_UI
+// 2:Energy_Bar
+// 3:Inventory
+// 4:Map_Grid
+// 5:Resources_Display
+vector<vector<bool>> Accessable{{0}, {0}, {0}, {0}, {0}, {0}};
+vector<bool> Visible{0, 0, 0, 0, 0, 0};
 
 #include "..\Display_Module_Main\Draw_Button.h"
 #include "..\Display_Module_Main\Map_Grid.h"
 #include "..\Display_Module_Main\Resources_Display.h"
 #include "..\Display_Module_Main\Energy_Bar.h"
 #include "..\Display_Module_Main\Draw_UI.h"
+#include "..\Display_Module_Main\Inventory.h"
 
 using namespace std;
 
-class Data_Storage : public Map_Grid, public Resources_Display, public Draw_Button, public Energy_Bar, public Draw_UI
+class Data_Storage : public Map_Grid, public Resources_Display, public Draw_Button, public Energy_Bar, public Draw_UI, public Inventory
 {
 private:
     bool Testmod = 0;
@@ -151,48 +149,64 @@ private:
 
 void Data_Storage::Draw()
 {
-    Sum_Upgrade_Weighting=Sum_Building_Weighting=Sum_Tool_Weighting=0;
-    for (int id = 0;id<Upgrade_Weighting.size();id++){
-        Sum_Upgrade_Weighting+=Upgrade_Weighting[id];
+    Sum_Upgrade_Weighting = Sum_Building_Weighting = Sum_Tool_Weighting = 0;
+    for (int id = 0; id < Upgrade_Weighting.size(); id++)
+    {
+        Sum_Upgrade_Weighting += Upgrade_Weighting[id];
     }
-    for (int id = 0;id<Building_Weighting.size();id++){
-        Sum_Building_Weighting+=Building_Weighting[id];
+    for (int id = 0; id < Building_Weighting.size(); id++)
+    {
+        Sum_Building_Weighting += Building_Weighting[id];
     }
-    for (int id = 0;id<Tool_Weighting.size();id++){
-        Sum_Tool_Weighting+=Tool_Weighting[id];
+    for (int id = 0; id < Tool_Weighting.size(); id++)
+    {
+        Sum_Tool_Weighting += Tool_Weighting[id];
     }
     DUI_Draw_Card();
-    Visible[1]=1;
+    Visible[1] = 1;
 }
 
-void Data_Storage::Refresh_Layer(string id){
-    if (Draw_Layer_name==id){
-        if ( Visible[0] ){
+void Data_Storage::Refresh_Layer(string id)
+{
+    if (Draw_Layer_name == id)
+    {
+        if (Visible[0])
+        {
             Draw_Output();
         }
     }
-    if (DUI_Layer_name==id){
-        if ( Visible[1] ){
+    if (DUI_Layer_name == id)
+    {
+        if (Visible[1])
+        {
             DUI_Output();
         }
     }
-    if (EGY_Layer_name==id){
-        if ( Visible[2] ){
+    if (EGY_Layer_name == id)
+    {
+        if (Visible[2])
+        {
             EGY_Output();
         }
     }
-    //if (Draw_Layer_name==id){
-    //    if ( Visible[3] ){
-            //;
-    //    }
-    //}
-    if (Grid_Layer_name==id){
-        if ( Visible[4] ){
+    if (INV_Layer_name == id)
+    {
+        if (Visible[3])
+        {
+            INV_Output();
+        }
+    }
+    if (Grid_Layer_name == id)
+    {
+        if (Visible[4])
+        {
             Grid_Output();
         }
     }
-    if (Res_Layer_name==id){
-        if ( Visible[5] ){
+    if (Res_Layer_name == id)
+    {
+        if (Visible[5])
+        {
             Res_Output();
         }
     }
@@ -200,26 +214,31 @@ void Data_Storage::Refresh_Layer(string id){
 
 void Data_Storage::Refresh()
 {
-    if ( Visible[0] ){
+    if (Visible[0])
+    {
         Draw_Output();
     }
-    if ( Visible[1] ){
+    if (Visible[1])
+    {
         DUI_Output();
     }
-    if ( Visible[2] ){
+    if (Visible[2])
+    {
         EGY_Output();
     }
-    if ( Visible[3] ){
-        //;
+    if (Visible[3])
+    {
+        INV_Output();
     }
-    if ( Visible[4] ){
+    if (Visible[4])
+    {
         Grid_Output();
     }
-    if ( Visible[5] ){
+    if (Visible[5])
+    {
         Res_Output();
     }
-    
-    
+
     if (Testmod)
     {
         cout << '\n'
@@ -238,44 +257,57 @@ void Data_Storage::Relocate()
     EGY_st_xy[0] = Res_st_xy[0];
     EGY_st_xy[1] = Grid_st_xy[1] + Grid_Size[1] + 1;
     EGY_Size[0] = Grid_st_xy[0] + Grid_Size[0] - EGY_st_xy[0];
-    Screen_Size[0]=EGY_Size[0];
-    Screen_Size[1]=EGY_st_xy[1]+EGY_Size[1];
+    INV_st_xy[0] = Res_st_xy[0];
+    INV_st_xy[1] = EGY_st_xy[1] + EGY_Size[1] + 1;
+    Screen_Size[0] = EGY_Size[0];
+    Screen_Size[1] = INV_st_xy[1] + INV_Size[1];
 }
 
 void Data_Storage::Initialize()
 {
-    Visible[0]=1;
-    Visible[2]=1;
-    Visible[4]=1;
-    Visible[5]=1;
+    Visible[0] = 1;
+    Visible[2] = 1;
+    Visible[3] = 1;
+    Visible[4] = 1;
+    Visible[5] = 1;
+    Visible[5] = 1;
     // Upgrade Data Initialize
-    vector <double> temp{0,0};
-    for (int id;id<20;id++){
+    vector<double> temp{0, 0};
+    for (int id; id < 20; id++)
+    {
         Upgrade_List.push_back(temp);
     }
-    Upgrade_List[0][1]=3;
-    Upgrade_List[10][1]=1;
-    for (int id=1;id<Production_Building_type;id++){
+    Upgrade_List[0][1] = 3;
+    Upgrade_List[9][1] = 4;
+    Upgrade_List[10][1] = 1;
+    Upgrade_List[12][1] = 100;
+    for (int id = 1; id < Production_Building_type; id++)
+    {
         Upgrade_List[14].push_back(0);
         Upgrade_List[14].push_back(0);
     }
-    for (int id=1;id<Production_Building_number;id++){
+    for (int id = 1; id < Production_Building_number; id++)
+    {
         Upgrade_List[4].push_back(0);
         Upgrade_List[4].push_back(0);
     }
-    for (int id=1;id<Processing_Building_type;id++){
+    for (int id = 1; id < Processing_Building_type; id++)
+    {
         Upgrade_List[15].push_back(0);
         Upgrade_List[15].push_back(0);
     }
-    for (int id=1;id<Processing_Building_number;id++){
+    for (int id = 1; id < Processing_Building_number; id++)
+    {
         Upgrade_List[6].push_back(0);
         Upgrade_List[6].push_back(0);
     }
-    for (int id=1;id<All_Building_type;id++){
+    for (int id = 1; id < All_Building_type; id++)
+    {
         Upgrade_List[19].push_back(0);
         Upgrade_List[19].push_back(0);
     }
-    for (int id=1;id<All_Building_number;id++){
+    for (int id = 1; id < All_Building_number; id++)
+    {
         Upgrade_List[7].push_back(0);
         Upgrade_List[7].push_back(0);
     }
@@ -283,9 +315,10 @@ void Data_Storage::Initialize()
     Grid_Set_Size(4, 4);
     Res_Future_List[0] = 10;
     Res_Future_List[5] = -999;
-    EGY_Energy = 50;
+    EGY_Energy = 70;
     EGY_Future_Energy = 30;
     Grid_Reset();
+    INV_Reset();
     Relocate();
 }
 

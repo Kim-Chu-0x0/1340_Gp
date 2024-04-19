@@ -36,9 +36,10 @@ private:
 
 void Action_Processor::Initialize()
 {
-    Set_Size(65, 33);
-    Add_Layer_object("Map", 2);
-    Add_Layer_object("PopUp", 1);
+    Set_Size(80, 42);
+    Add_Layer_object("Map", 3);
+    Add_Layer_object("PopUp_1", 2);
+    Add_Layer_object("PopUp_2", 1);
     Add_Layer_object("Setting", 0);
 }
 

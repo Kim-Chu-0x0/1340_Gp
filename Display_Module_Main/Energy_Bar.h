@@ -19,7 +19,6 @@ private:
 
 protected:
     double EGY_Energy = 100;
-    double EGY_Energy_Max = 100;
     double EGY_Future_Energy = 0;
 
 protected:
@@ -53,20 +52,20 @@ void Energy_Bar::EGY_Output()
     R_Main.Add_Textbox("", 0, 0, EGY_Layer_name, Output_Map, EGY_st_xy, Textbox_en_xy, 0);
     Output_Map.clear();
     Pixel P1_Pix, P2_Pix, P3_Pix;
-    P1_Pix.text = P2_Pix.text = P3_Pix.text = "/s";
+    P1_Pix.text = P2_Pix.text = P3_Pix.text = "█";
     P1_Pix.colour = Yellow;
     int Bar_Size = EGY_Size[0] - Text_Width - 1;
-    double P1 = (EGY_Energy / EGY_Energy_Max) * ((2 * (Bar_Size)) - 1);
+    double P1 = (EGY_Energy / Upgrade_List[12][1]) * ((2 * (Bar_Size)) - 1);
     double P2;
     if (EGY_Future_Energy < 0)
     {
         P2 = P1;
-        P1 -= (abs(EGY_Future_Energy) / EGY_Energy_Max) * ((2 * (Bar_Size)) - 1);
+        P1 -= (abs(EGY_Future_Energy) / Upgrade_List[12][1]) * ((2 * (Bar_Size)) - 1);
         P2_Pix.colour = H_Red;
     }
     else
     {
-        P2 = ((EGY_Future_Energy / EGY_Energy_Max) * ((2 * (Bar_Size)) - 1)) + P1;
+        P2 = ((EGY_Future_Energy / Upgrade_List[12][1]) * ((2 * (Bar_Size)) - 1)) + P1;
         P2_Pix.colour = H_Green;
     }
     P3_Pix.colour = Black;

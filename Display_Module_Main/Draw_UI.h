@@ -21,7 +21,7 @@ private:
     vector <int> DUI_highlight_id;
 
 protected:
-    vector<int> DUI_st_xy{0, 5};
+    vector<int> DUI_st_xy{0, 0};
     vector<int> DUI_Size{0, 0};
     vector<Card> DUI_item_list;
     int selection=0;
@@ -31,7 +31,7 @@ private:
     void DUI_Refresh_Pos();
 
 protected:
-    string DUI_Layer_name = "PopUp";
+    string DUI_Layer_name = "PopUp_1";
 };
 
 void Draw_UI::DUI_Draw_Card()
@@ -46,9 +46,10 @@ void Draw_UI::DUI_Draw_Card()
 }
 
 void Draw_UI::DUI_Refresh_Pos(){
-    DUI_Size[0]=(DUI_item_list.size()*6)-1;
+    DUI_Size[0]=(DUI_item_list.size()*(Size_of_icon[0]+1))-1;
     DUI_Size[1]=5+DUI_item_list[selection].Size_of_Description[1];
     DUI_st_xy[0]=(Screen_Size[0]/2)-(DUI_Size[0]/2);
+    DUI_st_xy[1]=(Screen_Size[1]/2)-(DUI_Size[1]/2);
 }
 
 void Draw_UI::DUI_Output()
@@ -63,8 +64,8 @@ void Draw_UI::DUI_Output()
     }
     DUI_Refresh_Pos();
     for(int id =0;id<DUI_item_list.size();id++){
-        vector <int>temp_St{DUI_st_xy[0]+(id*6),DUI_st_xy[1]};
-        vector <int>temp_En{temp_St[0]+4,temp_St[1]+3};
+        vector <int>temp_St{DUI_st_xy[0]+(id*(Size_of_icon[0]+1)),DUI_st_xy[1]};
+        vector <int>temp_En{temp_St[0]+(Size_of_icon[0]-1),temp_St[1]+(Size_of_icon[1]-1)};
         DUI_highlight_id[id] = R_Main.Add_Textbox("Card_Draw", 1, DUI_highlight_id[id], DUI_Layer_name, DUI_item_list[id].Graphic, temp_St, temp_En, 0);
         if(DUI_Testmod){
             cout<<'\n'<<"Item "<<id<<" id: "<<DUI_highlight_id[id]<<'\n';
@@ -73,15 +74,15 @@ void Draw_UI::DUI_Output()
     if(DUI_Testmod){
         cout<<'\n'<<"DUI first part Outputed"<<'\n';
     }
-    vector <int>temp_St{DUI_st_xy[0]+((selection-1)*6),DUI_st_xy[1]+5};
+    vector <int>temp_St{DUI_st_xy[0]+((selection-1)*(Size_of_icon[0]+1)),DUI_st_xy[1]+(Size_of_icon[1]+1)};
     if (selection==0){
-        temp_St[0]+=6;
+        temp_St[0]+=(Size_of_icon[0]+1);
     }
     else if(selection==DUI_item_list.size()-1){
-        temp_St[0]-=6;
+        temp_St[0]-=(Size_of_icon[0]+1);
     }
-    vector <int>temp_En{temp_St[0]+16,temp_St[1]+DUI_item_list[selection].Size_of_Description[1]-1};
-    R_Main.Add_Textbox("Card_Draw", 0, 0, DUI_Layer_name, DUI_item_list[selection].Description, temp_St, temp_En, 0);
+    vector <int>temp_En{temp_St[0]+DUI_item_list[selection].Size_of_Description[0]-1,temp_St[1]+DUI_item_list[selection].Size_of_Description[1]-1};
+    R_Main.Add_Textbox("", 0, 0, DUI_Layer_name, DUI_item_list[selection].Description, temp_St, temp_En, 0);
     if(DUI_Testmod){
         cout<<'\n'<<"DUI Output completed"<<'\n';
     }

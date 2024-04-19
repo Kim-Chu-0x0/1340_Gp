@@ -10,6 +10,8 @@
 
 using namespace std;
 
+const vector <int> Size_of_icon{5,4};
+
 class Card
 {
     // testing
@@ -18,12 +20,13 @@ private:
 
 public:
     void Random();
+    void Blank();
 
 public:
     vector <Pixel> Graphic,Description,Detail_in_Inv;
     vector <int> Size_of_Description{17,0};
-private:
     int Type = 0;
+private:
     Building B_Data;
     Tool T_Data;
     Upgrade U_Data;
@@ -117,6 +120,16 @@ void Card::Random(){
     if (TestMod){
         cout<<'\n'<<"Card type "<<Type<<" generated"<<'\n';
         cout<<"Description Size: "<<Size_of_Description[0]<<' '<<Size_of_Description[1]<<'\n';
+    }
+}
+
+void Card::Blank()
+{
+    Pixel space;
+    space.text="/s";
+    Graphic.clear();
+    for (int id=0;id<(((Size_of_icon[0]*2)-1)*Size_of_icon[1]);id++){
+        Graphic.push_back(space);
     }
 }
 

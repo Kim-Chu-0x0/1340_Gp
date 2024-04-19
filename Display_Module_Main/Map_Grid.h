@@ -20,7 +20,7 @@ private:
     // item access
 protected:
     // change a single grid
-    // xy can be in form of{x_id,y_id} orF {id}
+    // xy can be in form of{x_id,y_id} or {id}
     void Grid_Set_Building(vector<int> xy, Building item);
     // re-input all building object
     // previous data will be covered
@@ -49,7 +49,6 @@ protected:
             Grid_Building_list.push_back(temp);
             Grid_Highlight_Data.push_back(0);
         }
-        Grid_Size[0] = Grid_Grid_Size[0] * 7 - 1;
         Grid_Size[1] = Grid_Grid_Size[1] * 7 - 1;
     }
     void Grid_Expand(int x, int y);
@@ -58,8 +57,8 @@ protected:
 protected:
     void Grid_Output();
     vector<int> Grid_st_xy{0, 0};
-    vector<int> Grid_Size{0, 0};
     vector<int> Grid_Maximum_Size{8, 5};
+    vector<int> Grid_Size{Grid_Maximum_Size[0]*7-1, 0};
     string Grid_Layer_name = "Map";
 
 private:
@@ -114,7 +113,6 @@ void Map_Grid::Grid_Expand(int x, int y)
         }
     }
     Grid_Grid_Size[1] += y;
-    Grid_Size[0] = Grid_Grid_Size[0] * 7 - 1;
     Grid_Size[1] = Grid_Grid_Size[1] * 7 - 1;
 }
 
@@ -142,6 +140,21 @@ void Map_Grid::Grid_Output()
             vector<int> temp_En{x2, y2};
             Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building", 1, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
         }
+    }
+    if(Grid_Grid_Size[0]!=Grid_Maximum_Size[0]){
+        int y1 = Grid_st_xy[1];
+        int y2 = Grid_st_xy[1] + ((Grid_Building_list[0].output_graphic_size_S[1] + 1) * (Grid_Grid_Size[1]-1)) + (Grid_Building_list[0].output_graphic_size_S[1] - 1);
+        int x1 = Grid_st_xy[0] + ((Grid_Building_list[0].output_graphic_size_S[0] + 1) * (Grid_Grid_Size[0]));
+        int x2 = Grid_st_xy[0] + ((Grid_Building_list[0].output_graphic_size_S[0] + 1) * (Grid_Maximum_Size[0]-1)) + (Grid_Building_list[0].output_graphic_size_S[0] - 1);
+        vector <Pixel> Temp;
+        Pixel temp_P;
+        temp_P.text="/s";
+        for (int id =0 ;id<(y2-y1+1)*(((x2-x1+1)*2)-1);id++){
+            Temp.push_back(temp_P);
+        }
+        vector<int> temp_St{x1, y1};
+        vector<int> temp_En{x2, y2};
+        R_Main.Add_Textbox("", 0, 0, Grid_Layer_name, Temp, temp_St, temp_En, 0);
     }
     if (Grid_TestMod)
     {

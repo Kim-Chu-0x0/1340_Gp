@@ -14,7 +14,7 @@ using namespace std;
 class Input
 {
 private:
-    bool I_TestMod = 1;
+    bool I_TestMod = 0;
 
 public:
     void Read_input();
@@ -74,6 +74,10 @@ int Input::Key_to_Action(string type, char Input_Key)
     else if (type == "Draw")
     {
         E = 6;
+    }
+    else if (type == "Card_Draw")
+    {
+        E = 7;
     }
     vector<int> Key{W, A, S, D, Q, E};
     return Key[Command];
@@ -158,6 +162,8 @@ void Input::Execute_Command()
             I_Refresh();
             input_stack.clear();
             I_Output();
+            break;
+        case 7:
             break;
         }
         if (id == input_stack.size() - 1)
