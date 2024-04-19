@@ -26,6 +26,7 @@ public:
 
     // Mutate Layer object
 public:
+    void Refresh_Layer(string id);
     void Add_Layer_object(string id, int position);
     void Remove_Layer_object(string id);
     vector<Layer> Layer_list;
@@ -64,22 +65,23 @@ protected:
     vector<vector<string>> Layer_Textbox_name;
     // store position of Textboxes located in Textbox list in Layer objects
     vector<vector<int>> Layer_Textbox_position;
-    // store which textbox is chosen to be highlighted
-    int Highlight_Choice_Textbox_id = 1;
-    // store which Layer's highlight will be triggered
-    string Highlight_Choice_Layer = "Map";
     int Layer_id_search(string input_Layer_id);
     int Textbox_id_search(int input_Textbox_id, int ifany_Layer_Location);
+    void Highlight_Refresh();
 
     // Set screen size
 public:
+    // store which Layer's highlight will be triggered
+    string Highlight_Choice_Layer = "Map";
+    // store which textbox is chosen to be highlighted
+    int Highlight_Choice_Textbox_id = 1;
     // can only be used once
     void Set_Size(int x_len, int y_len)
     {
         if ((x_len <= 0) || (y_len <= 0))
         {
             cout << '\n'
-                 << "Size error, input must be positive numbers" << '\n';
+                 << "(Set_Size)Error: input must be positive numbers" << '\n';
             cout << "Input: x=" << x_len << " y=" << y_len << '\n';
             exit(0);
         }
@@ -116,7 +118,7 @@ int Render::Layer_id_search(string input_Layer_id)
         }
     }
     cout << '\n'
-         << "Error: Layer ID not found" << '\n';
+         << "(Layer_id_search)Error: Layer ID not found" << '\n';
     exit(0);
 }
 
@@ -133,6 +135,12 @@ int Render::Textbox_id_search(int input_Textbox_id, int Layer_Location)
     return -1;
 }
 
+void Render::Refresh_Layer(string id)
+{
+    Layer Temp(Screen_Size[0], Screen_Size[1]);
+    Layer_list[Layer_id_search(id)]=Temp;
+}
+
 void Render::Add_Layer_object(string id, int position)
 {
     for (int x = 0; x < Layer_no; x++)
@@ -140,7 +148,7 @@ void Render::Add_Layer_object(string id, int position)
         if (Layer_position[x] == position)
         {
             cout << '\n'
-                 << "Error: Layer position occupied" << '\n';
+                 << "(Add_Layer_object)Error: Layer position occupied" << '\n';
             exit(0);
         }
     }
@@ -198,7 +206,7 @@ int Render::Add_Textbox(string Item_name, bool Selectable, int input_Textbox_id,
     return input_Textbox_id;
 }
 
-void Render::Render_Output()
+void Render::Highlight_Refresh()
 {
     if (Enable_Highlight && (Highlight_Choice_Textbox_id != 0))
     {
@@ -220,6 +228,11 @@ void Render::Render_Output()
             Layer_list[Layer_position[Layer_Location]].Highlight_no = Layer_Textbox_position[Layer_Location][Textbox_Location];
         }
     }
+}
+
+void Render::Render_Output()
+{
+    Highlight_Refresh();
     Pixel temp;
     temp.text = " ";
     Output.clear();

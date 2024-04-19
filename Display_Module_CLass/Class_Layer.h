@@ -266,7 +266,7 @@ void Layer::Add_Textbox(vector<Pixel> Text, vector<int> starting_xy, vector<int>
     if ((starting_xy[0] > endpt_xy[0]) || (starting_xy[1] > endpt_xy[1]))
     {
         cout << '\n'
-             << "Location error, Starting_pt should be smaller than End_pt" << '\n';
+             << "(Add_Textbox)Error: Starting_pt should be smaller than End_pt" << '\n';
         cout << "St: " << starting_xy[0] << "  " << starting_xy[1] << '\n';
         cout << "En: " << endpt_xy[0] << "  " << endpt_xy[1] << '\n';
         exit(0);
@@ -274,7 +274,7 @@ void Layer::Add_Textbox(vector<Pixel> Text, vector<int> starting_xy, vector<int>
     if (((starting_xy[0] < 0) || (starting_xy[1] < 0)) || ((endpt_xy[0] < 0) || (endpt_xy[1] < 0)))
     {
         cout << '\n'
-             << "Location error, Starting_pt and End_pt should be positive" << '\n';
+             << "(Add_Textbox)Error: Starting_pt and End_pt should be positive" << '\n';
         cout << "St: " << starting_xy[0] << "  " << starting_xy[1] << '\n';
         cout << "En: " << endpt_xy[0] << "  " << endpt_xy[1] << '\n';
         exit(0);
@@ -282,7 +282,7 @@ void Layer::Add_Textbox(vector<Pixel> Text, vector<int> starting_xy, vector<int>
     if (((starting_xy[0] + 3 > Map_xy[0]) || (starting_xy[1] + 3 > Map_xy[1])) || ((endpt_xy[0] + 3 > Map_xy[0]) || (endpt_xy[1] + 3 > Map_xy[1])))
     {
         cout << '\n'
-             << "Location error, Starting_pt and End_pt should locate within the map" << '\n';
+             << "(Add_Textbox)Error: Starting_pt and End_pt should locate within the map" << '\n';
         cout << "St: " << starting_xy[0] << "  " << starting_xy[1] << '\n';
         cout << "En: " << endpt_xy[0] << "  " << endpt_xy[1] << '\n';
         cout << "Map Size: " << Map_xy[0] - 2 << " " << Map_xy[1] - 2;
@@ -291,7 +291,7 @@ void Layer::Add_Textbox(vector<Pixel> Text, vector<int> starting_xy, vector<int>
     if (((Whitespace) && ((endpt_xy[0] - starting_xy[0] + 1) * (endpt_xy[1] - starting_xy[1] + 1) != Text.size())) || ((!Whitespace) && (((endpt_xy[0] - starting_xy[0]) * 2 + 1) * (endpt_xy[1] - starting_xy[1] + 1) != Text.size())))
     {
         cout << '\n'
-             << "Input error, length of text didn't match the size of the box" << '\n';
+             << "(Add_Textbox)Error: length of text didn't match the size of the box" << '\n';
         cout << "St: " << starting_xy[0] << "  " << starting_xy[1] << '\n';
         cout << "En: " << endpt_xy[0] << "  " << endpt_xy[1] << '\n';
         cout << "Input Text Length: " << Text.size() << '\n';

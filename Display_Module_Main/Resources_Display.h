@@ -28,8 +28,6 @@ protected:
 
 protected:
     void Res_PsssTurn();
-
-private:
     string Res_Layer_name = "Map";
 };
 

@@ -26,8 +26,6 @@ protected:
     vector<int> Draw_st_xy{0, 0};
     vector<int> Draw_Size{9, 4};
     void Draw_Output();
-
-private:
     string Draw_Layer_name = "Map";
 };
 

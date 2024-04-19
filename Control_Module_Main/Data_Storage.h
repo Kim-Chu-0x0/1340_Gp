@@ -28,7 +28,7 @@
 //  19 : Increase Duration (Specific Type)
 // Format:
 //{0:level,1:value 2:level,3:value......}
-vector<vector<int>> Upgrade_List;
+vector<vector<double>> Upgrade_List;
 
 vector<int> Weighting_Tier_List{0, 1, 4, 6, 10, 15, 30, 50, 90};
 
@@ -140,6 +140,7 @@ private:
 public:
     void Initialize();
     void Refresh();
+    void Refresh_Layer(string id);
 
 public:
     void Draw();
@@ -162,6 +163,39 @@ void Data_Storage::Draw()
     }
     DUI_Draw_Card();
     Visible[1]=1;
+}
+
+void Data_Storage::Refresh_Layer(string id){
+    if (Draw_Layer_name==id){
+        if ( Visible[0] ){
+            Draw_Output();
+        }
+    }
+    if (DUI_Layer_name==id){
+        if ( Visible[1] ){
+            DUI_Output();
+        }
+    }
+    if (EGY_Layer_name==id){
+        if ( Visible[2] ){
+            EGY_Output();
+        }
+    }
+    //if (Draw_Layer_name==id){
+    //    if ( Visible[3] ){
+            //;
+    //    }
+    //}
+    if (Grid_Layer_name==id){
+        if ( Visible[4] ){
+            Grid_Output();
+        }
+    }
+    if (Res_Layer_name==id){
+        if ( Visible[5] ){
+            Res_Output();
+        }
+    }
 }
 
 void Data_Storage::Refresh()
@@ -215,11 +249,12 @@ void Data_Storage::Initialize()
     Visible[4]=1;
     Visible[5]=1;
     // Upgrade Data Initialize
-    vector <int> temp{0,0};
+    vector <double> temp{0,0};
     for (int id;id<20;id++){
         Upgrade_List.push_back(temp);
     }
     Upgrade_List[0][1]=3;
+    Upgrade_List[10][1]=1;
     for (int id=1;id<Production_Building_type;id++){
         Upgrade_List[14].push_back(0);
         Upgrade_List[14].push_back(0);

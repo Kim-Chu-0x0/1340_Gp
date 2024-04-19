@@ -180,7 +180,7 @@ void Building::normal_refresh()
   if ((counter != graphic_size[0]))
   {
     cout << '\n'
-         << "Building Colourtapes Error: Wrong Size" << '\n';
+         << "(normal_refresh)Error: Building Colourtapes: Wrong Size" << '\n';
     cout << "counter: " << counter << '\n';
     exit(0);
   }
@@ -539,9 +539,11 @@ void Building::Input_type(int id)
   }
   else
   {
-    cout << "Input Error: Unknown Building id" << '\n';
+    cout << "(Input_type)Error: Unknown Building id" << '\n';
     exit(0);
   }
+  req_constant*=(((Upgrade_List[10][1]-1)/2)+1);
+  out_constant/=(((Upgrade_List[10][1]-1)/2)+1);
   if (TestMod)
   {
     cout << '\n'

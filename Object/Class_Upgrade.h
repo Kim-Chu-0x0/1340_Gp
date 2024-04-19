@@ -22,7 +22,7 @@ public:
     int type = 0;
     int subtype = 0;
     int level = 0;
-    int value = 0;
+    double value = 0;
     vector <Pixel> description;
 
 public:
@@ -72,36 +72,36 @@ void Upgrade::Input_type(int id)
         break;
     case 3:
         express = 2;
-        constant_1 = 0.18;
+        constant_1 = 18;
         constant_2 = 1.16;
         break;
     case 4:
         express = 2;
-        constant_1 = 0.3;
+        constant_1 = 30;
         constant_2 = 1.25;
         subtype = rand() % Production_Building_number;
         level = Upgrade_List[id][subtype * 2] + 1;
         break;
     case 5:
         express = 2;
-        constant_1 = 0.1;
+        constant_1 = 10;
         constant_2 = 0.71;
         break;
     case 6:
         express = 2;
-        constant_1 = 0.2;
+        constant_1 = 20;
         constant_2 = 0.766;
         subtype = rand() % Processing_Building_number;
         level = Upgrade_List[id][subtype * 2] + 1;
         break;
     case 7:
         express = 2;
-        constant_1 = 0.18;
+        constant_1 = 18;
         constant_2 = 1.16;
         break;
     case 8:
         express = 2;
-        constant_1 = 0.3;
+        constant_1 = 30;
         constant_2 = 1.25;
         subtype = rand() % All_Building_number;
         level = Upgrade_List[id][subtype * 2] + 1;
@@ -127,14 +127,14 @@ void Upgrade::Input_type(int id)
         break;
     case 14:
         express = 2;
-        constant_1 = 0.25;
+        constant_1 = 25;
         constant_2 = 1.16;
         subtype = rand() % Production_Building_type;
         level = Upgrade_List[id][subtype * 2] + 1;
         break;
     case 15:
         express = 2;
-        constant_1 = 0.15;
+        constant_1 = 15;
         constant_2 = 0.73;
         subtype = rand() % Processing_Building_type;
         level = Upgrade_List[id][subtype * 2] + 1;
@@ -144,7 +144,7 @@ void Upgrade::Input_type(int id)
         break;
     case 17:
         express = 2;
-        constant_1 = 0.12;
+        constant_1 = 12;
         constant_2 = 0.77;
         break;
     case 18:
@@ -157,26 +157,29 @@ void Upgrade::Input_type(int id)
         break;
     case 20:
         express = 2;
-        constant_1 = 0.25;
+        constant_1 = 25;
         constant_2 = 1.16;
         subtype = rand() % All_Building_type;
         level = Upgrade_List[id][subtype * 2] + 1;
         break;
 
     default:
-        cout << "Input Error: Unknown Upgrade id" << '\n';
+        cout << "(Input_type)Error: Unknown Upgrade id" << '\n';
         exit(0);
     };
+    int temp;
     switch (express)
     {
     case 1:
         value = 1;
         break;
     case 2:
-        value = 1;
+        temp=30*Upgrade_List[10][1];
+        value = constant_1 * (pow(constant_2, pow(level, 0.5)));
+        value *= ((85+(rand()%(temp)))/100.0);
         break;
     case 3:
-        value = constant_1 * (pow(constant_2, pow(level, 0.5)));
+        value = 1;
         break;
     }
     if (TestMod){
@@ -193,6 +196,7 @@ void Upgrade::Text_Formation(int id)
 {
     vector <string> insert_list;
     string raw_text=",Level:-"+to_string(level)+",";
+    string value_string =to_string(value).substr(0,4);
     switch (id)
     {
     case 0:
@@ -205,45 +209,45 @@ void Upgrade::Text_Formation(int id)
         raw_text+="extend-the-map-vertically-by-1";
         break;
     case 3:
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="Gain-//%-resource-boost,(Apply-to-all-buildings)";
         break;
     case 4:
         insert_list.push_back(Processing_Building_name_list[subtype]);
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="//-gain-//%,resource-boost";
         break;
     case 5:
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="Gain-//%-input-discount,(Apply-to-all-buildings)";
         break;
     case 6:
         insert_list.push_back(Production_Building_name_list[subtype]);
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="//-gain-//%,input-discount";
         break;
     case 7:
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="Gain-//%-lifespan,(Apply-to-all-buildings)";
         break;
     case 8:
         insert_list.push_back(All_Building_name_list[subtype]);
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="//-gain-//%,lifespan";
         break;
     case 9:
         raw_text+="Gain-an-extra-inventory-slot";
         break;
     case 10:
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="Luck-increase-by-//%";
         break;
     case 11:
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="Energy-regen-increase-by-//%";
         break;
     case 12:
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="Maximum-energy-increase-by-//";
         break;
     case 13:
@@ -251,23 +255,23 @@ void Upgrade::Text_Formation(int id)
         break;
     case 14:
         insert_list.push_back(Production_Building_type_list[subtype]);
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="All-//-gain-//%,resource-boost";
         break;
     case 15:
         insert_list.push_back(Processing_Building_type_list[subtype]);
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="All-//-gain-//%,input-discount";
         break;
     case 16:
         raw_text+="Gain-one-extra-life,(once-per-game)";
         break;
     case 17:
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="Reduce-draw-cost-by-//%";
         break;
     case 18:
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="Receive-//-Tier-1,-resources-per-turn";
         break;
     case 19:
@@ -275,7 +279,7 @@ void Upgrade::Text_Formation(int id)
         break;
     case 20:
         insert_list.push_back(All_Building_type_list[subtype]);
-        insert_list.push_back(to_string(value));
+        insert_list.push_back(value_string);
         raw_text+="All-//-gain-//%,lifespan";
         break;
     }
@@ -324,6 +328,8 @@ void Upgrade::Text_Formation(int id)
             counter=0;
         }
     }
+    Output.erase(Output.begin());
+    Output.push_back(space);
     description = Output;
     if (TestMod){
         cout<<'\n'<<"Upgrade description generation completed"<<'\n';

@@ -17,6 +17,7 @@ private:
 
 public:
     int Move(int direction);
+    int Switch_Layer(string name);
 
 public:
     void Initialize();
@@ -353,6 +354,21 @@ int Action_Processor::Move(int direction)
              << "Result id: " << A_P_Layer_Textbox_id[min_id] << '\n';
     }
     return 0;
+}
+
+int Action_Processor::Switch_Layer(string name)
+{
+    for (int id = 0;id<Layer_id.size();id++){
+        if (Layer_id[id]==name){
+            Highlight_Choice_Layer=name;
+            if (A_P_TestMod){
+                cout<<'\n'<<"Layer switch to "<<name<<'\n';
+            }
+            return 0;
+        }
+    }
+    cout<<'\n'<<"(Switch_Layer)Error: Layer "<<name<<" not found"<<'\n';
+    exit(0);
 }
 
 #endif

@@ -26,10 +26,10 @@ protected:
     void EGY_Output();
     vector<int> EGY_st_xy{0, 0};
     vector<int> EGY_Size{0, 2};
+    string EGY_Layer_name = "Map";
 
 private:
     int Text_Width = 4;
-    string EGY_Layer_name = "Map";
 };
 
 void Energy_Bar::EGY_Output()

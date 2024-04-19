@@ -14,7 +14,7 @@ using namespace std;
 class Input
 {
 private:
-    bool I_TestMod = 0;
+    bool I_TestMod = 1;
 
 public:
     void Read_input();
@@ -25,6 +25,7 @@ public:
 private:
     void I_Refresh();
     void I_Output();
+    void Refresh_Layer(string id);
     vector<char> input_stack;
 };
 
@@ -97,6 +98,11 @@ void Input::I_Refresh()
     }
 }
 
+void Input::Refresh_Layer(string id){
+    R_Main.Refresh_Layer(id);
+    D_Main.Refresh_Layer(id);
+}
+
 void Input::I_Output()
 {
     R_Main.Render_Output();
@@ -125,26 +131,33 @@ void Input::Execute_Command()
         case 1:
             I_Refresh();
             R_Main.Move(1);
+            Refresh_Layer(R_Main.Highlight_Choice_Layer);
             break;
         // DOWN
         case 2:
             I_Refresh();
             R_Main.Move(2);
+            Refresh_Layer(R_Main.Highlight_Choice_Layer);
             break;
         // LEFT
         case 3:
             I_Refresh();
             R_Main.Move(3);
+            Refresh_Layer(R_Main.Highlight_Choice_Layer);
             break;
         // RIGHT
         case 4:
             I_Refresh();
             R_Main.Move(4);
+            Refresh_Layer(R_Main.Highlight_Choice_Layer);
             break;
         // DRAW CARD
         case 6:
             D_Main.Draw();
+            R_Main.Switch_Layer("PopUp");
             I_Refresh();
+            input_stack.clear();
+            I_Output();
             break;
         }
         if (id == input_stack.size() - 1)

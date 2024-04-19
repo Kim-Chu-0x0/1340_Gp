@@ -38,7 +38,7 @@ protected:
         if (!((Grid_Grid_Size[0] == 0) && (Grid_Grid_Size[1] == 0)))
         {
             cout << '\n'
-                 << "Error: Grid_Size can not be changed" << '\n';
+                 << "(Grid_Set_Size)Error: Grid_Size can not be changed" << '\n';
             exit(0);
         }
         Grid_Grid_Size[0] = x;
@@ -60,9 +60,9 @@ protected:
     vector<int> Grid_st_xy{0, 0};
     vector<int> Grid_Size{0, 0};
     vector<int> Grid_Maximum_Size{8, 5};
+    string Grid_Layer_name = "Map";
 
 private:
-    string Grid_Layer_name = "Map";
     vector<int> Grid_Grid_Size{0, 0};
 };
 
@@ -82,7 +82,7 @@ void Map_Grid::Grid_Expand(int x, int y)
     if (!((x >= 0) && (y >= 0)))
     {
         cout << '\n'
-             << "Error: Size can not be negative number" << '\n';
+             << "(Grid_Expand)Error: Size can not be negative number" << '\n';
         cout << '\n'
              << "Your input: x=" << x << " y=" << y << '\n';
         exit(0);
@@ -90,7 +90,7 @@ void Map_Grid::Grid_Expand(int x, int y)
     if ((Grid_Grid_Size[0] == 0) && (Grid_Grid_Size[1] == 0))
     {
         cout << '\n'
-             << "Error: Set the size first" << '\n';
+             << "(Grid_Expand)Error: Set the size first" << '\n';
         exit(0);
     }
     // rightward
@@ -165,7 +165,7 @@ void Map_Grid::Grid_Set_Building(vector<int> xy, Building item)
         if ((x >= Grid_Grid_Size[0]) || (y >= Grid_Grid_Size[1]))
         {
             cout << '\n'
-                 << "Coordinates Error: x and y should locate within the grid system" << '\n';
+                 << "(Grid_Set_Building)Error: x and y should locate within the grid system" << '\n';
             cout << "input x: " << x << " y: " << y << '\n';
             cout << "Grid size x: " << Grid_Grid_Size[0] << " y: " << Grid_Grid_Size[1] << '\n';
             exit(0);
@@ -183,7 +183,7 @@ void Map_Grid::Grid_CoverAll_Biulding(vector<Building> item_list)
     if (item_list.size() != Grid_Grid_Size[0] * Grid_Grid_Size[1])
     {
         cout << '\n'
-             << "Input Error: Size of input vector should equal to the size of the grid" << '\n';
+             << "(Grid_CoverAll_Biulding)Error: Size of input vector should equal to the size of the grid" << '\n';
         cout << "input size: " << item_list.size() << '\n';
         cout << "Grid size : " << Grid_Grid_Size[0] * Grid_Grid_Size[1] << '\n';
         exit(0);

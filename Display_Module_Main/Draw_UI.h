@@ -30,7 +30,7 @@ protected:
 private:
     void DUI_Refresh_Pos();
 
-private:
+protected:
     string DUI_Layer_name = "PopUp";
 };
 
@@ -53,11 +53,22 @@ void Draw_UI::DUI_Refresh_Pos(){
 
 void Draw_UI::DUI_Output()
 {
+    selection=0;
+    if (DUI_highlight_id[0]!=0){
+        for (int id = 0;id<DUI_highlight_id.size();id++){
+            if (R_Main.Highlight_Choice_Textbox_id==DUI_highlight_id[id]){
+                selection=id;
+            }
+        }
+    }
     DUI_Refresh_Pos();
     for(int id =0;id<DUI_item_list.size();id++){
         vector <int>temp_St{DUI_st_xy[0]+(id*6),DUI_st_xy[1]};
         vector <int>temp_En{temp_St[0]+4,temp_St[1]+3};
         DUI_highlight_id[id] = R_Main.Add_Textbox("Card_Draw", 1, DUI_highlight_id[id], DUI_Layer_name, DUI_item_list[id].Graphic, temp_St, temp_En, 0);
+        if(DUI_Testmod){
+            cout<<'\n'<<"Item "<<id<<" id: "<<DUI_highlight_id[id]<<'\n';
+        }
     }
     if(DUI_Testmod){
         cout<<'\n'<<"DUI first part Outputed"<<'\n';
@@ -66,10 +77,10 @@ void Draw_UI::DUI_Output()
     if (selection==0){
         temp_St[0]+=6;
     }
-    else if(selection==DUI_item_list.size()){
+    else if(selection==DUI_item_list.size()-1){
         temp_St[0]-=6;
     }
-    vector <int>temp_En{temp_St[0]+16,temp_St[0]+DUI_item_list[selection].Size_of_Description[1]-1};
+    vector <int>temp_En{temp_St[0]+16,temp_St[1]+DUI_item_list[selection].Size_of_Description[1]-1};
     R_Main.Add_Textbox("Card_Draw", 0, 0, DUI_Layer_name, DUI_item_list[selection].Description, temp_St, temp_En, 0);
     if(DUI_Testmod){
         cout<<'\n'<<"DUI Output completed"<<'\n';
