@@ -25,6 +25,7 @@ public:
 private:
     void I_Refresh();
     void I_Output();
+    void Switch_Layer(string id);
     void Refresh_Layer(string id);
     vector<char> input_stack;
 };
@@ -34,7 +35,7 @@ int Input::Key_to_Action(string type, char Input_Key)
     if (I_TestMod)
     {
         cout << '\n'
-             << "Selecting type: " <<type<< '\n';
+             << "Selecting type: " << type << '\n';
     }
     int Command;
     switch (Input_Key)
@@ -86,15 +87,67 @@ int Input::Key_to_Action(string type, char Input_Key)
     }
     else if (type == "Card_Draw_CFM")
     {
+        W = 0;
+        S = 0;
+        A = 0;
+        D = 0;
         Q = 8;
         E = 9;
     }
+    else if (type == "INV_Slot")
+    {
+        Q = 10;
+        E = 11;
+    }
+    else if (type == "INV_Discard_CFM")
+    {
+        W = 0;
+        S = 0;
+        A = 0;
+        D = 0;
+        Q = 12;
+        E = 13;
+    }
+    else if (type == "INV_Use_CFM")
+    {
+        W = 0;
+        S = 0;
+        A = 0;
+        D = 0;
+        Q = 14;
+        E = 15;
+    }
+    else if (type == "Building_NULL_F")
+    {
+        Q = 16;
+        E = 17;
+    }
+    else if (type == "Building_NULL_T")
+    {
+        Q = 18;
+        E = 19;
+    }
     vector<int> Key{W, A, S, D, Q, E};
+    if (I_TestMod)
+    {
+        cout << "Selecting Command: " << Key[Command] << '\n';
+    }
     return Key[Command];
 }
 
 void Input::Initialize()
 {
+    R_Main.Initialize();
+    if (I_TestMod)
+    {
+        cout << '\n';
+        cout << "R_Main initialized" << '\n';
+    }
+    D_Main.Initialize();
+    if (I_TestMod)
+    {
+        cout << "D_Main initialized" << '\n';
+    }
     I_Refresh();
     I_Output();
 }
@@ -133,73 +186,197 @@ void Input::I_Output()
     }
 }
 
+void Input::Switch_Layer(string id)
+{
+    R_Main.Switch_Layer(id);
+    Refresh_Layer(R_Main.Highlight_Choice_Layer);
+    R_Main.Refresh_Current_Name();
+}
+
 void Input::Execute_Command()
 {
-    R_Main.Refresh_Current_Name();
+    bool Sus = 0;
+    bool Ref = 1;
+    int Temp;
     for (int id = 0; id < input_stack.size(); id++)
     {
+        if (Ref){
+            R_Main.Refresh_Current_Name();
+        }
         //*****************Edit action here***************************
         switch (Key_to_Action(R_Main.Current_Item_Name, input_stack[id]))
         {
         case 0:
+            Ref = 0;
             break;
         // UP
         case 1:
-            I_Refresh();
-            R_Main.Move(1);
+            Ref = 1;
+            Sus = 1;
             Refresh_Layer(R_Main.Highlight_Choice_Layer);
+            R_Main.Move(1);
+            I_Refresh();
             break;
         // DOWN
         case 2:
-            I_Refresh();
-            R_Main.Move(2);
+            Ref = 1;
+            Sus = 1;
             Refresh_Layer(R_Main.Highlight_Choice_Layer);
+            R_Main.Move(2);
+            I_Refresh();
             break;
         // LEFT
         case 3:
-            I_Refresh();
-            R_Main.Move(3);
+            Ref = 1;
+            Sus = 1;
             Refresh_Layer(R_Main.Highlight_Choice_Layer);
+            R_Main.Move(3);
+            I_Refresh();
             break;
         // RIGHT
         case 4:
-            I_Refresh();
-            R_Main.Move(4);
+            Ref = 1;
+            Sus = 1;
             Refresh_Layer(R_Main.Highlight_Choice_Layer);
+            R_Main.Move(4);
+            I_Refresh();
             break;
         // DRAW CARD
         case 6:
+            Ref = 1;
+            Sus = 1;
             D_Main.Draw(0);
-            R_Main.Switch_Layer("PopUp_1");
+            Switch_Layer("PopUp_Map");
             I_Refresh();
-            id=input_stack.size()-1;
+            id = input_stack.size() - 1;
             break;
         // DRAW CARD Confirm Selection
         case 7:
+            Ref = 1;
+            Sus = 1;
             D_Main.Draw(2);
             I_Refresh();
-            id=input_stack.size()-1;
+            id = input_stack.size() - 1;
             break;
         // DRAW CARD Reverse Selection
         case 8:
+            Ref = 1;
+            Sus = 1;
             D_Main.Draw(1);
             I_Refresh();
-            id=input_stack.size()-1;
+            id = input_stack.size() - 1;
             break;
         // DRAW CARD DONE
         case 9:
+            Ref = 1;
+            Sus = 1;
             D_Main.Draw(3);
-            R_Main.Switch_Layer("Map");
+            Switch_Layer("Map");
             I_Refresh();
-            id=input_stack.size()-1;
+            id = input_stack.size() - 1;
             break;
-        }
-        if (id == input_stack.size() - 1)
-        {
-            I_Output();
+        // Discard_Inventory_Item
+        case 10:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Discard(0);
+            Switch_Layer("PopUp_Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Use_Inventory_Item
+        case 11:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Use_INV_item(0);
+            Switch_Layer("PopUp_Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Discard_Inventory_Item Reverse
+        case 12:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Discard(1);
+            Switch_Layer("Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Discard_Inventory_Item Confirm
+        case 13:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Discard(2);
+            Switch_Layer("Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Use_Inventory_Item Reverse
+        case 14:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Use_INV_item(1);
+            Switch_Layer("Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Use_Inventory_Item Confirm
+        case 15:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Use_INV_item(2);
+            Switch_Layer("Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Hv Building Q
+        case 16:
+            Ref = 1;
+            Sus = 1;
+            Temp = D_Main.Building_Grid_Selection_Result(0);
+            if (Temp == 1)
+            {
+                R_Main.Restore_Textbox_id(D_Main.slot_id_cache);
+            }
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Hv Building E
+        case 17:
+            Ref = 1;
+            Sus = 1;
+            Temp = D_Main.Building_Grid_Selection_Result(1);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // No Building Q
+        case 18:
+            Ref = 1;
+            Sus = 1;
+            Temp = D_Main.Building_Grid_Selection_Result(2);
+            if (Temp == 1)
+            {
+                R_Main.Restore_Textbox_id(D_Main.slot_id_cache);
+            }
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // No Building E
+        case 19:
+            Ref = 1;
+            Sus = 1;
+            Temp = D_Main.Building_Grid_Selection_Result(3);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
         }
     }
     input_stack.clear();
+    if (Sus == 0)
+    {
+        I_Refresh();
+    }
+    I_Output();
 }
 
 void Input::Read_input()

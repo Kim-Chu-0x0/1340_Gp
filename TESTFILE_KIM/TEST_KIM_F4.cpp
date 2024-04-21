@@ -1,4 +1,4 @@
-//for testing input module
+// for testing input module
 #include <iostream>
 #include <string>
 #include <vector>
@@ -13,11 +13,12 @@ Input I_Main;
 
 using namespace std;
 
-int main(){
-    R_Main.Initialize();
-    D_Main.Initialize();
+int main()
+{
     I_Main.Initialize();
-    for (int ff=0;ff<200;ff++){
+    // D_Main.Test_Specific_Card(2);
+    for (int ff = 0; ff < 200; ff++)
+    {
         I_Main.Read_input();
         I_Main.Execute_Command();
     }

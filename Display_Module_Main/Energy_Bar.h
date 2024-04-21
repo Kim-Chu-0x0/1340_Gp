@@ -26,6 +26,8 @@ protected:
     vector<int> EGY_st_xy{0, 0};
     vector<int> EGY_Size{0, 2};
     string EGY_Layer_name = "Map";
+private:
+    int EGY_selectable;
 
 private:
     int Text_Width = 4;
@@ -33,17 +35,20 @@ private:
 
 void Energy_Bar::EGY_Output()
 {
+    EGY_selectable=Selectable_List[2];
     vector<Pixel> Output_Map;
     string temp_s = "Energy:0000000";
     Pixel temp_P;
     temp_P.colour = B_White;
-    for (int id = 0; id < EGY_Size[1] * ((Text_Width*2)-1); id++)
+    for (int id = 0; id < EGY_Size[1] * ((Text_Width * 2) - 1); id++)
     {
-        if(temp_s[id]=='0'){
-            temp_P.text="/s";
+        if (temp_s[id] == '0')
+        {
+            temp_P.text = "/s";
         }
-        else{
-        temp_P.text = temp_s[id];
+        else
+        {
+            temp_P.text = temp_s[id];
         }
         Output_Map.push_back(temp_P);
     }

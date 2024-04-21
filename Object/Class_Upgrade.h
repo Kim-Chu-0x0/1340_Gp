@@ -23,7 +23,7 @@ public:
     int subtype = 0;
     int level = 0;
     double value = 0;
-    vector <Pixel> description;
+    vector<Pixel> description;
 
 public:
     void Input_type(int id);
@@ -54,7 +54,7 @@ public:
 //  20 : Increase Duration (Specific Type)
 void Upgrade::Input_type(int id)
 {
-    type=id;
+    type = id;
     int express = 0;
     double constant_1 = 0;
     double constant_2 = 0;
@@ -174,168 +174,192 @@ void Upgrade::Input_type(int id)
         value = 1;
         break;
     case 2:
-        temp=30*Upgrade_List[10][1];
+        temp = 30 * Upgrade_List[10][1] / 100;
         value = constant_1 * (pow(constant_2, pow(level, 0.5)));
-        value *= ((85+(rand()%(temp)))/100.0);
+        value *= ((85 + (rand() % (temp))) / 100.0);
         break;
     case 3:
         value = 1;
         break;
     }
-    if (TestMod){
-        cout<<'\n'<<"Upgrade value generation completed"<<'\n';
-        cout<<"Type: "<<type<<'\n';;
-        cout<<"Subtype: "<<subtype<<'\n';;
-        cout<<"Level: "<<level<<'\n';;
-        cout<<"Value: "<<value<<'\n';;
+    if (TestMod)
+    {
+        cout << '\n'
+             << "Upgrade value generation completed" << '\n';
+        cout << "Type: " << type << '\n';
+        ;
+        cout << "Subtype: " << subtype << '\n';
+        ;
+        cout << "Level: " << level << '\n';
+        ;
+        cout << "Value: " << value << '\n';
+        ;
     }
     Text_Formation(id);
 }
 
 void Upgrade::Text_Formation(int id)
 {
-    vector <string> insert_list;
-    string raw_text=",Level:-"+to_string(level)+",";
-    string value_string =to_string(value).substr(0,4);
+    vector<string> insert_list;
+    string raw_text = ",Level:-" + to_string(level) + ",";
+    string value_string = to_string(value).substr(0, 4);
     switch (id)
     {
     case 0:
-        raw_text+="when-you-draw-cards,Gain-a-extra-choice";
+        raw_text += "When-you-draw-cards,Gain-a-extra-choice";
         break;
     case 1:
-        raw_text+="extend-the-map-horizontally-by-1";
+        raw_text += "Extend-the-map-horizontally-by-1";
         break;
     case 2:
-        raw_text+="extend-the-map-vertically-by-1";
+        raw_text += "Extend-the-map-vertically-by-1";
         break;
     case 3:
         insert_list.push_back(value_string);
-        raw_text+="Gain-//%-resource-boost,(Apply-to-all-buildings)";
+        raw_text += "Gain-//%-resource-boost,(Apply-to-all-buildings)";
         break;
     case 4:
         insert_list.push_back(Processing_Building_name_list[subtype]);
         insert_list.push_back(value_string);
-        raw_text+="//-gain-//%,resource-boost";
+        raw_text += "//-gain-//%,resource-boost";
         break;
     case 5:
         insert_list.push_back(value_string);
-        raw_text+="Gain-//%-input-discount,(Apply-to-all-buildings)";
+        raw_text += "Gain-//%-input-discount,(Apply-to-all-buildings)";
         break;
     case 6:
         insert_list.push_back(Production_Building_name_list[subtype]);
         insert_list.push_back(value_string);
-        raw_text+="//-gain-//%,input-discount";
+        raw_text += "//-gain-//%,input-discount";
         break;
     case 7:
         insert_list.push_back(value_string);
-        raw_text+="Gain-//%-lifespan,(Apply-to-all-buildings)";
+        raw_text += "Gain-//%-lifespan,(Apply-to-all-buildings)";
         break;
     case 8:
         insert_list.push_back(All_Building_name_list[subtype]);
         insert_list.push_back(value_string);
-        raw_text+="//-gain-//%,lifespan";
+        raw_text += "//-gain-//%,lifespan";
         break;
     case 9:
-        raw_text+="Gain-an-extra-inventory-slot";
+        raw_text += "Gain-an-extra-inventory-slot";
         break;
     case 10:
         insert_list.push_back(value_string);
-        raw_text+="Luck-increase-by-//%";
+        raw_text += "Luck-increase-by-//%";
         break;
     case 11:
         insert_list.push_back(value_string);
-        raw_text+="Energy-regen-increase-by-//%";
+        raw_text += "Energy-regen-increase-by-//%";
         break;
     case 12:
         insert_list.push_back(value_string);
-        raw_text+="Maximum-energy-increase-by-//";
+        raw_text += "Maximum-energy-increase-by-//";
         break;
     case 13:
-        raw_text+="Longer-delay-between-disasters";
+        raw_text += "Longer-delay-between-disasters";
         break;
     case 14:
         insert_list.push_back(Production_Building_type_list[subtype]);
         insert_list.push_back(value_string);
-        raw_text+="All-//-gain-//%,resource-boost";
+        raw_text += "All-//-gain-//%,resource-boost";
         break;
     case 15:
         insert_list.push_back(Processing_Building_type_list[subtype]);
         insert_list.push_back(value_string);
-        raw_text+="All-//-gain-//%,input-discount";
+        raw_text += "All-//-gain-//%,input-discount";
         break;
     case 16:
-        raw_text+="Gain-one-extra-life,(once-per-game)";
+        raw_text += "Gain-one-extra-life,(once-per-game)";
         break;
     case 17:
         insert_list.push_back(value_string);
-        raw_text+="Reduce-draw-cost-by-//%";
+        raw_text += "Reduce-draw-cost-by-//%";
         break;
     case 18:
         insert_list.push_back(value_string);
-        raw_text+="Receive-//-Tier-1,-resources-per-turn";
+        raw_text += "Receive-//-Tier-1,-resources-per-turn";
         break;
     case 19:
-        raw_text+="Receive-2-Random-upgrades";
+        raw_text += "Receive-2-Random-upgrades";
         break;
     case 20:
         insert_list.push_back(All_Building_type_list[subtype]);
         insert_list.push_back(value_string);
-        raw_text+="All-//-gain-//%,lifespan";
+        raw_text += "All-//-gain-//%,lifespan";
         break;
     }
-    int text_pos=0;
-    string pros_text1,pros_text2;
-    for (int id=0;id<insert_list.size();id++){
-        for (;!(raw_text[text_pos]=='/'&&raw_text[text_pos+1]=='/');text_pos++){
-            pros_text1+=raw_text[text_pos];
+    int text_pos = 0;
+    string pros_text1, pros_text2;
+    for (int id = 0; id < insert_list.size(); id++)
+    {
+        for (; !(raw_text[text_pos] == '/' && raw_text[text_pos + 1] == '/'); text_pos++)
+        {
+            pros_text1 += raw_text[text_pos];
         }
-        pros_text1+=insert_list[id];
+        pros_text1 += insert_list[id];
         text_pos++;
         text_pos++;
     }
-    for (;text_pos<raw_text.size();text_pos++){
-        pros_text1+=raw_text[text_pos];
+    for (; text_pos < raw_text.size(); text_pos++)
+    {
+        pros_text1 += raw_text[text_pos];
     }
-    if (insert_list.size()==0){
-        pros_text1=raw_text;
+    if (insert_list.size() == 0)
+    {
+        pros_text1 = raw_text;
     }
-    if (TestText){
-        cout<<'\n'<<"pros_text1: "<<pros_text1<<'\n';
+    if (TestText)
+    {
+        cout << '\n'
+             << "pros_text1: " << pros_text1 << '\n';
     }
-    for (int id=0;id<pros_text1.size();id++){
-        if (pros_text1[id]=='-'){
-            pros_text2+="/s";
+    for (int id = 0; id < pros_text1.size(); id++)
+    {
+        if (pros_text1[id] == '-')
+        {
+            pros_text2 += "/s";
         }
-        else{
-            pros_text2+=pros_text1[id];
+        else
+        {
+            pros_text2 += pros_text1[id];
         }
     }
-    if (TestText){
-        cout<<'\n'<<"pros_text2: "<<pros_text2<<'\n';
+    if (TestText)
+    {
+        cout << '\n'
+             << "pros_text2: " << pros_text2 << '\n';
     }
-    pros_text1="";
-    vector <Pixel> Output=To_Pixel(pros_text2);
+    pros_text1 = "";
+    vector<Pixel> Output = To_Pixel(pros_text2);
     Pixel space;
-    space.text="/s";
-    int counter=0;
-    for (int id=Output.size()-1;id>=0;id--){
+    space.text = "/s";
+    int counter = 0;
+    for (int id = Output.size() - 1; id >= 0; id--)
+    {
         counter++;
-        if (Output[id].text==","){
-            Output[id]=space;
-            for (int time = counter;time<33;time++){
-                Output.insert(Output.begin()+id+counter,space);
+        if (Output[id].text == ",")
+        {
+            Output[id] = space;
+            for (int time = counter; time < 33; time++)
+            {
+                Output.insert(Output.begin() + id + counter, space);
             }
-            counter=0;
+            counter = 0;
         }
     }
     Output.erase(Output.begin());
     Output.push_back(space);
     description = Output;
-    if (TestMod){
-        cout<<'\n'<<"Upgrade description generation completed"<<'\n';
+    if (TestMod)
+    {
+        cout << '\n'
+             << "Upgrade description generation completed" << '\n';
     }
-    if (TestText){
-        cout<<'\n'<<"Size: "<<Output.size()<<'\n';
+    if (TestText)
+    {
+        cout << '\n'
+             << "Size: " << Output.size() << '\n';
     }
 }
 

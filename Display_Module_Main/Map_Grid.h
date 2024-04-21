@@ -22,6 +22,7 @@ protected:
     // change a single grid
     // xy can be in form of{x_id,y_id} or {id}
     void Grid_Set_Building(vector<int> xy, Building item);
+    void Grid_Place_Building(Building item);
     // re-input all building object
     // previous data will be covered
     void Grid_CoverAll_Biulding(vector<Building> item_list);
@@ -30,6 +31,10 @@ protected:
 protected:
     vector<Building> Grid_Building_list;
     vector<int> Grid_Highlight_Data;
+    int Grid_Phase = 0;
+    Building cache;
+private:
+    int Grid_selectable;
 
     // size control
 protected:
@@ -52,17 +57,19 @@ protected:
         Grid_Size[1] = Grid_Grid_Size[1] * 7 - 1;
     }
     void Grid_Expand(int x, int y);
+    void Check_Size();
 
     // output control
 protected:
     void Grid_Output();
     vector<int> Grid_st_xy{0, 0};
     vector<int> Grid_Maximum_Size{8, 5};
-    vector<int> Grid_Size{Grid_Maximum_Size[0]*7-1, 0};
+    vector<int> Grid_Size{Grid_Maximum_Size[0] * 7 - 1, 0};
     string Grid_Layer_name = "Map";
 
 private:
     vector<int> Grid_Grid_Size{0, 0};
+    int selection;
 };
 
 void Map_Grid::Grid_Reset()
@@ -74,6 +81,12 @@ void Map_Grid::Grid_Reset()
         vector<int> temp{id};
         Grid_Set_Building(temp, Null);
     }
+}
+
+void Map_Grid::Grid_Place_Building(Building item){
+    vector <int> temp{selection};
+    cout<<"l "<<selection;
+    Grid_Set_Building(temp,item);
 }
 
 void Map_Grid::Grid_Expand(int x, int y)
@@ -94,6 +107,7 @@ void Map_Grid::Grid_Expand(int x, int y)
     }
     // rightward
     Building temp;
+    temp.Input_type(6);
     for (int id_y = Grid_Grid_Size[1] - 1; id_y >= 0; id_y--)
     {
         for (int id_x = 0; id_x < x; id_x++)
@@ -116,8 +130,34 @@ void Map_Grid::Grid_Expand(int x, int y)
     Grid_Size[1] = Grid_Grid_Size[1] * 7 - 1;
 }
 
+void Map_Grid::Check_Size()
+{
+    for (; Grid_Grid_Size[0] < Upgrade_List[1][1];)
+    {
+        Grid_Expand(1, 0);
+    }
+    for (; Grid_Grid_Size[1] < Upgrade_List[2][1];)
+    {
+        Grid_Expand(0, 1);
+    }
+}
+
 void Map_Grid::Grid_Output()
 {
+    Grid_selectable=Selectable_List[4];
+    if (Grid_Phase==0||Grid_Phase==1){
+        selection = -1;
+        if ((R_Main.Highlight_Choice_Layer == Grid_Layer_name) && (Grid_Highlight_Data[0] != 0))
+        {
+            for (int id = 0; id < Grid_Highlight_Data.size(); id++)
+            {
+                if (R_Main.Highlight_Choice_Textbox_id[R_Main.AP_Layer_Location] == Grid_Highlight_Data[id])
+                {
+                    selection = id;
+                }
+            }
+        }
+    }
     if (Grid_TestMod)
     {
         cout << '\n'
@@ -138,18 +178,30 @@ void Map_Grid::Grid_Output()
             int x2 = Grid_st_xy[0] + ((Grid_Building_list[0].output_graphic_size_S[0] + 1) * x) + (Grid_Building_list[0].output_graphic_size_S[0] - 1);
             vector<int> temp_St{x1, y1};
             vector<int> temp_En{x2, y2};
-            Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building", 1, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+            if(Grid_Phase==0){
+                Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+            }
+            else if(Grid_Phase==1){
+                if (Grid_Building_list[x + y * Grid_Grid_Size[0]].name=="Empty/sSpace"){
+                    Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building_NULL_T", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+                }
+                else {
+                    Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building_NULL_F", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+                }
+            }
         }
     }
-    if(Grid_Grid_Size[0]!=Grid_Maximum_Size[0]){
+    if (Grid_Grid_Size[0] != Grid_Maximum_Size[0])
+    {
         int y1 = Grid_st_xy[1];
-        int y2 = Grid_st_xy[1] + ((Grid_Building_list[0].output_graphic_size_S[1] + 1) * (Grid_Grid_Size[1]-1)) + (Grid_Building_list[0].output_graphic_size_S[1] - 1);
+        int y2 = Grid_st_xy[1] + ((Grid_Building_list[0].output_graphic_size_S[1] + 1) * (Grid_Grid_Size[1] - 1)) + (Grid_Building_list[0].output_graphic_size_S[1] - 1);
         int x1 = Grid_st_xy[0] + ((Grid_Building_list[0].output_graphic_size_S[0] + 1) * (Grid_Grid_Size[0]));
-        int x2 = Grid_st_xy[0] + ((Grid_Building_list[0].output_graphic_size_S[0] + 1) * (Grid_Maximum_Size[0]-1)) + (Grid_Building_list[0].output_graphic_size_S[0] - 1);
-        vector <Pixel> Temp;
+        int x2 = Grid_st_xy[0] + ((Grid_Building_list[0].output_graphic_size_S[0] + 1) * (Grid_Maximum_Size[0] - 1)) + (Grid_Building_list[0].output_graphic_size_S[0] - 1);
+        vector<Pixel> Temp;
         Pixel temp_P;
-        temp_P.text="/s";
-        for (int id =0 ;id<(y2-y1+1)*(((x2-x1+1)*2)-1);id++){
+        temp_P.text = "/s";
+        for (int id = 0; id < (y2 - y1 + 1) * (((x2 - x1 + 1) * 2) - 1); id++)
+        {
             Temp.push_back(temp_P);
         }
         vector<int> temp_St{x1, y1};

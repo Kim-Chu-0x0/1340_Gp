@@ -29,6 +29,8 @@ protected:
 protected:
     void Res_PsssTurn();
     string Res_Layer_name = "Map";
+private:
+    int Res_selectable;
 };
 
 void Resources_Display::Res_PsssTurn()
@@ -42,6 +44,7 @@ void Resources_Display::Res_PsssTurn()
 
 void Resources_Display::Res_Output()
 {
+    Res_selectable=Selectable_List[5];
     vector<Pixel> Output_Map;
     Pixel Space, Semicolon;
     Space.text = "/s";

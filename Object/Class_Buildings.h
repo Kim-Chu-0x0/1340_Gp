@@ -13,41 +13,35 @@ using namespace std;
 const int Processing_Building_type = 1;
 const int Processing_Building_number = 3;
 const vector<string> Processing_Building_type_list{
-  "Processor"
-  };
+    "Processor"};
 const vector<string> Processing_Building_name_list{
-  "Tier/s0/sprocessor",
-  "Tier/s1/sprocessor",
-  "Tier/s2/sprocessor"
-};
+    "Tier/s0/sprocessor",
+    "Tier/s1/sprocessor",
+    "Tier/s2/sprocessor"};
 const int Production_Building_type = 2;
 const int Production_Building_number = 6;
 const vector<string> Production_Building_type_list{
-  "Producer",
-  "Processor"
-  };
+    "Producer",
+    "Processor"};
 const vector<string> Production_Building_name_list{
-  "Tier/s0/sproducer",
-  "Tier/s1/sproducer",
-  "Tier/s2/sproducer",
-  "Tier/s0/sprocessor",
-  "Tier/s1/sprocessor",
-  "Tier/s2/sprocessor"
-};
+    "Tier/s0/sproducer",
+    "Tier/s1/sproducer",
+    "Tier/s2/sproducer",
+    "Tier/s0/sprocessor",
+    "Tier/s1/sprocessor",
+    "Tier/s2/sprocessor"};
 const int All_Building_type = 2;
 const int All_Building_number = 6;
 const vector<string> All_Building_type_list{
-  "Producer",
-  "Processor"
-  };
+    "Producer",
+    "Processor"};
 const vector<string> All_Building_name_list{
-  "Tier/s0/sproducer",
-  "Tier/s1/sproducer",
-  "Tier/s2/sproducer",
-  "Tier/s0/sprocessor",
-  "Tier/s1/sprocessor",
-  "Tier/s2/sprocessor"
-};
+    "Tier/s0/sproducer",
+    "Tier/s1/sproducer",
+    "Tier/s2/sproducer",
+    "Tier/s0/sprocessor",
+    "Tier/s1/sprocessor",
+    "Tier/s2/sprocessor"};
 const int no_each_tier = 4;
 const int no_of_t4 = 4;
 const vector<string> Default_colour{Red, Yellow, Blue, Green};
@@ -57,6 +51,7 @@ class io_building
 public:
   int item;
   int quantity = 0;
+  int quantity_base = 0;
 };
 
 class Building
@@ -65,8 +60,10 @@ private:
   bool TestMod = 0;
   bool TestTEXT = 0;
   bool TestRNG = 0;
+  bool TestBounus = 0;
 
 public:
+  string type;
   string name;
   vector<Pixel> graphic_S;
   vector<Pixel> description;
@@ -74,6 +71,18 @@ public:
   vector<io_building> input_list;
   vector<io_building> output_list;
   int duration = -1;
+  int countdown = -1;
+
+private:
+  int duration_base = -1;
+
+private:
+  int PC_Type = -1;
+  int PC_Name = -1;
+  int PD_Type = -1;
+  int PD_Name = -1;
+  int All_Type = -1;
+  int All_Name = -1;
 
 private:
   vector<int> graphic_size{11, 4};
@@ -88,8 +97,11 @@ private:
 
 public:
   void Input_type(int id);
+  void Refresh_stat();
+  void Countdown_St();
 
 private:
+  void Search_Location();
   void type_process();
   void normal_refresh();
   void basestat_bounus();
@@ -98,14 +110,112 @@ private:
   void Generate_Description();
 };
 
+void Building::Countdown_St()
+{
+  countdown = duration;
+}
+
+void Building::Refresh_stat()
+{
+  if (costume == 0)
+  {
+    normal_refresh();
+  }
+}
+
 void Building::basestat_bounus()
 {
-  1;
+  double Temp_d;
+  Temp_d = out_constant;
+  Temp_d *= (1.0 + (((Upgrade_List[10][1] / 100) - 1) / 2));
+  out_constant = Temp_d;
+  Temp_d = req_constant;
+  Temp_d /= (1.0 + (((Upgrade_List[10][1] / 100) - 1) / 2));
+  req_constant = Temp_d;
+  if (TestBounus)
+  {
+    cout << '\n'
+         << "basestat_bounus" << '\n';
+    cout << "req_constant: " << req_constant << '\n';
+    cout << "out_constant: " << out_constant << '\n';
+  }
 }
 
 void Building::finalstat_bounus()
 {
-  1;
+  if (TestBounus)
+  {
+    cout << '\n'
+         << "finalstat_bounus(before)" << '\n';
+    if (input_list.size() != 0)
+    {
+      cout << "input_list[0]: " << input_list[0].quantity << '\n';
+    }
+    if (output_list.size() != 0)
+    {
+      cout << "output_list[0]: " << output_list[0].quantity << '\n';
+    }
+    cout << "duration: " << duration << '\n';
+  }
+  double Temp_d;
+  double counter = 0;
+  counter += Upgrade_List[7][1];
+  if (All_Type != -1)
+  {
+    counter += Upgrade_List[20][(All_Type * 2) + 1];
+  }
+  if (All_Name != -1)
+  {
+    counter += Upgrade_List[8][(All_Name * 2) + 1];
+  }
+  Temp_d = duration_base;
+  Temp_d *= 1.0 + (counter / 100);
+  duration = Temp_d;
+  counter = 0;
+  counter += Upgrade_List[3][1];
+  if (All_Type != -1)
+  {
+    counter += Upgrade_List[14][(All_Type * 2) + 1];
+  }
+  if (All_Name != -1)
+  {
+    counter += Upgrade_List[4][(All_Name * 2) + 1];
+  }
+  for (int id = 0; id < output_list.size(); id++)
+  {
+    Temp_d = output_list[id].quantity_base;
+    Temp_d *= 1.0 + (counter / 100);
+    output_list[id].quantity = Temp_d;
+  }
+  counter = 0;
+  counter += Upgrade_List[5][1];
+  if (All_Type != -1)
+  {
+    counter += Upgrade_List[15][(All_Type * 2) + 1];
+  }
+  if (All_Name != -1)
+  {
+    counter += Upgrade_List[6][(All_Name * 2) + 1];
+  }
+  for (int id = 0; id < input_list.size(); id++)
+  {
+    Temp_d = input_list[id].quantity_base;
+    Temp_d *= 1.0 + (counter / 100);
+    input_list[id].quantity = Temp_d;
+  }
+  if (TestBounus)
+  {
+    cout << "after" << '\n';
+    if (input_list.size() != 0)
+    {
+      cout << "input_list[0]: " << input_list[0].quantity << '\n';
+    }
+    if (output_list.size() != 0)
+    {
+      cout << "output_list[0]: " << output_list[0].quantity << '\n';
+    }
+    cout << "duration: " << duration << '\n';
+  }
 }
 
 void Building::normal_refresh()
@@ -254,8 +364,15 @@ void Building::Generate_Description()
         "Output:",
         "Duration:"};
     text_temp[0] += name;
-    text_temp[3] += to_string(duration);
-    if (input_list.size()==0){
+    if (countdown!=-1){
+      text_temp[3]="Lifespan:";
+      text_temp[3] += to_string(countdown);
+    }
+    else{
+      text_temp[3] += to_string(duration);
+    }
+    if (input_list.size() == 0)
+    {
       text_temp[1] += "/s";
       text_temp[1] += "None";
     }
@@ -264,8 +381,9 @@ void Building::Generate_Description()
       text_temp[1] += "/s";
       text_temp[1] += to_string(input_list[x].quantity);
       text_temp[1] += "/";
-      if (input_list[x].item<10){
-        text_temp[1]+="0";
+      if (input_list[x].item < 10)
+      {
+        text_temp[1] += "0";
       }
       text_temp[1] += to_string(input_list[x].item);
     }
@@ -274,18 +392,21 @@ void Building::Generate_Description()
       text_temp[2] += "/s";
       text_temp[2] += to_string(output_list[x].quantity);
       text_temp[2] += "/";
-      if (output_list[x].item<10){
-        text_temp[2]+="0";
+      if (output_list[x].item < 10)
+      {
+        text_temp[2] += "0";
       }
       text_temp[2] += to_string(output_list[x].item);
     }
-    if (TestTEXT){
-      cout<<'\n';
-      for (int id = 0;id<text_temp.size();id++){
-        cout<<"line "<<id<<' '<<text_temp[id]<<'\n';
+    if (TestTEXT)
+    {
+      cout << '\n';
+      for (int id = 0; id < text_temp.size(); id++)
+      {
+        cout << "line " << id << ' ' << text_temp[id] << '\n';
       }
     }
-    text_raw_1=text_temp;
+    text_raw_1 = text_temp;
   }
   else
   {
@@ -299,10 +420,12 @@ void Building::Generate_Description()
     {
       if (text_raw_1[id][length] == '/')
       {
-        if (text_raw_1[id][length+1] == 's'){
+        if (text_raw_1[id][length + 1] == 's')
+        {
           count++;
         }
-        else{
+        else
+        {
           count++;
           count++;
         }
@@ -314,8 +437,10 @@ void Building::Generate_Description()
       text_raw_2 += "/s";
     }
   }
-  if (TestTEXT){
-    cout<<'\n'<<text_raw_2<<'\n';
+  if (TestTEXT)
+  {
+    cout << '\n'
+         << text_raw_2 << '\n';
   }
   description = To_Pixel(text_raw_2);
 }
@@ -353,7 +478,7 @@ void Building::type_process()
     input_temp = rand() % input_list.size();
     int cost = input_list[input_temp].item / graphic_size[1];
     cost = pow(cost, (((rand() % graphic_size[1]) + 9) / 10));
-    input_list[input_temp].quantity++;
+    input_list[input_temp].quantity_base++;
     req_constant -= cost;
   }
   // output generation
@@ -409,7 +534,7 @@ void Building::type_process()
     output_temp = rand() % output_list.size();
     int cost = output_list[output_temp].item / graphic_size[1];
     cost = pow(cost, (((rand() % graphic_size[1]) + 9) / 10));
-    output_list[output_temp].quantity++;
+    output_list[output_temp].quantity_base++;
     out_constant -= cost;
   }
   if (TestMod)
@@ -419,6 +544,67 @@ void Building::type_process()
     cout << "Output size: " << output_list.size() << '\n';
   }
   normal_refresh();
+}
+
+void Building::Search_Location()
+{
+  for (int id = 0; id < Processing_Building_type_list.size(); id++)
+  {
+    if (Processing_Building_type_list[id] == type)
+    {
+      PC_Type = id;
+    }
+  }
+  for (int id = 0; id < Processing_Building_name_list.size(); id++)
+  {
+    if (Processing_Building_name_list[id] == name)
+    {
+      PC_Name = id;
+    }
+  }
+  for (int id = 0; id < Production_Building_type_list.size(); id++)
+  {
+    if (Production_Building_type_list[id] == type)
+    {
+      PD_Type = id;
+    }
+  }
+  for (int id = 0; id < Production_Building_name_list.size(); id++)
+  {
+    if (Production_Building_name_list[id] == name)
+    {
+      PD_Name = id;
+    }
+  }
+  for (int id = 0; id < All_Building_type_list.size(); id++)
+  {
+    if (All_Building_type_list[id] == type)
+    {
+      All_Type = id;
+    }
+  }
+  for (int id = 0; id < All_Building_name_list.size(); id++)
+  {
+    if (All_Building_name_list[id] == name)
+    {
+      All_Name = id;
+    }
+  }
+  if (TestMod)
+  {
+    cout << '\n'
+         << "All_Type= " << All_Type << '\n';
+    cout << '\n'
+         << "All_Name= " << All_Name << '\n';
+    cout << '\n'
+         << "PD_Type= " << PD_Type << '\n';
+    cout << '\n'
+         << "PD_Name= " << PD_Name << '\n';
+    cout << '\n'
+         << "PC_Type= " << PC_Type << '\n';
+    cout << '\n'
+         << "PC_Name= " << PC_Name << '\n';
+  }
 }
 
 // Generate a building item in random
@@ -432,6 +618,7 @@ void Building::Input_type(int id)
   // 4:can in/output tier4 materials
   if (id == 0)
   {
+    type = "Producer";
     name = "Tier/s0/sproducer";
     vector<string> temp_vector{
         "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
@@ -445,10 +632,11 @@ void Building::Input_type(int id)
     out_constant = 10;
     in_complexity = 1;
     out_complexity = 1;
-    duration = 10;
+    duration_base = 10;
   }
   else if (id == 1)
   {
+    type = "Producer";
     name = "Tier/s1/sproducer";
     vector<string> temp_vector{
         "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
@@ -462,10 +650,11 @@ void Building::Input_type(int id)
     out_constant = 13;
     in_complexity = 2;
     out_complexity = 2;
-    duration = 12;
+    duration_base = 12;
   }
   else if (id == 2)
   {
+    type = "Producer";
     name = "Tier/s2/sproducer";
     vector<string> temp_vector{
         "0", "0", "╔", "╩", "═", "╬", "═", "╦", "═", "═", "╗",
@@ -479,10 +668,11 @@ void Building::Input_type(int id)
     out_constant = 18;
     in_complexity = 3;
     out_complexity = 3;
-    duration = 14;
+    duration_base = 14;
   }
   else if (id == 3)
   {
+    type = "Processor";
     name = "Tier/s0/sprocessor";
     vector<string> temp_vector{
         "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
@@ -496,10 +686,11 @@ void Building::Input_type(int id)
     out_constant = 10;
     in_complexity = 1;
     out_complexity = 1;
-    duration = 10;
+    duration_base = 10;
   }
   else if (id == 4)
   {
+    type = "Processor";
     name = "Tier/s1/sprocessor";
     vector<string> temp_vector{
         "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
@@ -513,10 +704,11 @@ void Building::Input_type(int id)
     out_constant = 14;
     in_complexity = 2;
     out_complexity = 2;
-    duration = 12;
+    duration_base = 12;
   }
   else if (id == 5)
   {
+    type = "Processor";
     name = "Tier/s2/sprocessor";
     vector<string> temp_vector{
         "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
@@ -530,7 +722,7 @@ void Building::Input_type(int id)
     out_constant = 20;
     in_complexity = 3;
     out_complexity = 3;
-    duration = 14;
+    duration_base = 14;
   }
   else if (id == 6)
   {
@@ -542,22 +734,21 @@ void Building::Input_type(int id)
     cout << "(Input_type)Error: Unknown Building id" << '\n';
     exit(0);
   }
-  req_constant*=(((Upgrade_List[10][1]-1)/2)+1);
-  out_constant/=(((Upgrade_List[10][1]-1)/2)+1);
-  if (TestMod)
-  {
-    cout << '\n'
-         << "name: " << name << '\n';
-    cout << "req_tier: " << req_tier << '\n';
-    cout << "req_constant: " << req_constant << '\n';
-    cout << "out_tier: " << out_tier << '\n';
-    cout << "out_constant: " << out_constant << '\n';
-    cout << "in_complexity: " << in_complexity << '\n';
-    cout << "out_complexity: " << out_complexity << '\n';
-    cout << "duration: " << duration << '\n';
-  }
   if (!costume)
   {
+    if (TestMod)
+    {
+      cout << '\n'
+           << "name: " << name << '\n';
+      cout << "req_tier: " << req_tier << '\n';
+      cout << "req_constant: " << req_constant << '\n';
+      cout << "out_tier: " << out_tier << '\n';
+      cout << "out_constant: " << out_constant << '\n';
+      cout << "in_complexity: " << in_complexity << '\n';
+      cout << "out_complexity: " << out_complexity << '\n';
+      cout << "duration_base: " << duration << '\n';
+    }
+    Search_Location();
     basestat_bounus();
     type_process();
   }

@@ -76,7 +76,7 @@ public:
     // store which Layer's highlight will be triggered
     string Highlight_Choice_Layer = "Map";
     // store which textbox is chosen to be highlighted
-    int Highlight_Choice_Textbox_id = 1;
+    vector <int> Highlight_Choice_Textbox_id;
     // can only be used once
     void Set_Size(int x_len, int y_len)
     {
@@ -139,8 +139,9 @@ int Render::Textbox_id_search(int input_Textbox_id, int Layer_Location)
 
 void Render::Refresh_Layer(string id)
 {
+    int no_id = Layer_id_search(id);
     Layer Temp(Screen_Size[0], Screen_Size[1]);
-    Layer_list[Layer_position[Layer_id_search(id)]] = Temp;
+    Layer_list[Layer_position[no_id]] = Temp;
 }
 
 void Render::Add_Layer_object(string id, int position)
@@ -156,6 +157,7 @@ void Render::Add_Layer_object(string id, int position)
     }
     Layer_id.push_back(id);
     Layer_position.push_back(position);
+    Highlight_Choice_Textbox_id.push_back(1);
     vector<int> temp;
     Layer_Textbox_id.push_back(temp);
     Layer_Textbox_counter.push_back(0);
@@ -169,6 +171,7 @@ void Render::Add_Layer_object(string id, int position)
 void Render::Remove_Layer_object(string id)
 {
     int Layer_Location = Layer_id_search(id);
+    Highlight_Choice_Textbox_id.erase(Highlight_Choice_Textbox_id.begin() + Layer_Location);
     Layer_id.erase(Layer_id.begin() + Layer_Location);
     Layer_position.erase(Layer_position.begin() + Layer_Location);
     Layer_Textbox_id.erase(Layer_Textbox_id.begin() + Layer_Location);
@@ -214,21 +217,21 @@ int Render::Add_Textbox(string Item_name, bool Selectable, int input_Textbox_id,
 
 void Render::Highlight_Refresh()
 {
-    if (Enable_Highlight && (Highlight_Choice_Textbox_id != 0))
+    int Layer_Location = Layer_id_search(Highlight_Choice_Layer);
+    if (Enable_Highlight && (Highlight_Choice_Textbox_id[Layer_Location] != 0))
     {
         if (TestMod)
         {
             cout << '\n'
                  << "Highlight started" << '\n';
         }
-        int Layer_Location = Layer_id_search(Highlight_Choice_Layer);
-        int Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id, Layer_Location);
+        int Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id[Layer_Location], Layer_Location);
         if (Layer_Textbox_id[Layer_Location].size() != 0)
         {
             if (Textbox_Location == -1)
             {
-                Highlight_Choice_Textbox_id = Layer_Textbox_id[Layer_Location][0];
-                Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id, Layer_Location);
+                Highlight_Choice_Textbox_id[Layer_Location] = Layer_Textbox_id[Layer_Location][0];
+                Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id[Layer_Location], Layer_Location);
             }
             if (TestMod)
             {

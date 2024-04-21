@@ -18,15 +18,17 @@ private:
 public:
     int Move(int direction);
     int Switch_Layer(string name);
+    void Restore_Textbox_id(int id);
 
 public:
     void Initialize();
     string Current_Item_Name;
     void Refresh_Current_Name()
     {
-        Layer_Location = Layer_id_search(Highlight_Choice_Layer);
-        Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id, Layer_Location);
-        Current_Item_Name = Layer_Textbox_name[Layer_Location][Textbox_Location];
+        Highlight_Refresh();
+        AP_Layer_Location = Layer_id_search(Highlight_Choice_Layer);
+        Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id[AP_Layer_Location], AP_Layer_Location);
+        Current_Item_Name = Layer_Textbox_name[AP_Layer_Location][Textbox_Location];
         for (int id = 0; id < Layer_no; id++)
         {
             Layer_Textbox_id[id].clear();
@@ -35,18 +37,22 @@ public:
         }
     }
 
+public:
+    int AP_Layer_Location;
 private:
-    int Layer_Location;
     int Textbox_Location;
 };
 
 void Action_Processor::Initialize()
 {
     Set_Size(80, 42);
-    Add_Layer_object("Map", 3);
-    Add_Layer_object("PopUp_2", 2);
-    Add_Layer_object("PopUp_1", 1);
+    Add_Layer_object("Map", 2);
+    Add_Layer_object("PopUp_Map", 1);
     Add_Layer_object("Setting", 0);
+}
+
+void Action_Processor::Restore_Textbox_id(int id){
+    Highlight_Choice_Textbox_id[AP_Layer_Location]=id;
 }
 
 // Move between selectable textboxes
@@ -76,7 +82,7 @@ int Action_Processor::Move(int direction)
         }
         cout << '\n'
              << "Layer name: " << Highlight_Choice_Layer << '\n';
-        cout << "Current Item id: " << Highlight_Choice_Textbox_id << '\n';
+        cout << "Current Item id: " << Highlight_Choice_Textbox_id[AP_Layer_Location] << '\n';
     }
     const int Distance_threshold_1 = 0;
     const int Distance_threshold_2 = 10;
@@ -84,12 +90,12 @@ int Action_Processor::Move(int direction)
 
     // This list is not in order, plz do not use id to access it
     // To get the correct item, plz use A_P_Textbox_position[id]
-    vector<vector<int>> A_P_st_pt = Layer_list[Layer_position[Layer_Location]].Textbox_St;
+    vector<vector<int>> A_P_st_pt = Layer_list[Layer_position[AP_Layer_Location]].Textbox_St;
     // This list is not in order, plz do not use id to access it
     // To get the correct item, plz use A_P_Textbox_position[id]
-    vector<vector<int>> A_P_en_pt = Layer_list[Layer_position[Layer_Location]].Textbox_En;
-    vector<int> A_P_Layer_Textbox_id = Layer_Textbox_id[Layer_Location];
-    vector<int> A_P_Textbox_position = Layer_Textbox_position[Layer_Location];
+    vector<vector<int>> A_P_en_pt = Layer_list[Layer_position[AP_Layer_Location]].Textbox_En;
+    vector<int> A_P_Layer_Textbox_id = Layer_Textbox_id[AP_Layer_Location];
+    vector<int> A_P_Textbox_position = Layer_Textbox_position[AP_Layer_Location];
     vector<int> Present_st_pt = A_P_st_pt[A_P_Textbox_position[Textbox_Location]];
     vector<int> Present_en_pt = A_P_en_pt[A_P_Textbox_position[Textbox_Location]];
     if (A_P_TestMod)
@@ -106,8 +112,8 @@ int Action_Processor::Move(int direction)
             cout << '\n'
                  << "Item id: " << A_P_Layer_Textbox_id[id] << '\n';
             cout << "Position: " << A_P_Textbox_position[id] << '\n';
-            cout << "Stpt: " << Layer_list[Layer_position[Layer_Location]].Textbox_St[A_P_Textbox_position[id]][0] << " " << Layer_list[Layer_position[Layer_Location]].Textbox_St[A_P_Textbox_position[id]][1] << '\n';
-            cout << "Enpt: " << Layer_list[Layer_position[Layer_Location]].Textbox_En[A_P_Textbox_position[id]][0] << " " << Layer_list[Layer_position[Layer_Location]].Textbox_En[A_P_Textbox_position[id]][1] << '\n';
+            cout << "Stpt: " << Layer_list[Layer_position[AP_Layer_Location]].Textbox_St[A_P_Textbox_position[id]][0] << " " << Layer_list[Layer_position[AP_Layer_Location]].Textbox_St[A_P_Textbox_position[id]][1] << '\n';
+            cout << "Enpt: " << Layer_list[Layer_position[AP_Layer_Location]].Textbox_En[A_P_Textbox_position[id]][0] << " " << Layer_list[Layer_position[AP_Layer_Location]].Textbox_En[A_P_Textbox_position[id]][1] << '\n';
         }
     }
     // Filter unavalible textbox
@@ -354,7 +360,7 @@ int Action_Processor::Move(int direction)
             min_id = id;
         }
     }
-    Highlight_Choice_Textbox_id = A_P_Layer_Textbox_id[min_id];
+    Highlight_Choice_Textbox_id[AP_Layer_Location] = A_P_Layer_Textbox_id[min_id];
     if (A_P_TestMod)
     {
         cout << '\n'
@@ -365,16 +371,21 @@ int Action_Processor::Move(int direction)
 
 int Action_Processor::Switch_Layer(string name)
 {
-    for (int id = 0;id<Layer_id.size();id++){
-        if (Layer_id[id]==name){
-            Highlight_Choice_Layer=name;
-            if (A_P_TestMod){
-                cout<<'\n'<<"Layer switch to "<<name<<'\n';
+    for (int id = 0; id < Layer_id.size(); id++)
+    {
+        if (Layer_id[id] == name)
+        {
+            Highlight_Choice_Layer = name;
+            if (A_P_TestMod)
+            {
+                cout << '\n'
+                     << "Layer switch to " << name << '\n';
             }
             return 0;
         }
     }
-    cout<<'\n'<<"(Switch_Layer)Error: Layer "<<name<<" not found"<<'\n';
+    cout << '\n'
+         << "(Switch_Layer)Error: Layer " << name << " not found" << '\n';
     exit(0);
 }
 

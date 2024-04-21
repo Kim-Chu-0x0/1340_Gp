@@ -25,10 +25,19 @@
 //  16 : Gain Extra Life
 //  17 : Less Draw Consumption
 //  18 : Receive T1 Resource Every Turn
-//  19 : Increase Duration (Specific Type)
+//  19 : Receive 2 Random Upgrades
+//  20 : Increase Duration (Specific Type)
 // Format:
 //{0:level,1:value 2:level,3:value......}
 vector<vector<double>> Upgrade_List;
+
+//00:Draw
+//01:DUI
+//02:EGY
+//03:INV
+//04:Grid
+//05:Res
+vector <bool> Selectable_List;
 
 vector<int> Weighting_Tier_List{0, 1, 4, 6, 10, 15, 30, 50, 90};
 
@@ -118,7 +127,6 @@ vector<int> Screen_Size{0, 0};
 // 3:Inventory
 // 4:Map_Grid
 // 5:Resources_Display
-vector<vector<bool>> Accessable{{0}, {0}, {0}, {0}, {0}, {0}};
 vector<bool> Visible{0, 0, 0, 0, 0, 0};
 
 #include "..\Display_Module_Main\Draw_Button.h"
@@ -132,6 +140,8 @@ using namespace std;
 
 class Data_Storage : public Map_Grid, public Resources_Display, public Draw_Button, public Energy_Bar, public Draw_UI, public Inventory
 {
+public:
+    void Test_Specific_Card(int id);
 private:
     bool Testmod = 0;
 
@@ -142,14 +152,168 @@ public:
 
 public:
     void Draw(int id);
+    void Discard(int id);
+    void Use_INV_item(int id);
+    int Building_Grid_Selection_Result(int id);
 
 private:
+    void Upgrade_Apply(Upgrade input);
     void Relocate();
+    void Upgrade_Max_Check();
+    void D_Phase_Switch(int id);
+
+public:
+    int slot_id_cache;
+private:
+    int slot_pos_cache;
+    int Situation;
+    Card Card_cache;
 };
+
+void Data_Storage ::Upgrade_Apply(Upgrade input)
+{
+    Upgrade_List[input.type][input.subtype * 2] += 1;
+    Upgrade_List[input.type][input.subtype * 2 + 1] += input.value;
+    if(input.type==1||input.type==2){
+        Check_Size();
+    }
+}
+
+void Data_Storage::Discard(int id){
+    if(id==0){
+        INV_Phase=1;
+    }
+    else if(id==1){
+        INV_Phase=0;
+    }
+    else if(id==2){
+        INV_Phase=0;
+        INV_Discard();
+    }
+}
+
+void Data_Storage::Use_INV_item(int id){
+    if(id==0){
+        INV_Phase=2;
+    }
+    else if(id==1){
+        INV_Phase=0;
+    }
+    else if(id==2){
+        INV_Phase=0;
+        Card_cache=INV_Slot_Output();
+        slot_id_cache=INV_selection_id;
+        slot_pos_cache=INV_selection;
+        INV_Discard();
+        D_Phase_Switch(1);
+        if (Card_cache.Type==2){
+            Situation=1;
+        }
+        else if (Card_cache.Type==3){
+            Situation=0;
+        }
+    }
+}
+
+int Data_Storage ::Building_Grid_Selection_Result(int id){
+    //Place Building
+    if (Situation==0){
+        //Hv building Q
+        if(id==0){
+            INV_Fill_Item(slot_pos_cache, Card_cache);
+            D_Phase_Switch(0);
+            return 1;
+        }
+        //Hv building E
+        else if(id==1){
+            return 0;
+        }
+        //No building Q
+        else if(id==2){
+            INV_Fill_Item(slot_pos_cache, Card_cache);
+            D_Phase_Switch(0);
+            return 1;
+        }
+        //No building E
+        else if(id==3){
+            Card_cache.B_Data.Countdown_St();
+            Grid_Place_Building(Card_cache.B_Data);
+            D_Phase_Switch(0);
+            return 0;
+        }
+    }
+    else if (Situation==1){
+        //Hv building Q
+        if(id==0){
+            INV_Fill_Item(slot_pos_cache, Card_cache);
+            D_Phase_Switch(0);
+            return 1;
+        }
+        //Hv building E
+        else if(id==1){
+            D_Phase_Switch(0);
+            return 0;
+        }
+        //No building Q
+        else if(id==2){
+            INV_Fill_Item(slot_pos_cache, Card_cache);
+            D_Phase_Switch(0);
+            return 1;
+        }
+        //No building E
+        else if(id==3){
+            return 2;
+        }
+    }
+    return 0;
+}
+
+void Data_Storage ::D_Phase_Switch(int id){
+    //Reset
+    if (id==0){
+        Selectable_List[0]=1;
+        Selectable_List[1]=1;
+        Selectable_List[2]=1;
+        Selectable_List[3]=1;
+        Selectable_List[4]=1;
+        Selectable_List[5]=1;
+        Grid_Phase=0;
+    }
+    //Building Grid Selection
+    else if(id==1){
+        Selectable_List[0]=0;
+        Selectable_List[1]=0;
+        Selectable_List[2]=0;
+        Selectable_List[3]=0;
+        Selectable_List[4]=1;
+        Selectable_List[5]=0;
+        Grid_Phase=1;
+    }
+}
+
+void Data_Storage ::Upgrade_Max_Check(){
+    if (Upgrade_List[0][1]==5){
+        Upgrade_Weighting[0]=0;
+    }
+    if (Upgrade_List[1][1]==Grid_Maximum_Size[0]){
+        Upgrade_Weighting[1]=0;
+    }
+    if (Upgrade_List[2][1]==Grid_Maximum_Size[1]){
+        Upgrade_Weighting[2]=0;
+    }
+    if (Upgrade_List[9][1]==INV_Max_Size){
+        Upgrade_Weighting[9]=0;
+    }
+    if (Upgrade_List[16][0]==1){
+        Upgrade_Weighting[16]=0;
+    }
+}
 
 void Data_Storage::Draw(int id)
 {
-    if (id==0){
+    if (id == 0)
+    {
+        Upgrade_Max_Check();
         Sum_Upgrade_Weighting = Sum_Building_Weighting = Sum_Tool_Weighting = 0;
         for (int id = 0; id < Upgrade_Weighting.size(); id++)
         {
@@ -163,24 +327,63 @@ void Data_Storage::Draw(int id)
         {
             Sum_Tool_Weighting += Tool_Weighting[id];
         }
+        if (Testmod){
+            cout <<'\n'<<"Sum_Upgrade_Weighting= "<<Sum_Upgrade_Weighting<<'\n';
+            cout <<"Sum_Tool_Weighting= "<<Sum_Tool_Weighting<<'\n';
+            cout <<"Sum_Building_Weighting= "<<Sum_Building_Weighting<<'\n';
+            cout <<"RNG MAX= "<<(Sum_Upgrade_Weighting + Sum_Tool_Weighting + Sum_Building_Weighting)<<'\n';
+        }
         DUI_Draw_Card();
         Visible[1] = 1;
     }
-    else if (id==1){
-        DUI_Phase=0;
+    else if (id == 1)
+    {
+        DUI_Phase = 0;
     }
-    else if (id==2){
-        DUI_Phase=1;
+    else if (id == 2)
+    {
+        DUI_Phase = 1;
     }
-    else if (id==3){
-        INV_Fill_Item(-1,DUI_item_list[DUI_selection]);
+    else if (id == 3)
+    {
+        Card temp=DUI_Draw_Output();
+        if (temp.Type == 1)
+        {
+            Upgrade_Apply(temp.U_Data);
+        }
+        else
+        {
+            INV_Fill_Item(-1, temp);
+        }
         DUI_Clear();
         Visible[1] = 0;
     }
 }
 
+void Data_Storage::Test_Specific_Card(int id)
+{
+    for (int no = 0;no<Upgrade_Weighting.size();no++){
+        if (id != no){
+            Upgrade_Weighting[no]=0;
+        }
+    }
+    id-=Upgrade_Weighting.size();
+    for (int no = 0;no<Tool_Weighting.size();no++){
+        if (id != no){
+            Tool_Weighting[no]=0;
+        }
+    }
+    id-=Tool_Weighting.size();
+    for (int no = 0;no<Building_Weighting.size();no++){
+        if (id != no){
+            Building_Weighting[no]=0;
+        }
+    }
+}
+
 void Data_Storage::Refresh_Layer(string id)
 {
+    Relocate();
     if (Draw_Layer_name == id)
     {
         if (Visible[0])
@@ -202,7 +405,7 @@ void Data_Storage::Refresh_Layer(string id)
             EGY_Output();
         }
     }
-    if (INV_Layer_name == id)
+    if ((INV_Layer_name == id)||(INV_Popup_Layer_Name == id))
     {
         if (Visible[3])
         {
@@ -227,6 +430,7 @@ void Data_Storage::Refresh_Layer(string id)
 
 void Data_Storage::Refresh()
 {
+    Relocate();
     if (Visible[0])
     {
         Draw_Output();
@@ -278,21 +482,27 @@ void Data_Storage::Relocate()
 
 void Data_Storage::Initialize()
 {
+    for (int id = 0;id<6;id++){
+        Selectable_List.push_back(1);
+    }
     Visible[0] = 1;
     Visible[2] = 1;
     Visible[3] = 1;
     Visible[4] = 1;
     Visible[5] = 1;
-    Visible[5] = 1;
+    if (Testmod){
+        cout<<'\n'<<"Visual&Selectable_Date initialized"<<'\n';
+    }
     // Upgrade Data Initialize
     vector<double> temp{0, 0};
-    for (int id; id < 20; id++)
-    {
+    for (int id = 0;id<21;id++){
         Upgrade_List.push_back(temp);
     }
     Upgrade_List[0][1] = 3;
+    Upgrade_List[1][1] = 4;
+    Upgrade_List[2][1] = 4;
     Upgrade_List[9][1] = 4;
-    Upgrade_List[10][1] = 1;
+    Upgrade_List[10][1] = 100;
     Upgrade_List[12][1] = 100;
     for (int id = 1; id < Production_Building_type; id++)
     {
@@ -316,22 +526,29 @@ void Data_Storage::Initialize()
     }
     for (int id = 1; id < All_Building_type; id++)
     {
-        Upgrade_List[19].push_back(0);
-        Upgrade_List[19].push_back(0);
+        Upgrade_List[20].push_back(0);
+        Upgrade_List[20].push_back(0);
     }
     for (int id = 1; id < All_Building_number; id++)
     {
         Upgrade_List[7].push_back(0);
         Upgrade_List[7].push_back(0);
     }
+    if (Testmod){
+        cout<<"Upgrade_Date initialized"<<'\n';
+    }
     // UI Setup
-    Grid_Set_Size(4, 4);
+    Grid_Set_Size(Upgrade_List[1][1], Upgrade_List[2][1]);
     Res_Future_List[0] = 10;
     Res_Future_List[5] = -999;
     EGY_Energy = 70;
     EGY_Future_Energy = 30;
     Grid_Reset();
     INV_Reset();
+    if (Testmod){
+        cout<<'\n';
+        cout<<"R_Main initialized"<<'\n';
+    }
     Relocate();
 }
 
