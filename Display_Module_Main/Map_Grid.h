@@ -110,7 +110,7 @@ void Map_Grid::Grid_Popup(){
         }
     }
     if (Grid_Phase == 2){
-        string Text = "000000000000000000000Press0E0to0Fix0000000000000000000000";
+        string Text = "000000000000000000000000Press0E0to0Fix0000000000000000000000000";
         vector<Pixel> T_Pixel_List;
         Pixel T_Pixel;
         T_Pixel.colour = Green;
@@ -126,16 +126,16 @@ void Map_Grid::Grid_Popup(){
             }
             T_Pixel_List.push_back(T_Pixel);
         }
-        vector<int> temp_St{Grid_st_xy[0]+((selection%Grid_Grid_Size[0])*7)-6, Grid_st_xy[1]+((selection/Grid_Grid_Size[0])*7)+7};
+        vector<int> temp_St{Grid_st_xy[0]+((selection%Grid_Grid_Size[0])*7)-2, Grid_st_xy[1]+((selection/Grid_Grid_Size[0])*7)+7};
         if (selection%Grid_Grid_Size[0] == Grid_Maximum_Size[0] - 1)
         {
-            temp_St[0] -= 5;
+            temp_St[0] -= 3;
         }
-        vector<int> temp_En{temp_St[0] + 9, temp_St[1] + 2};
+        vector<int> temp_En{temp_St[0] + 10, temp_St[1] + 2};
         Grid_Disaster_Fix_Highlight_Data = R_Main.Add_Textbox("Disaster_Fix_T", 1, Grid_Disaster_Fix_Highlight_Data, Grid_Popup_Layer_name, T_Pixel_List, temp_St, temp_En, 0);
     }
     if (Grid_Phase == 3){
-        string Text = "0000000000000000000Not Enough0Materials000000000000000000";
+        string Text = "0000000000000000000000Not0Enough0Materials000000000000000000000";
         vector<Pixel> T_Pixel_List; 
         Pixel T_Pixel;
         T_Pixel.colour = Red;
@@ -151,12 +151,12 @@ void Map_Grid::Grid_Popup(){
             }
             T_Pixel_List.push_back(T_Pixel);
         }
-        vector<int> temp_St{Grid_st_xy[0]+((selection%Grid_Grid_Size[0])*7)-6, Grid_st_xy[1]+((selection/Grid_Grid_Size[0])*7)+7};
+        vector<int> temp_St{Grid_st_xy[0]+((selection%Grid_Grid_Size[0])*7)-2, Grid_st_xy[1]+((selection/Grid_Grid_Size[0])*7)+7};
         if (selection%Grid_Grid_Size[0] == Grid_Maximum_Size[0] - 1)
         {
-            temp_St[0] -= 5;
+            temp_St[0] -= 3;
         }
-        vector<int> temp_En{temp_St[0] + 9, temp_St[1] + 2};
+        vector<int> temp_En{temp_St[0] + 10, temp_St[1] + 2};
         Grid_Disaster_Fix_Highlight_Data = R_Main.Add_Textbox("Disaster_Fix_F", 1, Grid_Disaster_Fix_Highlight_Data, Grid_Popup_Layer_name, T_Pixel_List, temp_St, temp_En, 0);
     }
 }

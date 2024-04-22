@@ -32,8 +32,8 @@ public:
 
 private:
     bool TestMod = 0;
-    bool TestOutline = 1;
-    bool Check_Input = 1;
+    bool TestOutline = 0;
+    bool Check_Input = 0;
 
     // trigger the output
 public:

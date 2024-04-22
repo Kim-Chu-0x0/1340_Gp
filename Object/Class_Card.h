@@ -16,8 +16,8 @@ class Card
 {
     // testing
 private:
-    bool TestMod = 1;
-    bool TestRNG = 1;
+    bool TestMod = 0;
+    bool TestRNG = 0;
 
 public:
     void Random();
