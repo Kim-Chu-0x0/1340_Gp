@@ -377,6 +377,10 @@ void Input::Execute_Command()
             Ref = 1;
             Sus = 1;
             Temp = D_Main.Building_Grid_Selection_Result(1);
+            if (Temp == 1)
+            {
+                R_Main.Restore_Textbox_id(D_Main.slot_id_cache);
+            }
             I_Refresh();
             id = input_stack.size() - 1;
             break;
@@ -397,6 +401,10 @@ void Input::Execute_Command()
             Ref = 1;
             Sus = 1;
             Temp = D_Main.Building_Grid_Selection_Result(3);
+            if (Temp == 1)
+            {
+                R_Main.Restore_Textbox_id(D_Main.slot_id_cache);
+            }
             I_Refresh();
             id = input_stack.size() - 1;
             break;

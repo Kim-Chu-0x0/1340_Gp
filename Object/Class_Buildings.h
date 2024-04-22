@@ -104,6 +104,7 @@ public:
   bool Pass_Turn();
   vector<vector<int>> Return_Req();
   vector<int> Get_Disaster_Req();
+  void Restore_Lifespan(double value);
 
 private:
   void Search_Location();
@@ -114,6 +115,16 @@ private:
   void Costume_initialize();
   void Generate_Description();
 };
+
+void Building::Restore_Lifespan(double value){
+  int T_value = (duration* value) /100 ;
+  if ((T_value+countdown)>=duration){
+    countdown=duration;
+  }
+  else{
+    countdown+=T_value;
+  }
+}
 
 // return 1 if lifespan <=0
 bool Building::Pass_Turn()
@@ -182,7 +193,7 @@ void Building::Refresh_stat()
   }
   else if (name == "Disaster")
   {
-    output_list[0].quantity = countdown * output_list[0].quantity_base;
+    output_list[0].quantity = (1+(countdown/2)) * output_list[0].quantity_base;
     Generate_Description();
   }
 }
@@ -869,7 +880,7 @@ void Building::Input_type(int id)
         "╚", "═", "═", "╝", "0", "0", "0", "╚", "═", "═", "╝"};
     unprocessed_graphic = temp_vector;
     req_tier = 1;
-    req_constant = 10;
+    req_constant = 4;
     out_tier = 2;
     out_constant = 10;
     in_complexity = 1;
@@ -887,7 +898,7 @@ void Building::Input_type(int id)
         "╚", "═", "═", "╝", "0", "0", "0", "╚", "═", "═", "╝"};
     unprocessed_graphic = temp_vector;
     req_tier = 1;
-    req_constant = 10;
+    req_constant = 5;
     out_tier = 2;
     out_constant = 14;
     in_complexity = 2;
@@ -905,7 +916,7 @@ void Building::Input_type(int id)
         "╚", "═", "╩", "╝", "0", "╩", "0", "╚", "╩", "═", "╝"};
     unprocessed_graphic = temp_vector;
     req_tier = 2;
-    req_constant = 12;
+    req_constant = 6;
     out_tier = 3;
     out_constant = 20;
     in_complexity = 3;

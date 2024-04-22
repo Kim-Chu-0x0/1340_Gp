@@ -28,6 +28,7 @@ protected:
     void Grid_Reset();
     vector <vector <int>> Cal_Building_req();
     void Grid_Place_Building(Building item);
+    void Grid_Restore_Building(double value);
     void Grid_Building_On_Off();
 
 protected:
@@ -73,6 +74,9 @@ protected:
     void Grid_Pass_Turn();
     vector<int> Get_Disaster_Req();
     void Grid_Plant_Disaster(int level);
+    Building Grid_Take_Building();
+    void Grid_Demolish_Building();
+    int Grid_Get_pos();
 
 private:
     vector<int> Grid_Grid_Size{0, 0};
@@ -80,6 +84,26 @@ private:
     void Grid_Popup();
     int Grid_Disaster_Fix_Highlight_Data;
 };
+
+int Map_Grid::Grid_Get_pos(){
+    return selection;
+}
+
+void Map_Grid::Grid_Demolish_Building(){
+    Building temp;
+    temp.Input_type(6);
+    Grid_Place_Building(temp);
+}
+
+Building Map_Grid::Grid_Take_Building(){
+    Building temp = Grid_Building_list[selection];
+    Grid_Demolish_Building();
+    return temp;
+}
+
+void Map_Grid::Grid_Restore_Building(double value){
+    Grid_Building_list[selection].Restore_Lifespan(value);
+}
 
 vector<int> Map_Grid::Get_Disaster_Req(){
     return (Grid_Building_list[selection].Get_Disaster_Req());

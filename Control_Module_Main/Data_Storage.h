@@ -186,7 +186,9 @@ public:
 private:
     int slot_pos_cache;
     int Situation;
+    int Grid_pos_cache;
     Card Card_cache;
+    Building Building_cache;
 
 private:
     int turn_counter=0;
@@ -323,9 +325,7 @@ void Data_Storage::Fix(int id)
         for (int id = 0;id<Res_Resource_List.size();id++){
             Res_Resource_List[id]-=Result[id];
         }
-        Building Null;
-        Null.Input_type(6);
-        Grid_Place_Building(Null);
+        Grid_Demolish_Building();
         Corruption_no-=1;
     }
 }
@@ -347,14 +347,46 @@ void Data_Storage::Use_INV_item(int id)
         slot_id_cache = INV_selection_id;
         slot_pos_cache = INV_selection;
         INV_Discard();
-        D_Phase_Switch(1);
         if (Card_cache.Type == 2)
         {
-            Situation = 1;
+            if (Card_cache.T_Data.type==0){
+                Situation = 1;
+                D_Phase_Switch(1);
+            }
+            else if (Card_cache.T_Data.type==1){
+                Situation = 2;
+                D_Phase_Switch(1);
+            }
+            else if (Card_cache.T_Data.type==2){
+                Situation = 3;
+                D_Phase_Switch(1);
+            }
+            else if (Card_cache.T_Data.type==3){
+                Other_Buffs[0]=1;
+            }
+            else if (Card_cache.T_Data.type==4){
+                Other_Buffs[1]=1;
+            }
+            else if (Card_cache.T_Data.type==5){
+                for (int id = 0;id<4;id++){
+                    Res_Resource_List[id]+=Card_cache.T_Data.value;
+                }
+            }
+            else if (Card_cache.T_Data.type==6){
+                for (int id = 0;id<4;id++){
+                    Res_Resource_List[4+id]+=Card_cache.T_Data.value;
+                }
+            }
+            else if (Card_cache.T_Data.type==7){
+                for (int id = 0;id<4;id++){
+                    Res_Resource_List[8+id]+=Card_cache.T_Data.value;
+                }
+            }
         }
         else if (Card_cache.Type == 3)
         {
             Situation = 0;
+            D_Phase_Switch(1);
         }
     }
 }
@@ -392,6 +424,7 @@ int Data_Storage ::Building_Grid_Selection_Result(int id)
             return 0;
         }
     }
+    //Move Building(1)
     else if (Situation == 1)
     {
         // Hv building Q
@@ -404,6 +437,38 @@ int Data_Storage ::Building_Grid_Selection_Result(int id)
         // Hv building E
         else if (id == 1)
         {
+            Grid_pos_cache=Grid_Get_pos();
+            Building_cache=Grid_Take_Building();
+            Situation=4;
+            return 0;
+        }
+        // No building Q
+        else if (id == 2)
+        {
+            INV_Fill_Item(slot_pos_cache, Card_cache);
+            D_Phase_Switch(0);
+            return 1;
+        }
+        // No building E
+        else if (id == 3)
+        {
+            return 0;
+        }
+    }
+    //Demolish Building
+    else if (Situation == 2)
+    {
+        // Hv building Q
+        if (id == 0)
+        {
+            INV_Fill_Item(slot_pos_cache, Card_cache);
+            D_Phase_Switch(0);
+            return 1;
+        }
+        // Hv building E
+        else if (id == 1)
+        {
+            Grid_Demolish_Building();
             D_Phase_Switch(0);
             return 0;
         }
@@ -417,7 +482,69 @@ int Data_Storage ::Building_Grid_Selection_Result(int id)
         // No building E
         else if (id == 3)
         {
-            return 2;
+            return 0;
+        }
+    }
+    //Restore Building lifespan
+    else if (Situation == 3)
+    {
+        // Hv building Q
+        if (id == 0)
+        {
+            INV_Fill_Item(slot_pos_cache, Card_cache);
+            D_Phase_Switch(0);
+            return 1;
+        }
+        // Hv building E
+        else if (id == 1)
+        {
+            Grid_Restore_Building(Card_cache.T_Data.value);
+            D_Phase_Switch(0);
+            return 0;
+        }
+        // No building Q
+        else if (id == 2)
+        {
+            INV_Fill_Item(slot_pos_cache, Card_cache);
+            D_Phase_Switch(0);
+            return 1;
+        }
+        // No building E
+        else if (id == 3)
+        {
+            return 0;
+        }
+    }
+    //Move Building(2)
+    else if (Situation == 4)
+    {
+        // Hv building Q
+        if (id == 0)
+        {
+            vector <int> temp{Grid_pos_cache};
+            Grid_Set_Building(temp,Building_cache);
+            Situation=1;
+            return 0;
+        }
+        // Hv building E
+        else if (id == 1)
+        {
+            return 0;
+        }
+        // No building Q
+        else if (id == 2)
+        {
+            vector <int> temp{Grid_pos_cache};
+            Grid_Set_Building(temp,Building_cache);
+            Situation=1;
+            return 0;
+        }
+        // No building E
+        else if (id == 3)
+        {
+            Grid_Place_Building(Building_cache);
+            D_Phase_Switch(0);
+            return 0;
         }
     }
     return 0;

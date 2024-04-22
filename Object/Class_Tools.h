@@ -66,7 +66,7 @@ void Tool::Input_Type(int id)
         break;
     case 2:
         insert_list.push_back(value_string);
-        raw_text += "Extend-lifespan-of a-Building,by-//%(Of-maximum-value)";
+        raw_text += "Restore-lifespan-of a-Building,by-//%(Of-maximum-value)";
         break;
     case 3:
         raw_text += "Prevent-energy-lost-due-to,corruption-this-turn";
@@ -77,15 +77,15 @@ void Tool::Input_Type(int id)
         break;
     case 5:
         insert_list.push_back(value_string);
-        raw_text += "Gain-//-T1-resource-every-term,(All-type)";
+        raw_text += "Gain-//-T1-resource,(All-type)";
         break;
     case 6:
         insert_list.push_back(value_string);
-        raw_text += "Gain-//-T2-resource-every-term,(All-type)";
+        raw_text += "Gain-//-T2-resource,(All-type)";
         break;
     case 7:
         insert_list.push_back(value_string);
-        raw_text += "Gain-//-T3-resource-every-term,(All-type)";
+        raw_text += "Gain-//-T3-resource,(All-type)";
         break;
     }
     int text_pos = 0;
