@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
-#include "..\Display_Module_Class\Class_Render.h"
+#include "../Display_Module_Class/Class_Render.h"
 
 using namespace std;
 

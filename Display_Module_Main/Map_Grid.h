@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "..\Object\Class_Buildings.h"
-#include "..\Display_Module_Class\Class_Render.h"
+#include "../Object/Class_Buildings.h"
+#include "../Display_Module_Class/Class_Render.h"
 
 using namespace std;
 

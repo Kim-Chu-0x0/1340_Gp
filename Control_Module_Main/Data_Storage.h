@@ -121,8 +121,9 @@ vector<int> Upgrade_Weighting{
 int Sum_Upgrade_Weighting, Sum_Building_Weighting, Sum_Tool_Weighting;
 
 vector<int> Screen_Size{0, 0};
-
-vector <double> Other_Buffs{0};
+//00 Free Draw
+//01 Prevent 1 round corruption
+vector <double> Other_Buffs{0,0};
 
 bool End_turn_able = 0;
 
@@ -137,13 +138,13 @@ int Turn_No=0;
 // 06:Next_Turn_Button
 vector<bool> Visible{0, 0, 0, 0, 0, 0, 0};
 
-#include "..\Display_Module_Main\Draw_Button.h"
-#include "..\Display_Module_Main\Map_Grid.h"
-#include "..\Display_Module_Main\Resources_Display.h"
-#include "..\Display_Module_Main\Energy_Bar.h"
-#include "..\Display_Module_Main\Draw_UI.h"
-#include "..\Display_Module_Main\Inventory.h"
-#include "..\Display_Module_Main\Next_Turn_Button.h"
+#include "../Display_Module_Main/Draw_Button.h"
+#include "../Display_Module_Main/Map_Grid.h"
+#include "../Display_Module_Main/Resources_Display.h"
+#include "../Display_Module_Main/Energy_Bar.h"
+#include "../Display_Module_Main/Draw_UI.h"
+#include "../Display_Module_Main/Inventory.h"
+#include "../Display_Module_Main/Next_Turn_Button.h"
 
 using namespace std;
 
@@ -190,6 +191,7 @@ private:
 private:
     int turn_counter=0;
     int turn_gap;
+    int Corruption_no;
 };
 
 void Data_Storage::Building_On_Off(){
@@ -206,6 +208,11 @@ void Data_Storage::Availability_Check(){
     Refresh_stat();
     End_turn_able=1;
     vector <vector <int>> Result=Cal_Building_req();
+    if (Corruption_no>0){
+        if (Other_Buffs[1]>0){
+            Other_Buffs[1]-=1;
+        }
+    }
     for (int id = 0;id<Res_Future_List.size();id++){
         Res_Future_List[id]=0;
         Res_Future_List[id]-=Result[0][id];
@@ -256,6 +263,7 @@ void Data_Storage::Next_turn(){
         turn_counter=0;
         Turn_No+=1;
         Grid_Plant_Disaster(0);
+        Corruption_no+=1;
     }
 }
 
@@ -318,6 +326,7 @@ void Data_Storage::Fix(int id)
         Building Null;
         Null.Input_type(6);
         Grid_Place_Building(Null);
+        Corruption_no-=1;
     }
 }
 

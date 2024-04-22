@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 #include <cmath>
-#include "..\Object\Materials.h"
-#include "..\Display_Module_Class\Class_Render.h"
+#include "../Object/Materials.h"
+#include "../Display_Module_Class/Class_Render.h"
 
 using namespace std;
 

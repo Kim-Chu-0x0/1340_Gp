@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "..\Object\Materials.h"
-#include "..\Display_Module_Class\Class_Render.h"
-#include "..\Object\Class_Card.h"
+#include "../Object/Materials.h"
+#include "../Display_Module_Class/Class_Render.h"
+#include "../Object/Class_Card.h"
 
 using namespace std;
 

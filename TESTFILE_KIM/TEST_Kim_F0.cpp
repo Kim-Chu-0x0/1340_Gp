@@ -1,7 +1,7 @@
 //for random testing
 #include <string>
 #include <iostream>
-#include "..\Object\Materials.h"
+#include "../Object/Materials.h"
 
 using namespace std;
 

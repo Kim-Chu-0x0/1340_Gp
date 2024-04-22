@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <math.h>
-#include "..\Display_Module_Class\Class_Pixel.h"
+#include "../Display_Module_Class/Class_Pixel.h"
 #include "Materials.h"
 
 using namespace std;
@@ -155,9 +155,11 @@ vector<vector<int>> Building::Return_Req()
         Tp_1[input_list[id].item] += input_list[id].quantity;
       }
     }
-    for (int id = 0; id < output_list.size(); id++)
-    {
-      Tp_2[output_list[id].item] += output_list[id].quantity;
+    if (!(name=="Disaster"&&Other_Buffs[1]>0)){
+      for (int id = 0; id < output_list.size(); id++)
+      {
+        Tp_2[output_list[id].item] += output_list[id].quantity;
+      }
     }
   }
   vector<vector<int>> Output{Tp_1, Tp_2};
