@@ -22,11 +22,13 @@ protected:
     // change a single grid
     // xy can be in form of{x_id,y_id} or {id}
     void Grid_Set_Building(vector<int> xy, Building item);
-    void Grid_Place_Building(Building item);
     // re-input all building object
     // previous data will be covered
     void Grid_CoverAll_Biulding(vector<Building> item_list);
     void Grid_Reset();
+    vector <vector <int>> Cal_Building_req();
+    void Grid_Place_Building(Building item);
+    void Grid_Building_On_Off();
 
 protected:
     vector<Building> Grid_Building_list;
@@ -62,15 +64,147 @@ protected:
     // output control
 protected:
     void Grid_Output();
+    void Grid_Refresh_stat();
     vector<int> Grid_st_xy{0, 0};
     vector<int> Grid_Maximum_Size{8, 5};
     vector<int> Grid_Size{Grid_Maximum_Size[0] * 7 - 1, 0};
     string Grid_Layer_name = "Map";
+    string Grid_Popup_Layer_name = "PopUp_Map";
+    void Grid_Pass_Turn();
+    vector<int> Get_Disaster_Req();
+    void Grid_Plant_Disaster(int level);
 
 private:
     vector<int> Grid_Grid_Size{0, 0};
     int selection;
+    void Grid_Popup();
+    int Grid_Disaster_Fix_Highlight_Data;
 };
+
+vector<int> Map_Grid::Get_Disaster_Req(){
+    return (Grid_Building_list[selection].Get_Disaster_Req());
+}
+
+void Map_Grid::Grid_Building_On_Off(){
+    if (Grid_Building_list[selection].On_Off==0){
+        Grid_Building_list[selection].On_Off=1;
+    }
+    else{
+        Grid_Building_list[selection].On_Off=0;
+    }
+}
+
+void Map_Grid::Grid_Popup(){
+    if (((Grid_Phase == 0)||(Grid_Phase == 1)) && (selection != -1))
+    {
+        if (Grid_Building_list[selection].name != "Empty/sSpace")
+        {
+            vector<int> temp_St{Grid_st_xy[0]+((selection%Grid_Grid_Size[0])*7)-6, Grid_st_xy[1]+((selection/Grid_Grid_Size[0])*7)+7};
+            if (selection%Grid_Grid_Size[0] == Grid_Maximum_Size[0] - 1)
+            {
+                temp_St[0] -= 5;
+            }
+            int temp_size=(Grid_Building_list[selection].description.size()/33);
+            vector<int> temp_En{temp_St[0] + 16, temp_St[1] + temp_size - 1};
+            R_Main.Add_Textbox("", 0, 0, Grid_Popup_Layer_name, Grid_Building_list[selection].description, temp_St, temp_En, 0);
+        }
+    }
+    if (Grid_Phase == 2){
+        string Text = "000000000000000000000Press0E0to0Fix0000000000000000000000";
+        vector<Pixel> T_Pixel_List;
+        Pixel T_Pixel;
+        T_Pixel.colour = Green;
+        for (int id = 0; id < Text.size(); id++)
+        {
+            if (Text[id] == '0')
+            {
+                T_Pixel.text = "/s";
+            }
+            else
+            {
+                T_Pixel.text = Text[id];
+            }
+            T_Pixel_List.push_back(T_Pixel);
+        }
+        vector<int> temp_St{Grid_st_xy[0]+((selection%Grid_Grid_Size[0])*7)-6, Grid_st_xy[1]+((selection/Grid_Grid_Size[0])*7)+7};
+        if (selection%Grid_Grid_Size[0] == Grid_Maximum_Size[0] - 1)
+        {
+            temp_St[0] -= 5;
+        }
+        vector<int> temp_En{temp_St[0] + 9, temp_St[1] + 2};
+        Grid_Disaster_Fix_Highlight_Data = R_Main.Add_Textbox("Disaster_Fix_T", 1, Grid_Disaster_Fix_Highlight_Data, Grid_Popup_Layer_name, T_Pixel_List, temp_St, temp_En, 0);
+    }
+    if (Grid_Phase == 3){
+        string Text = "0000000000000000000Not Enough0Materials000000000000000000";
+        vector<Pixel> T_Pixel_List; 
+        Pixel T_Pixel;
+        T_Pixel.colour = Red;
+        for (int id = 0; id < Text.size(); id++)
+        {
+            if (Text[id] == '0')
+            {
+                T_Pixel.text = "/s";
+            }
+            else
+            {
+                T_Pixel.text = Text[id];
+            }
+            T_Pixel_List.push_back(T_Pixel);
+        }
+        vector<int> temp_St{Grid_st_xy[0]+((selection%Grid_Grid_Size[0])*7)-6, Grid_st_xy[1]+((selection/Grid_Grid_Size[0])*7)+7};
+        if (selection%Grid_Grid_Size[0] == Grid_Maximum_Size[0] - 1)
+        {
+            temp_St[0] -= 5;
+        }
+        vector<int> temp_En{temp_St[0] + 9, temp_St[1] + 2};
+        Grid_Disaster_Fix_Highlight_Data = R_Main.Add_Textbox("Disaster_Fix_F", 1, Grid_Disaster_Fix_Highlight_Data, Grid_Popup_Layer_name, T_Pixel_List, temp_St, temp_En, 0);
+    }
+}
+
+//Start at lv 0
+void Map_Grid::Grid_Plant_Disaster(int level){
+    for (int no = 0;no<level+1;no++){
+        int choice=rand()%Grid_Building_list.size();
+        Building Dis;
+        Dis.Input_type(7);
+        vector<int> temp{choice};
+        Grid_Set_Building(temp, Dis);
+    }
+}
+
+void Map_Grid::Grid_Pass_Turn(){
+    Building Null;
+    Null.Input_type(6);
+    for (int id = 0; id < Grid_Building_list.size(); id++){
+        if (Grid_Building_list[id].Pass_Turn()){
+            vector<int> temp{id};
+            Grid_Set_Building(temp, Null);
+        }
+    }
+}
+
+void Map_Grid::Grid_Refresh_stat(){
+    for (int id = 0; id < Grid_Building_list.size(); id++){
+        Grid_Building_list[id].Refresh_stat();
+    }
+}
+
+vector <vector <int>> Map_Grid::Cal_Building_req(){
+    vector <int> temp (17,0);
+    vector <vector <int>> Output{temp,temp};
+    for (int id = 0; id < Grid_Grid_Size[0] * Grid_Grid_Size[1]; id++){
+        if (Grid_Building_list[id].name!="Empty/sSpace"){
+            vector <vector <int>> T_Output=Grid_Building_list[id].Return_Req();
+            for (int no = 0;no<T_Output[0].size();no++){
+                Output[0][no]+=T_Output[0][no];
+            }
+            for (int no = 0;no<T_Output[1].size();no++){
+                Output[1][no]+=T_Output[1][no];
+            }
+        }
+    }
+    return Output;
+}
 
 void Map_Grid::Grid_Reset()
 {
@@ -85,7 +219,6 @@ void Map_Grid::Grid_Reset()
 
 void Map_Grid::Grid_Place_Building(Building item){
     vector <int> temp{selection};
-    cout<<"l "<<selection;
     Grid_Set_Building(temp,item);
 }
 
@@ -179,15 +312,29 @@ void Map_Grid::Grid_Output()
             vector<int> temp_St{x1, y1};
             vector<int> temp_En{x2, y2};
             if(Grid_Phase==0){
-                Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+                if (Grid_Building_list[x + y * Grid_Grid_Size[0]].name=="Empty/sSpace"){
+                    Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building_NULL", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+                }
+                else if (Grid_Building_list[x + y * Grid_Grid_Size[0]].name=="Disaster"){
+                    Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Disaster", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+                }
+                else {
+                    Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+                }
             }
             else if(Grid_Phase==1){
                 if (Grid_Building_list[x + y * Grid_Grid_Size[0]].name=="Empty/sSpace"){
                     Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building_NULL_T", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
                 }
+                else if (Grid_Building_list[x + y * Grid_Grid_Size[0]].name=="Disaster"){
+                    Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Disaster_", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
+                }
                 else {
                     Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("Building_NULL_F", Grid_selectable, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
                 }
+            }
+            else{
+                Grid_Highlight_Data[x + y * Grid_Grid_Size[0]] = R_Main.Add_Textbox("", 0, Grid_Highlight_Data[x + y * Grid_Grid_Size[0]], Grid_Layer_name, Grid_Building_list[x + y * Grid_Grid_Size[0]].graphic_S, temp_St, temp_En, 0);
             }
         }
     }
@@ -208,6 +355,9 @@ void Map_Grid::Grid_Output()
         vector<int> temp_En{x2, y2};
         R_Main.Add_Textbox("", 0, 0, Grid_Layer_name, Temp, temp_St, temp_En, 0);
     }
+
+    Grid_Popup();
+
     if (Grid_TestMod)
     {
         cout << "Output done" << '\n';

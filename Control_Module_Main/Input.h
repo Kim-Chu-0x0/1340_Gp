@@ -77,7 +77,7 @@ int Input::Key_to_Action(string type, char Input_Key)
     {
         E = 5;
     }
-    else if (type == "Draw")
+    else if (type == "Draw_T")
     {
         E = 6;
     }
@@ -126,6 +126,28 @@ int Input::Key_to_Action(string type, char Input_Key)
     {
         Q = 18;
         E = 19;
+    }
+    else if (type == "NTB_T"){
+        E = 20;
+    }
+    else if (type == "Disaster"){
+        E = 21;
+    }
+    else if (type == "Disaster_Fix_F"){
+        W = 22;
+        S = 22;
+        A = 22;
+        D = 22;
+        Q = 22;
+        E = 22;
+    }
+    else if (type == "Disaster_Fix_T"){
+        W = 0;
+        S = 0;
+        A = 0;
+        D = 0;
+        Q = 22;
+        E = 23;
     }
     vector<int> Key{W, A, S, D, Q, E};
     if (I_TestMod)
@@ -203,11 +225,12 @@ void Input::Execute_Command()
         if (Ref){
             R_Main.Refresh_Current_Name();
         }
+        Ref = 0;
         //*****************Edit action here***************************
         switch (Key_to_Action(R_Main.Current_Item_Name, input_stack[id]))
         {
         case 0:
-            Ref = 0;
+            Sus = 0;
             break;
         // UP
         case 1:
@@ -240,6 +263,14 @@ void Input::Execute_Command()
             Refresh_Layer(R_Main.Highlight_Choice_Layer);
             R_Main.Move(4);
             I_Refresh();
+            break;
+        // Building On/Off
+        case 5:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Building_On_Off();
+            I_Refresh();
+            id = input_stack.size() - 1;
             break;
         // DRAW CARD
         case 6:
@@ -366,6 +397,40 @@ void Input::Execute_Command()
             Ref = 1;
             Sus = 1;
             Temp = D_Main.Building_Grid_Selection_Result(3);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Next_Turn
+        case 20:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Next_turn();
+            I_Refresh();
+            break;
+        // Fix
+        case 21:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Fix(0);
+            Switch_Layer("PopUp_Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Fix Reverse
+        case 22:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Fix(1);
+            Switch_Layer("Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Fix Reverse
+        case 23:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Fix(2);
+            Switch_Layer("Map");
             I_Refresh();
             id = input_stack.size() - 1;
             break;

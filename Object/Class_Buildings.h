@@ -72,6 +72,8 @@ public:
   vector<io_building> output_list;
   int duration = -1;
   int countdown = -1;
+  // 1:On 0:Off
+  bool On_Off = 1;
 
 private:
   int duration_base = -1;
@@ -99,6 +101,9 @@ public:
   void Input_type(int id);
   void Refresh_stat();
   void Countdown_St();
+  bool Pass_Turn();
+  vector<vector<int>> Return_Req();
+  vector<int> Get_Disaster_Req();
 
 private:
   void Search_Location();
@@ -110,9 +115,61 @@ private:
   void Generate_Description();
 };
 
+// return 1 if lifespan <=0
+bool Building::Pass_Turn()
+{
+  if (costume == 0)
+  {
+    countdown -= 1;
+    if (countdown <= 0)
+    {
+      return 1;
+    }
+  }
+  else if (name == "Disaster")
+  {
+    countdown += 1;
+  }
+  return 0;
+}
+
+//For Disaster only
+vector<int> Building::Get_Disaster_Req(){
+  vector<int> Tp_1(17, 0);
+  for (int id = 0; id < input_list.size(); id++)
+  {
+    Tp_1[input_list[id].item] += input_list[id].quantity;
+  }
+  return Tp_1;
+}
+
+vector<vector<int>> Building::Return_Req()
+{
+  vector<int> Tp_1(17, 0);
+  vector<int> Tp_2(17, 0);
+  if (On_Off == 1)
+  {
+    if (name!="Disaster"){
+      for (int id = 0; id < input_list.size(); id++)
+      {
+        Tp_1[input_list[id].item] += input_list[id].quantity;
+      }
+    }
+    for (int id = 0; id < output_list.size(); id++)
+    {
+      Tp_2[output_list[id].item] += output_list[id].quantity;
+    }
+  }
+  vector<vector<int>> Output{Tp_1, Tp_2};
+  return Output;
+}
+
 void Building::Countdown_St()
 {
-  countdown = duration;
+  if (costume == 0)
+  {
+    countdown = duration;
+  }
 }
 
 void Building::Refresh_stat()
@@ -120,6 +177,11 @@ void Building::Refresh_stat()
   if (costume == 0)
   {
     normal_refresh();
+  }
+  else if (name == "Disaster")
+  {
+    output_list[0].quantity = countdown * output_list[0].quantity_base;
+    Generate_Description();
   }
 }
 
@@ -159,19 +221,22 @@ void Building::finalstat_bounus()
   }
   double Temp_d;
   double counter = 0;
-  counter += Upgrade_List[7][1];
-  if (All_Type != -1)
+  if (countdown == -1)
   {
-    counter += Upgrade_List[20][(All_Type * 2) + 1];
+    counter += Upgrade_List[7][1];
+    if (All_Type != -1)
+    {
+      counter += Upgrade_List[20][(All_Type * 2) + 1];
+    }
+    if (All_Name != -1)
+    {
+      counter += Upgrade_List[8][(All_Name * 2) + 1];
+    }
+    Temp_d = duration_base;
+    Temp_d *= 1.0 + (counter / 100);
+    duration = Temp_d;
+    counter = 0;
   }
-  if (All_Name != -1)
-  {
-    counter += Upgrade_List[8][(All_Name * 2) + 1];
-  }
-  Temp_d = duration_base;
-  Temp_d *= 1.0 + (counter / 100);
-  duration = Temp_d;
-  counter = 0;
   counter += Upgrade_List[3][1];
   if (All_Type != -1)
   {
@@ -324,6 +389,13 @@ void Building::normal_refresh()
   {
     graphic_S.push_back(temp_pixel);
   }
+  if ((!On_Off) && (countdown != -1))
+  {
+    for (int id = 0; id < graphic_S.size(); id++)
+    {
+      graphic_S[id].colour = White;
+    }
+  }
   if (TestMod)
   {
     cout << '\n'
@@ -343,12 +415,95 @@ void Building::Costume_initialize()
     {
       graphic_S.push_back(temp);
     }
+    if (TestMod)
+    {
+      cout << '\n'
+           << "Blank object created" << '\n'
+           << "graphic_S size: " << graphic_S.size() << '\n';
+    }
   }
-  if (TestMod)
+  if (name == "Disaster")
   {
-    cout << '\n'
-         << "Blank object created" << '\n'
-         << "graphic_S size: " << graphic_S.size() << '\n';
+    Pixel temp;
+    for (int id = 0; id < graphic_size[0] * (graphic_size[1] + 2); id++)
+    {
+      temp.set_colour(1 + (rand() % 8));
+      switch (rand() % 10)
+      {
+      case 0:
+        temp.text = "@";
+        break;
+      case 1:
+        temp.text = "%";
+        break;
+      case 2:
+        temp.text = "#";
+        break;
+      case 3:
+        temp.text = "$";
+        break;
+      case 4:
+        temp.text = "*";
+        break;
+      case 5:
+        temp.text = "&";
+        break;
+      case 6:
+        temp.text = "?";
+        break;
+      case 7:
+        temp.text = "+";
+        break;
+      case 8:
+        temp.text = "/s";
+        break;
+      case 9:
+        temp.text = "/s";
+        break;
+      }
+      graphic_S.push_back(temp);
+    }
+    countdown = 1;
+    input_list.clear();
+    output_list.clear();
+    io_building temp_io;
+
+    temp_io.item = 16;
+    temp_io.quantity_base = -1 * (5 + rand() % 2) / (1.0 + (((Upgrade_List[10][1] / 100) - 1) / 4));
+    output_list.push_back(temp_io);
+
+    vector<int> element_used;
+    for (int x = 0; x < 4 * no_each_tier; x++)
+    {
+      element_used.push_back(x);
+    }
+    int input_temp;
+    for (double x = 3 + (rand() % 4); x > 0; x--)
+    {
+      if ((element_used.size()) > 0)
+      {
+        input_temp = rand() % element_used.size();
+        temp_io.item = element_used[input_temp];
+        element_used.erase(element_used.begin() + input_temp);
+        input_list.push_back(temp_io);
+      }
+    }
+    req_constant = 30 + (rand() % 6) + (Turn_No * (3 + (rand() % 2)));
+    while (req_constant > 0)
+    {
+      input_temp = rand() % input_list.size();
+      int cost = input_list[input_temp].item / graphic_size[1];
+      cost = pow(cost, (((rand() % graphic_size[1]) + 9) / 10));
+      input_list[input_temp].quantity++;
+      req_constant -= cost;
+    }
+    Generate_Description();
+    if (TestMod)
+    {
+      cout << '\n'
+           << "Disaster created" << '\n'
+           << "graphic_S size: " << graphic_S.size() << '\n';
+    }
   }
 }
 
@@ -364,11 +519,13 @@ void Building::Generate_Description()
         "Output:",
         "Duration:"};
     text_temp[0] += name;
-    if (countdown!=-1){
-      text_temp[3]="Lifespan:";
+    if (countdown != -1)
+    {
+      text_temp[3] = "Lifespan:";
       text_temp[3] += to_string(countdown);
     }
-    else{
+    else
+    {
       text_temp[3] += to_string(duration);
     }
     if (input_list.size() == 0)
@@ -398,6 +555,17 @@ void Building::Generate_Description()
       }
       text_temp[2] += to_string(output_list[x].item);
     }
+    if (countdown != -1)
+    {
+      if (On_Off)
+      {
+        text_temp.push_back("State:/sOn");
+      }
+      else
+      {
+        text_temp.push_back("State:/sOff");
+      }
+    }
     if (TestTEXT)
     {
       cout << '\n';
@@ -410,7 +578,25 @@ void Building::Generate_Description()
   }
   else
   {
-    ;
+    if (name == "Disaster")
+    {
+      vector<string> text_temp{"Requirements:"};
+      for (int id = 0; id < 1 + ((input_list.size() - 1) / 3); id++)
+      {
+        text_temp.push_back("");
+        for (int no = 0; (no < 3) && (((id * 3) + no) < input_list.size()); no++){
+          text_temp[id+1] += "/s";
+          text_temp[id+1] += to_string(input_list[((id * 3) + no)].quantity);
+          text_temp[id+1] += "/";
+          if (input_list[((id * 3) + no)].item < 10)
+          {
+            text_temp[id+1] += "0";
+          }
+          text_temp[id+1] += to_string(input_list[((id * 3) + no)].item);
+        }
+      }
+      text_raw_1 = text_temp;
+    }
   }
   string text_raw_2;
   for (int id = 0; id < text_raw_1.size(); id++)
@@ -727,6 +913,11 @@ void Building::Input_type(int id)
   else if (id == 6)
   {
     name = "Empty/sSpace";
+    costume = 1;
+  }
+  else if (id == 7)
+  {
+    name = "Disaster";
     costume = 1;
   }
   else

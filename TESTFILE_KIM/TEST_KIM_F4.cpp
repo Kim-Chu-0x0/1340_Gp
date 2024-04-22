@@ -15,6 +15,7 @@ using namespace std;
 
 int main()
 {
+    srand(0);
     I_Main.Initialize();
     // D_Main.Test_Specific_Card(2);
     for (int ff = 0; ff < 200; ff++)

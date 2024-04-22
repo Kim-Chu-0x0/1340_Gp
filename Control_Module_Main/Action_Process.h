@@ -25,6 +25,9 @@ public:
     string Current_Item_Name;
     void Refresh_Current_Name()
     {
+        if (A_P_TestMod){
+            cout<<'\n'<<"Refresh_Current_Name"<<'\n';
+        }
         Highlight_Refresh();
         AP_Layer_Location = Layer_id_search(Highlight_Choice_Layer);
         Textbox_Location = Textbox_id_search(Highlight_Choice_Textbox_id[AP_Layer_Location], AP_Layer_Location);

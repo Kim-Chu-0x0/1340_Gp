@@ -43,6 +43,7 @@ class Pixel
 public:
     string text;
     string colour = White;
+    //1 to 25
     void set_colour(int id)
     {
         switch (id)

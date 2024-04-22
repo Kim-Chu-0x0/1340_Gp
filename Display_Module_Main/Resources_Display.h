@@ -20,6 +20,7 @@ private:
 protected:
     vector<int> Res_Resource_List{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     vector<int> Res_Future_List{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    vector<bool> Res_Issue{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 protected:
     void Res_Output();
@@ -123,6 +124,9 @@ void Resources_Display::Res_Output()
                 temp.colour = H_Red;
                 temp.text = "-";
             }
+            if (Res_Issue[id]){
+                temp.colour = H_Yellow;
+            }
             Output_Map.push_back(temp);
             for (int length = 0; length < 6; length++)
             {
@@ -159,6 +163,9 @@ void Resources_Display::Res_Output()
                 {
                     temp.colour = H_Red;
                     temp.text = "-";
+                }
+                if (Res_Issue[id + Y_Size]){
+                    temp.colour = H_Yellow;
                 }
                 Output_Map.push_back(temp);
                 for (int length = 0; length < 6; length++)

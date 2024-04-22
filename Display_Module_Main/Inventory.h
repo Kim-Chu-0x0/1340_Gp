@@ -15,7 +15,7 @@ class Inventory
 {
     // testing
 private:
-    bool INV_Testmod = 1;
+    bool INV_Testmod = 0;
 
     // item access
 protected:
@@ -23,6 +23,7 @@ protected:
     void INV_Reset();
     void INV_Output();
     void INV_Discard();
+    void INV_Refresh_stat();
     Card INV_Slot_Output();
 
     // Formating Data
@@ -87,13 +88,16 @@ void Inventory::INV_Reset()
     }
 }
 
-void Inventory::INV_Output()
-{
+void Inventory::INV_Refresh_stat(){
     for (int id = 0; id < Upgrade_List[9][1]; id++){
         if(INV_item_list[id].Type==3){
             INV_item_list[id].Refresh_stat();
         }
     }
+}
+
+void Inventory::INV_Output()
+{
     INV_selectable = Selectable_List[3];
     if (INV_Phase == 0)
     {
