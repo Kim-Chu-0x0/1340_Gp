@@ -4,6 +4,8 @@ Oneday, your crewship crushed on an unknown planet, you need to try to survive a
 
 Awful digital corruptions are approaching from everywhere and absorbing your limited energy, fix them with materials you mine from the planet!
 
+----------------------------------------------------
+
 Rules:
 
   1:Keep your energy higher than 0 to withstand the cold weather
@@ -13,3 +15,70 @@ Rules:
   3:For most situation, Use WASD to control, and E works as "Yes" while Q works as "No"
   
   4:Getting new cards require energy, and process to new turn regenerate some
+
+----------------------------------------------------
+
+Compilation:
+
+  Use 
+  
+    g++ Main.cpp -o Main.exe
+    
+  to complie
+  
+  Then enter
+  
+    ./Main.exe
+    
+  to start the game
+  
+----------------------------------------------------
+
+Team member:
+
+  3036227434
+  
+(Yeah, only me)
+
+----------------------------------------------------
+
+Libraries:
+
+  No non-standard libraries are used
+
+----------------------------------------------------
+
+Project reqs:
+
+1.Generation of random game sets or events:
+
+  All gaming data is generated randomly  (for example: Draw Card,Weighting system is used to control the output  (Calss_Card.h and its related h.files)  )
+
+2.Data structures for storing game status (e.g., arrays, STL containers):
+
+  Complex game data is stored in different classes and subclasses(In 90% head files)
+
+3.Dynamic memory management (e.g., dynamic arrays, linked lists, STL containers):
+
+  Vector is frenquently used(In 90% head files)
+  
+4.File input/output (e.g., for loading/saving game status):
+
+  The game is a rougue-like style game, in this kind of game, every playthrough is not related to the previous one, SL is not needed
+
+  
+5.Program codes in multiple files:
+
+  Codes are distributted to different file
+  
+  All files are sorted into 4 layers:
+
+    top: Main
+    
+    2:Control_Module
+    
+    3:Display_Module_Main
+    
+    bottom:Objects & Display_Module_Class
+    
+  files only access and respond to files in their neighbor layers, so the structure of the program is clear
