@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
-#include "../Display_Module_Class/Class_Pixel.h"
+#include "Display_Module_CLass/Class_Pixel.h"
 #include "Materials.h"
 #include "Class_Buildings.h"
 

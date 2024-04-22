@@ -138,13 +138,13 @@ int Turn_No=0;
 // 06:Next_Turn_Button
 vector<bool> Visible{0, 0, 0, 0, 0, 0, 0};
 
-#include "../Display_Module_Main/Draw_Button.h"
-#include "../Display_Module_Main/Map_Grid.h"
-#include "../Display_Module_Main/Resources_Display.h"
-#include "../Display_Module_Main/Energy_Bar.h"
-#include "../Display_Module_Main/Draw_UI.h"
-#include "../Display_Module_Main/Inventory.h"
-#include "../Display_Module_Main/Next_Turn_Button.h"
+#include "Display_Module_Main/Draw_Button.h"
+#include "Display_Module_Main/Map_Grid.h"
+#include "Display_Module_Main/Resources_Display.h"
+#include "Display_Module_Main/Energy_Bar.h"
+#include "Display_Module_Main/Draw_UI.h"
+#include "Display_Module_Main/Inventory.h"
+#include "Display_Module_Main/Next_Turn_Button.h"
 
 using namespace std;
 
