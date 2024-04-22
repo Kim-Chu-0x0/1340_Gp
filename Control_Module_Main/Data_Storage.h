@@ -40,7 +40,7 @@ vector<vector<double>> Upgrade_List;
 // 06:NTB
 vector<bool> Selectable_List;
 
-vector<int> Weighting_Tier_List{0, 1, 4, 6, 10, 15, 30, 50, 90};
+vector<int> Weighting_Tier_List{0, 4, 8, 12, 17, 25, 35, 45, 90};
 
 vector<int> Tool_Weighting{
     // Move Building
@@ -64,15 +64,27 @@ vector<int> Building_Weighting{
     // Tier 0 producer
     Weighting_Tier_List[8],
     // Tier 1 producer
-    Weighting_Tier_List[4],
+    Weighting_Tier_List[7],
     // Tier 2 producer
-    Weighting_Tier_List[2],
+    Weighting_Tier_List[4],
     // Tier 0 processor
     Weighting_Tier_List[7],
     // Tier 1 processor
     Weighting_Tier_List[6],
     // Tier 2 processor
-    Weighting_Tier_List[4]};
+    Weighting_Tier_List[4],
+    // Tier 0 extractor
+    Weighting_Tier_List[6],
+    // Tier 1 extractor
+    Weighting_Tier_List[5],
+    // Tier 2 extractor
+    Weighting_Tier_List[3],
+    // Tier 0 dismantler
+    Weighting_Tier_List[5],
+    // Tier 1 dismantler
+    Weighting_Tier_List[4],
+    // Tier 2 dismantler
+    Weighting_Tier_List[2]};
 
 vector<int> Upgrade_Weighting{
     // 0 : Extra Card per draw (Min3 Max5)
@@ -98,23 +110,23 @@ vector<int> Upgrade_Weighting{
     // 10 : Increase Luck
     Weighting_Tier_List[3],
     // 11 : Increase Energy Regeneration
-    Weighting_Tier_List[2],
+    Weighting_Tier_List[3],
     // 12 : Increase Maximum Energy
     Weighting_Tier_List[3],
     // 13 : Longer Preperation Time Before Disaster
-    Weighting_Tier_List[1],
+    Weighting_Tier_List[3],
     // 14 : Increase Resource Output (Specific Type)
     Weighting_Tier_List[2],
     // 15 : Reduce Resource Intakes (Specific Type)
-    Weighting_Tier_List[1],
+    Weighting_Tier_List[3],
     // 16 : Gain Extra Life
     Weighting_Tier_List[0],
     // 17 : Less Draw Consumption
     Weighting_Tier_List[3],
     // 18 : Receive T1 Resource Every Turn
-    Weighting_Tier_List[1],
+    Weighting_Tier_List[3],
     // 19 : Receive 2 Random Upgrades
-    Weighting_Tier_List[2],
+    Weighting_Tier_List[0],
     // 20 : Increase Duration (Specific Type)
     Weighting_Tier_List[2]};
 
@@ -231,12 +243,29 @@ void Data_Storage::Availability_Check(){
     for (int id = 0;id<Res_Future_List.size();id++){
         Res_Future_List[id]+=Result[1][id];
     }
+    for (int id = 0;id<4;id++){
+        Res_Future_List[id]+=Upgrade_List[18][1];
+    }
     EGY_Future_Energy=0;
     EGY_Future_Energy-=Result[0][16];
     EGY_Future_Energy+=Result[1][16];
     EGY_Future_Energy+=Upgrade_List[11][1];
-    if(EGY_Energy>Draw_Draw_cost){
-        Draw_Availability=1;
+    bool blank=0;
+    for (int id = 0;id<Upgrade_List[9][1];id++){
+        if (INV_item_list[id].Type==0){
+            blank=1;
+        }
+    }
+    if (blank){
+        if(EGY_Energy>Draw_Draw_cost){
+            Draw_Availability=1;
+        }
+        else if (Other_Buffs[0]!=0){
+            Draw_Availability=1;
+        }
+        else{
+            Draw_Availability=0;
+        }
     }
     else{
         Draw_Availability=0;
@@ -362,10 +391,10 @@ void Data_Storage::Use_INV_item(int id)
                 D_Phase_Switch(1);
             }
             else if (Card_cache.T_Data.type==3){
-                Other_Buffs[0]=1;
+                Other_Buffs[1]=1;
             }
             else if (Card_cache.T_Data.type==4){
-                Other_Buffs[1]=1;
+                Other_Buffs[0]=1;
             }
             else if (Card_cache.T_Data.type==5){
                 for (int id = 0;id<4;id++){

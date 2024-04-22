@@ -88,10 +88,15 @@ void Draw_Button::Draw_Output()
     Output_Map[33] = temp_pixel;
     Output_Map[50] = temp_pixel;
     temp_pixel.colour = B_White;
-    for (int id = 0; id < to_string(Draw_Draw_cost).size(); id++)
-    {
-        temp_pixel.text = to_string(Draw_Draw_cost)[id];
-        Output_Map[40 + id] = temp_pixel;
+    if (Other_Buffs[0]==0){
+        for (int id = 0; id < to_string(Draw_Draw_cost).size(); id++)
+        {
+            temp_pixel.text = to_string(Draw_Draw_cost)[id];
+            Output_Map[40 + id] = temp_pixel;
+        }
+    }
+    else{
+        Output_Map[40].text = "0";
     }
     Output_Map[44] = Materials_Graphic(16);
     if (Draw_Availability){

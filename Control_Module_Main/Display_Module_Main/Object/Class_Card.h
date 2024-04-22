@@ -147,6 +147,9 @@ void Card::Random()
         {
             cout << "Choice: " << Choice << '\n';
         }
+        if (Choice>=6){
+            Choice+=2;
+        }
         B_Data.Input_type(Choice);
         vector<string> temp_vector{
             "0", "╦", "0", "0", "╦", "0", "0", "╦", "0",

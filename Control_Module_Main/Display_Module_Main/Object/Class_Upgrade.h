@@ -144,12 +144,12 @@ void Upgrade::Input_type(int id)
         break;
     case 17:
         express = 2;
-        constant_1 = 12;
-        constant_2 = 0.77;
+        constant_1 = 18;
+        constant_2 = 0.9;
         break;
     case 18:
         express = 2;
-        constant_1 = 3;
+        constant_1 = 10;
         constant_2 = 0.92;
         break;
     case 19:
@@ -219,7 +219,7 @@ void Upgrade::Text_Formation(int id)
         raw_text += "Gain-//%-resource-boost,(Apply-to-all-buildings)";
         break;
     case 4:
-        insert_list.push_back(Processing_Building_name_list[subtype]);
+        insert_list.push_back(Production_Building_name_list[subtype]);
         insert_list.push_back(value_string);
         raw_text += "//-gain-//%,resource-boost";
         break;
@@ -228,7 +228,7 @@ void Upgrade::Text_Formation(int id)
         raw_text += "Gain-//%-input-discount,(Apply-to-all-buildings)";
         break;
     case 6:
-        insert_list.push_back(Production_Building_name_list[subtype]);
+        insert_list.push_back(Processing_Building_name_list[subtype]);
         insert_list.push_back(value_string);
         raw_text += "//-gain-//%,input-discount";
         break;
