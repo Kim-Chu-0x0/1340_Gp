@@ -82,3 +82,9 @@ Project reqs:
     bottom:Objects & Display_Module_Class
     
   files only access and respond to files in their neighbor layers, so the structure of the program is clear
+
+----------------------------------------------------
+
+Wanna try my render system?
+
+  Read the readme.txt inside Display_Module_CLass, it explains how the complex render system works
