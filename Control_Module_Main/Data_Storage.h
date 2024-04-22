@@ -712,8 +712,7 @@ void Data_Storage::Initialize()
     Upgrade_List[10][1] = 100;
     Upgrade_List[11][1] = 20;
     Upgrade_List[12][1] = 100;
-    Upgrade_List[13][1] = 1;
-    //Upgrade_List[13][1] = 14;
+    Upgrade_List[13][1] = 14;
     Upgrade_List[17][1] = 100;
     for (int id = 1; id < Production_Building_type; id++)
     {
