@@ -352,6 +352,9 @@ void Data_Storage ::Upgrade_Apply(Upgrade input)
     {
         Check_Size();
     }
+    if (input.type == 12){
+        EGY_Energy+=input.value;
+    }
 }
 
 void Data_Storage::Discard(int id)

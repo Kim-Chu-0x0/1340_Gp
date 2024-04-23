@@ -17,6 +17,7 @@ int main()
 {
     srand(0);
     I_Main.Initialize();
+    //D_Main.Test_Specific_Card(12);
     for (int ff = 0;; ff++)
     {
         I_Main.Read_input();
