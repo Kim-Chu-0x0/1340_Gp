@@ -16,6 +16,8 @@ Rules:
   
   4:Getting new cards require energy, and process to new turn regenerate some
 
+  5:Having a high energy level will gain you some bouns, while low energy level will lead to some de-buff
+
 ----------------------------------------------------
 
 Compilation:
