@@ -73,7 +73,7 @@ Pixel Materials_Graphic(int id)
         output.text = "⇕";
         break;
     case 16:
-        output.colour = Yellow;
+        output.colour = H_Yellow;
         output.text = "⧰";
         break;
     }

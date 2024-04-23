@@ -120,10 +120,12 @@ void Upgrade::Input_type(int id)
         constant_2 = 0.92;
         break;
     case 12:
-        express = 20;
+        express = 3;
+        constant_1 = 20;
         break;
     case 13:
-        express = 1;
+        express = 3;
+        constant_1 = (rand() % 2) + 2;
         break;
     case 14:
         express = 2;
@@ -153,7 +155,7 @@ void Upgrade::Input_type(int id)
         constant_2 = 0.92;
         break;
     case 19:
-        express = 3;
+        express = 1;
         break;
     case 20:
         express = 2;
@@ -179,7 +181,7 @@ void Upgrade::Input_type(int id)
         value *= ((85 + (rand() % (temp))) / 100.0);
         break;
     case 3:
-        value = 1;
+        value += constant_1;
         break;
     }
     if (TestMod)

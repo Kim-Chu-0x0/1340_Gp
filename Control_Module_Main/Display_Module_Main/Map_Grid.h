@@ -67,7 +67,7 @@ protected:
     void Grid_Output();
     void Grid_Refresh_stat();
     vector<int> Grid_st_xy{0, 0};
-    vector<int> Grid_Maximum_Size{8, 5};
+    vector<int> Grid_Maximum_Size{8, 6};
     vector<int> Grid_Size{Grid_Maximum_Size[0] * 7 - 1, 0};
     string Grid_Layer_name = "Map";
     string Grid_Popup_Layer_name = "PopUp_Map";
@@ -77,6 +77,7 @@ protected:
     Building Grid_Take_Building();
     void Grid_Demolish_Building();
     int Grid_Get_pos();
+    void Grid_Clear_Disasters();
 
 private:
     vector<int> Grid_Grid_Size{0, 0};
@@ -84,6 +85,17 @@ private:
     void Grid_Popup();
     int Grid_Disaster_Fix_Highlight_Data;
 };
+
+void Map_Grid::Grid_Clear_Disasters(){
+    Building Null;
+    Null.Input_type(6);
+    for (int id = 0; id < Grid_Building_list.size(); id++){
+        if (Grid_Building_list[id].name=="Disaster"){
+            vector<int> temp{id};
+            Grid_Set_Building(temp, Null);
+        }
+    }
+}
 
 int Map_Grid::Grid_Get_pos(){
     return selection;

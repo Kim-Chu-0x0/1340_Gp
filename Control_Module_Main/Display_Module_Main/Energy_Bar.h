@@ -23,6 +23,7 @@ protected:
 
 protected:
     void EGY_Output();
+    int EGY_Energy_Level();
     vector<int> EGY_st_xy{0, 0};
     vector<int> EGY_Size{0, 2};
     string EGY_Layer_name = "Map";
@@ -95,5 +96,20 @@ void Energy_Bar::EGY_Output()
     vector<int> st_xy{EGY_st_xy[0] + Text_Width + 1, EGY_st_xy[1]};
     vector<int> en_xy{EGY_st_xy[0] + EGY_Size[0] - 1, EGY_st_xy[1] + EGY_Size[1] - 1};
     R_Main.Add_Textbox("", 0, 0, EGY_Layer_name, Output_Map, st_xy, en_xy, 0);
+}
+
+int Energy_Bar::EGY_Energy_Level()
+{
+    double percentage=EGY_Energy / Upgrade_List[12][1];
+    if (percentage>0.8){
+        return 3;
+    }
+    if (percentage>0.5){
+        return 2;
+    }
+    if (percentage>0.2){
+        return 1;
+    }
+    return 0;
 }
 #endif

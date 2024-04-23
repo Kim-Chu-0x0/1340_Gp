@@ -77,7 +77,6 @@ public:
     string Highlight_Choice_Layer = "Map";
     // store which textbox is chosen to be highlighted
     vector <int> Highlight_Choice_Textbox_id;
-    // can only be used once
     void Set_Size(int x_len, int y_len)
     {
         if ((x_len <= 0) || (y_len <= 0))

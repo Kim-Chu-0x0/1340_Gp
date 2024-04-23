@@ -21,7 +21,7 @@ protected:
     bool Draw_Availability = 1;
 
 private:
-    int Draw_Draw_cost_base=20;
+    int Draw_Draw_cost_base=16;
     int Draw_selectable;
     int Draw_highlight_id = 0;
 

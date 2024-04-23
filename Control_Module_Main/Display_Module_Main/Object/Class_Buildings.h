@@ -10,12 +10,11 @@
 
 using namespace std;
 
-const int Processing_Building_type = 3;
-const int Processing_Building_number = 9;
 const vector<string> Processing_Building_type_list{
     "Processor",
     "Extractor",
-    "Dismantler"};
+    "Dismantler",
+    "Generator"};
 const vector<string> Processing_Building_name_list{
     "Tier/s0/sprocessor",
     "Tier/s1/sprocessor",
@@ -25,14 +24,18 @@ const vector<string> Processing_Building_name_list{
     "Tier/s2/sExtractor",
     "Tier/s0/sDismantler",
     "Tier/s1/sDismantler",
-    "Tier/s2/sDismantler"};
-const int Production_Building_type = 4;
-const int Production_Building_number = 12;
+    "Tier/s2/sDismantler",
+    "Tier/s0/sGenerator",
+    "Tier/s1/sGenerator",
+    "Tier/s2/sGenerator"};
+const int Processing_Building_type = Processing_Building_type_list.size();
+const int Processing_Building_number = Processing_Building_name_list.size();
 const vector<string> Production_Building_type_list{
     "Producer",
     "Processor",
     "Extractor",
-    "Dismantler"};
+    "Dismantler",
+    "Generator"};
 const vector<string> Production_Building_name_list{
     "Tier/s0/sproducer",
     "Tier/s1/sproducer",
@@ -45,14 +48,18 @@ const vector<string> Production_Building_name_list{
     "Tier/s2/sExtractor",
     "Tier/s0/sDismantler",
     "Tier/s1/sDismantler",
-    "Tier/s2/sDismantler"};
-const int All_Building_type = 4;
-const int All_Building_number = 12;
+    "Tier/s2/sDismantler",
+    "Tier/s0/sGenerator",
+    "Tier/s1/sGenerator",
+    "Tier/s2/sGenerator"};
+const int Production_Building_type = Production_Building_type_list.size();
+const int Production_Building_number = Production_Building_name_list.size();
 const vector<string> All_Building_type_list{
     "Producer",
     "Processor",
     "Extractor",
-    "Dismantler"};
+    "Dismantler",
+    "Generator"};
 const vector<string> All_Building_name_list{
     "Tier/s0/sproducer",
     "Tier/s1/sproducer",
@@ -65,7 +72,12 @@ const vector<string> All_Building_name_list{
     "Tier/s2/sExtractor",
     "Tier/s0/sDismantler",
     "Tier/s1/sDismantler",
-    "Tier/s2/sDismantler"};
+    "Tier/s2/sDismantler",
+    "Tier/s0/sGenerator",
+    "Tier/s1/sGenerator",
+    "Tier/s2/sGenerator"};
+const int All_Building_type = All_Building_type_list.size();
+const int All_Building_number = All_Building_name_list.size();
 const int no_each_tier = 4;
 const int no_of_t4 = 4;
 const vector<string> Default_colour{Red, Yellow, Blue, Green};
@@ -75,7 +87,7 @@ class io_building
 public:
   int item;
   int quantity = 0;
-  int quantity_base = 0;
+  int quantity_base = 1;
 };
 
 class Building
@@ -287,6 +299,9 @@ void Building::finalstat_bounus()
   {
     Temp_d = output_list[id].quantity_base;
     Temp_d *= 1.0 + (counter / 100);
+    if (countdown != -1){
+      Temp_d*=Other_Buffs[2];
+    }
     output_list[id].quantity = Temp_d;
   }
   counter = 0;
@@ -303,6 +318,9 @@ void Building::finalstat_bounus()
   {
     Temp_d = input_list[id].quantity_base;
     Temp_d *= 1.0 + (counter / 100);
+    if (countdown != -1){
+      Temp_d*=Other_Buffs[2];
+    }
     input_list[id].quantity = Temp_d;
   }
   if (TestBounus)
@@ -378,6 +396,9 @@ void Building::normal_refresh()
     {
       temp_colour = Default_colour[output_list[id].item % no_each_tier];
     }
+    else if (output_list[id].item==16){
+      temp_colour = H_Yellow;
+    }
     else
     {
       temp_colour = White;
@@ -448,7 +469,7 @@ void Building::Costume_initialize()
   {
     Pixel temp;
     temp.text = "/s";
-    for (int id = 0; id < graphic_size[0] * (graphic_size[1] + 2); id++)
+    for (int id = 0; id < graphic_size[0] * (no_each_tier + 2); id++)
     {
       graphic_S.push_back(temp);
     }
@@ -462,7 +483,7 @@ void Building::Costume_initialize()
   if (name == "Disaster")
   {
     Pixel temp;
-    for (int id = 0; id < graphic_size[0] * (graphic_size[1] + 2); id++)
+    for (int id = 0; id < graphic_size[0] * (no_each_tier + 2); id++)
     {
       temp.set_colour(1 + (rand() % 8));
       switch (rand() % 10)
@@ -525,14 +546,14 @@ void Building::Costume_initialize()
         input_list.push_back(temp_io);
       }
     }
-    req_constant = 30 + (rand() % 6) + (Turn_No * (3 + (rand() % 2)));
-    while (req_constant > 0)
+    double counter = 30 + (rand() % 6) + pow(Turn_No * (6 + (rand() % 2)),1.5);
+    while (counter > 0)
     {
       input_temp = rand() % input_list.size();
-      int cost = input_list[input_temp].item / graphic_size[1];
-      cost = pow(cost, (((rand() % graphic_size[1]) + 9) / 10));
+      double cost = 1.0 *input_list[input_temp].item / no_each_tier;
+      cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
       input_list[input_temp].quantity++;
-      req_constant -= cost;
+      counter -= cost;
     }
     Generate_Description();
     if (TestMod)
@@ -542,13 +563,32 @@ void Building::Costume_initialize()
            << "graphic_S size: " << graphic_S.size() << '\n';
     }
   }
+  else if (type =="Generator"){
+    Search_Location();
+    basestat_bounus();
+    double Out_const_temp =out_constant;
+    out_constant = 0;
+    type_process();
+    io_building output_temp;
+    output_temp.item = 16;
+    while (Out_const_temp > 0)
+    {
+      double cost = 2.0;
+      cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
+      output_temp.quantity_base++;
+      Out_const_temp -= cost;
+    }
+    output_list.push_back(output_temp);
+    normal_refresh();
+    Generate_Description();
+  }
 }
 
 void Building::Generate_Description()
 {
   description.clear();
   vector<string> text_raw_1;
-  if (!costume)
+  if ((!costume)||(type =="Generator"))
   {
     vector<string> text_temp{
         "Name:",
@@ -699,13 +739,14 @@ void Building::type_process()
       input_list.push_back(temp_io);
     }
   }
-  while (req_constant > 0)
+  double Counter = req_constant;
+  while ( Counter > 0)
   {
     input_temp = rand() % input_list.size();
-    int cost = input_list[input_temp].item / graphic_size[1];
-    cost = pow(cost, (((rand() % graphic_size[1]) + 9) / 10));
+    double cost =  1.0 * input_list[input_temp].item / no_each_tier;
+    cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
     input_list[input_temp].quantity_base++;
-    req_constant -= cost;
+     Counter -= cost;
   }
   // output generation
   element_used.clear();
@@ -732,13 +773,14 @@ void Building::type_process()
       output_list.push_back(temp_io);
     }
   }
-  while (out_constant > 0)
+  Counter = out_constant;
+  while (Counter > 0)
   {
     output_temp = rand() % output_list.size();
-    int cost = output_list[output_temp].item / graphic_size[1];
-    cost = pow(cost, (((rand() % graphic_size[1]) + 9) / 10));
+    double cost = 1.0 * output_list[output_temp].item / no_each_tier;
+    cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
     output_list[output_temp].quantity_base++;
-    out_constant -= cost;
+    Counter -= cost;
   }
   if (TestMod)
   {
@@ -746,7 +788,6 @@ void Building::type_process()
          << "Input size: " << input_list.size() << '\n';
     cout << "Output size: " << output_list.size() << '\n';
   }
-  normal_refresh();
 }
 
 void Building::Search_Location()
@@ -834,7 +875,7 @@ void Building::Input_type(int id)
     out_constant = 10;
     in_complexity = 1;
     out_complexity = 1;
-    duration_base = 10;
+    duration_base = 6;
   }
   else if (id == 1)
   {
@@ -849,9 +890,9 @@ void Building::Input_type(int id)
     req_constant = 0;
     out_tier[0] = 1;
     out_constant = 13;
-    in_complexity = 2;
+    in_complexity = 1;
     out_complexity = 2;
-    duration_base = 12;
+    duration_base = 7;
   }
   else if (id == 2)
   {
@@ -867,9 +908,9 @@ void Building::Input_type(int id)
     out_tier[0] = 1;
     out_tier[1] = 1;
     out_constant = 18;
-    in_complexity = 3;
+    in_complexity = 1;
     out_complexity = 3;
-    duration_base = 14;
+    duration_base = 8;
   }
   else if (id == 3)
   {
@@ -885,10 +926,10 @@ void Building::Input_type(int id)
     req_constant = 4;
     out_tier[0] = 1;
     out_tier[1] = 1;
-    out_constant = 10;
+    out_constant = 18;
     in_complexity = 1;
     out_complexity = 1;
-    duration_base = 10;
+    duration_base = 5;
   }
   else if (id == 4)
   {
@@ -904,10 +945,10 @@ void Building::Input_type(int id)
     req_constant = 5;
     out_tier[0] = 1;
     out_tier[1] = 1;
-    out_constant = 14;
+    out_constant = 20;
     in_complexity = 2;
     out_complexity = 2;
-    duration_base = 12;
+    duration_base = 5;
   }
   else if (id == 5)
   {
@@ -924,10 +965,10 @@ void Building::Input_type(int id)
     req_constant = 6;
     out_tier[1] = 1;
     out_tier[2] = 1;
-    out_constant = 20;
+    out_constant = 25;
     in_complexity = 3;
     out_complexity = 3;
-    duration_base = 14;
+    duration_base = 5;
   }
   else if (id == 6)
   {
@@ -951,14 +992,14 @@ void Building::Input_type(int id)
     unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_tier[1] = 1;
-    req_constant = 5;
+    req_constant = 7;
     out_tier[1] = 1;
     out_tier[2] = 1;
     out_tier[3] = 1;
-    out_constant = 12;
+    out_constant = 17;
     in_complexity = 2;
     out_complexity = 3;
-    duration_base = 8;
+    duration_base = 10;
   }
   else if (id == 9)
   {
@@ -972,14 +1013,14 @@ void Building::Input_type(int id)
     unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_tier[1] = 1;
-    req_constant = 6;
+    req_constant = 9;
     out_tier[1] = 1;
     out_tier[2] = 1;
     out_tier[3] = 1;
-    out_constant = 16;
+    out_constant = 19;
     in_complexity = 2;
     out_complexity = 4;
-    duration_base = 9;
+    duration_base = 12;
   }
   else if (id == 10)
   {
@@ -994,13 +1035,13 @@ void Building::Input_type(int id)
     req_tier[0] = 1;
     req_tier[1] = 1;
     req_tier[2] = 1;
-    req_constant = 7;
+    req_constant = 12;
     out_tier[2] = 1;
     out_tier[3] = 1;
-    out_constant = 22;
+    out_constant = 27;
     in_complexity = 2;
     out_complexity = 4;
-    duration_base = 12;
+    duration_base = 14;
   }
   else if (id == 11)
   {
@@ -1008,19 +1049,19 @@ void Building::Input_type(int id)
     name = "Tier/s0/sDismantler";
     vector<string> temp_vector{
         "╔", "╦", "═", "╦", "═", "╦", "═", "╦", "═", "╦", "╗",
-        "0", "║", "0", "0", "0", "𐓏", "0", "0", "0", "║", "0",
+        "0", "║", "0", "0", "0", "✖︎", "0", "0", "0", "║", "0",
         "0", "║", "0", "0", "0", "0", "0", "0", "0", "║", "0",
         "╚", "╩", "═", "╩", "═", "╩", "═", "╩", "═", "╩", "╝"};
     unprocessed_graphic = temp_vector;
     req_tier[1] = 1;
     req_tier[2] = 1;
     req_tier[3] = 1;
-    req_constant = 5;
+    req_constant = 6;
     out_tier[0] = 1;
-    out_constant = 22;
+    out_constant = 24;
     in_complexity = 2;
     out_complexity = 2;
-    duration_base = 6;
+    duration_base = 3;
   }
   else if (id == 12)
   {
@@ -1028,19 +1069,19 @@ void Building::Input_type(int id)
     name = "Tier/s1/sDismantler";
     vector<string> temp_vector{
         "╔", "╦", "╦", "╦", "═", "╦", "═", "╦", "╦", "╦", "╗",
-        "0", "║", "0", "0", "0", "𐓏", "0", "0", "0", "║", "0",
-        "0", "║", "0", "╦", "═", "𐓏", "═", "╦", "0", "║", "0",
+        "0", "║", "0", "0", "0", "✖︎", "0", "0", "0", "║", "0",
+        "0", "║", "0", "╦", "═", "✖︎", "═", "╦", "0", "║", "0",
         "╚", "╩", "═", "╩", "═", "╩", "═", "╩", "═", "╩", "╝"};
     unprocessed_graphic = temp_vector;
     req_tier[1] = 1;
     req_tier[2] = 1;
     req_tier[3] = 1;
-    req_constant = 7;
+    req_constant = 8;
     out_tier[0] = 1;
-    out_constant = 24;
+    out_constant = 26;
     in_complexity = 2;
     out_complexity = 2;
-    duration_base = 7;
+    duration_base = 4;
   }
   else if (id == 13)
   {
@@ -1048,40 +1089,100 @@ void Building::Input_type(int id)
     name = "Tier/s2/sDismantler";
     vector<string> temp_vector{
         "╔", "╦", "╦", "╦", "═", "╦", "═", "╦", "╦", "╦", "╗",
-        "0", "╬", "0", "0", "𐓏", "𐓏", "𐓏", "0", "0", "╬", "0",
+        "0", "╬", "0", "0", "✖︎", "✖︎", "✖︎", "0", "0", "╬", "0",
         "0", "║", "0", "╦", "╩", "╬", "╩", "╦", "0", "║", "0",
         "╚", "╩", "╩", "╩", "═", "╩", "═", "╩", "╩", "╩", "╝"};
     unprocessed_graphic = temp_vector;
     req_tier[2] = 1;
     req_tier[3] = 1;
-    req_constant = 8;
+    req_constant = 9;
     out_tier[0] = 1;
     out_tier[1] = 1;
-    out_constant = 28;
+    out_constant = 29;
     in_complexity = 2;
     out_complexity = 3;
-    duration_base = 8;
+    duration_base = 5;
+  }
+  else if (id == 14)
+  {
+    type = "Generator";
+    name = "Tier/s0/sGenerator";
+    vector<string> temp_vector{
+        "0", "0", "0", "0", "╦", "═", "╦", "0", "0", "0", "0",
+        "0", "0", "0", "0", "║", "⧰", "║", "0", "0", "0", "0",
+        "0", "0", "╦", "╦", "║", "0", "║", "╦", "╦", "0", "0",
+        "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
+    unprocessed_graphic = temp_vector;
+    req_tier[0] = 1;
+    req_tier[1] = 1;
+    req_tier[2] = 1;
+    req_constant = 13;
+    out_constant = 18;
+    in_complexity = 2;
+    out_complexity = 1;
+    duration_base = 6;
+    costume = 1;
+  }
+  else if (id == 15)
+  {
+    type = "Generator";
+    name = "Tier/s1/sGenerator";
+    vector<string> temp_vector{
+        "0", "0", "0", "0", "╦", "╦", "╦", "0", "0", "0", "0",
+        "0", "0", "╦", "╦", "║", "⧰", "║", "╦", "╦", "0", "0",
+        "0", "0", "║", "║", "║", "⧰", "║", "║", "║", "0", "0",
+        "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
+    unprocessed_graphic = temp_vector;
+    req_tier[0] = 1;
+    req_tier[1] = 1;
+    req_tier[2] = 1;
+    req_constant = 11;
+    out_constant = 18;
+    in_complexity = 2;
+    out_complexity = 1;
+    duration_base = 5;
+    costume = 1;
+  }
+  else if (id == 16)
+  {
+    type = "Generator";
+    name = "Tier/s2/sGenerator";
+    vector<string> temp_vector{
+        "0", "0", "0", "0", "╦", "╬", "╦", "0", "0", "0", "0",
+        "0", "0", "╔", "╬", "║", "⧰", "║", "╬", "╗", "0", "0",
+        "0", "0", "║", "⧰", "╠", "═", "╣", "⧰", "║", "0", "0",
+        "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
+    unprocessed_graphic = temp_vector;
+    req_tier[0] = 1;
+    req_tier[1] = 1;
+    req_constant = 8;
+    out_constant = 16;
+    in_complexity = 2;
+    out_complexity = 1;
+    duration_base = 5;
+    costume = 1;
   }
   else
   {
     cout << "(Input_type)Error: Unknown Building id" << '\n';
     exit(0);
   }
+  if (TestMod)
+  {
+    cout << '\n'
+         << "name: " << name << '\n';
+    cout << "req_constant: " << req_constant << '\n';
+    cout << "out_constant: " << out_constant << '\n';
+    cout << "in_complexity: " << in_complexity << '\n';
+    cout << "out_complexity: " << out_complexity << '\n';
+    cout << "duration_base: " << duration_base << '\n';
+    }
   if (!costume)
   {
-    if (TestMod)
-    {
-      cout << '\n'
-           << "name: " << name << '\n';
-      cout << "req_constant: " << req_constant << '\n';
-      cout << "out_constant: " << out_constant << '\n';
-      cout << "in_complexity: " << in_complexity << '\n';
-      cout << "out_complexity: " << out_complexity << '\n';
-      cout << "duration_base: " << duration << '\n';
-    }
     Search_Location();
     basestat_bounus();
     type_process();
+    normal_refresh();
   }
   else
   {
