@@ -66,7 +66,7 @@ Project reqs:
   
 4.File input/output (e.g., for loading/saving game status):
 
-  The game provides a well developed SL system, includes Auto-Saving, and Multiple Save-Slots for play to save their progress
+  The game has a well developed SL system, includes Auto-Saving, and provides Multiple Save-Slots for player to save their progress
 
   
 5.Program codes in multiple files:
