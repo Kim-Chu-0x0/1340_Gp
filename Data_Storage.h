@@ -1159,8 +1159,6 @@ void Data_Storage::Load(int id)
         // Grid Building Data
         else if (phase == 7)
         {
-            cout<<'\n'<<"counter: "<<counter<<"  subcounter: "<<subcounter<<"  subcounter2: "<<subcounter2<<'\n';
-            cout<<Line<<'\n';
             if (gap == 0)
             {
                 temp.push_back(Line);
@@ -1182,8 +1180,6 @@ void Data_Storage::Load(int id)
         // INV Card Data
         else if (phase == 8)
         {
-            cout<<'\n'<<"counter: "<<counter<<"  subcounter: "<<subcounter<<"  subcounter2: "<<subcounter2<<'\n';
-            cout<<Line<<'\n';
             if (subcounter == 0)
             {
                 subcounter = stoi(Line);
