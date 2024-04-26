@@ -18,6 +18,7 @@ private:
     bool EGY_TestMod = 0;
 
 protected:
+    //Needs to be saved
     double EGY_Energy = 100;
     double EGY_Future_Energy = 0;
 

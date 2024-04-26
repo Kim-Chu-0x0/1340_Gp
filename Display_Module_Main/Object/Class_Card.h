@@ -23,6 +23,8 @@ public:
     void Random();
     void Blank();
     void Refresh_stat();
+    void Load_Card(vector <string> input);
+    vector <string> Save_Card();
 
 public:
     vector<Pixel> Graphic, Description, Detail_in_Inv;
@@ -36,6 +38,76 @@ public:
     Tool T_Data;
     Upgrade U_Data;
 };
+
+void Card::Load_Card(vector <string> input){
+    Graphic.clear();
+    Type=stoi(input[0]);
+    input.erase(input.begin());
+    if (Type==2){
+        T_Data.Load_Tool(input);
+        vector<string> temp_vector{
+            "0", "╔", "═", "═", "═", "═", "═", "╗", "0",
+            "0", "║", "0", "═", "╦", "═", "0", "║", "0",
+            "0", "║", "0", "═", "╩", "═", "0", "║", "0",
+            "0", "╚", "═", "═", "═", "═", "═", "╝", "0"};
+        Pixel temp;
+        temp.colour = Blue;
+        for (int id = 0; id < temp_vector.size(); id++)
+        {
+            if (temp_vector[id] == "0")
+            {
+                temp.text = "/s";
+            }
+            else
+            {
+                temp.text = temp_vector[id];
+            }
+            Graphic.push_back(temp);
+        }
+        Description = T_Data.description;
+        Size_of_Description[1] = T_Data.description.size() / 33;
+    }
+    else if (Type==3){
+        B_Data.Load_Building(input);
+        vector<string> temp_vector{
+            "0", "╦", "0", "0", "╦", "0", "0", "╦", "0",
+            "0", "║", "0", "0", "║", "0", "0", "║", "0",
+            "0", "║", "0", "0", "║", "0", "0", "║", "0",
+            "0", "╩", "0", "0", "╩", "0", "0", "╩", "0"};
+        Pixel temp;
+        temp.colour = Yellow;
+        for (int id = 0; id < temp_vector.size(); id++)
+        {
+            if (temp_vector[id] == "0")
+            {
+                temp.text = "/s";
+            }
+            else
+            {
+                temp.text = temp_vector[id];
+            }
+            Graphic.push_back(temp);
+        }
+        Description = B_Data.description;
+        Size_of_Description[1] = B_Data.description.size() / 33;
+    }
+}
+
+vector <string> Card::Save_Card(){
+    if (Type==1){
+        cout<<'\n'<<"Upgrade Card can't be saved"<<'\n';
+        exit(0);
+    }
+    vector <string> Output;
+    if (Type==2){
+        Output=T_Data.Save_Tool();
+    }
+    else if (Type==3){
+        Output=B_Data.Save_Building();
+    }
+    Output.insert(Output.begin(),to_string(Type));
+    return Output;
+}
 
 void Card::Refresh_stat(){
     B_Data.Refresh_stat();

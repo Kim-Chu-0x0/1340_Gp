@@ -36,16 +36,29 @@ protected:
 protected:
     int INV_selection;
     int INV_selection_id;
+    //Needs to be saved
     vector<Card> INV_item_list;
     vector<int> INV_highlight_id;
     int INV_button_highlight_id;
     string INV_Layer_name = "Map";
     string INV_Popup_Layer_Name = "PopUp_Map";
     int INV_Phase = 0;
+    vector <string> INV_Save();
 
 private:
     int INV_selectable;
 };
+
+vector <string> Inventory::INV_Save(){
+    vector <string> Output;
+    for (int id = 0 ;id<INV_item_list.size();id++){
+        vector <string> temp = INV_item_list[id].Save_Card();
+        for (int no = 0;no<temp.size();no++){
+            Output.push_back(temp[no]);
+        }
+    }
+    return Output;
+}
 
 void Inventory::INV_Discard(){
     Card temp;

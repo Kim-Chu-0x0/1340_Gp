@@ -18,6 +18,7 @@ private:
     bool Res_TestMod = 0;
 
 protected:
+    //Needs to be saved
     vector<int> Res_Resource_List{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     vector<int> Res_Future_List{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     vector<bool> Res_Issue{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

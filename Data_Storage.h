@@ -4,30 +4,32 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 
-// Type:
-//  0 : Extra Card per draw (Min3 Max5)
-//  1 : Extend Map Horizontaly
-//  2 : Extend Map Vertically
-//  3 : Extra Resource Output (All)
-//  4 : Extra Resource Output (Specific Building)
-//  5 : Reduce Resource Intakes (All)
-//  6 : Reduce Resource Intakes (Specific Building)
-//  7 : Increase Duration (All)
-//  8 : Increase Duration (Specific Building)
-//  9 : Extra Inventory Slot
-//  10 : Increase Luck
-//  11 : Increase Energy Regeneration
-//  12 : Increase Maximum Energy
-//  13 : Longer Preperation Time Before Disaster
-//  14 : Increase Resource Output (Specific Type)
-//  15 : Reduce Resource Intakes (Specific Type)
-//  16 : Gain Extra Life
-//  17 : Less Draw Consumption
-//  18 : Receive T1 Resource Every Turn
-//  19 : Receive 2 Random Upgrades
-//  20 : Increase Duration (Specific Type)
-// Format:
+// Needs to be saved
+//  Type:
+//   0 : Extra Card per draw (Min3 Max5)
+//   1 : Extend Map Horizontaly
+//   2 : Extend Map Vertically
+//   3 : Extra Resource Output (All)
+//   4 : Extra Resource Output (Specific Building)
+//   5 : Reduce Resource Intakes (All)
+//   6 : Reduce Resource Intakes (Specific Building)
+//   7 : Increase Duration (All)
+//   8 : Increase Duration (Specific Building)
+//   9 : Extra Inventory Slot
+//   10 : Increase Luck
+//   11 : Increase Energy Regeneration
+//   12 : Increase Maximum Energy
+//   13 : Longer Preperation Time Before Disaster
+//   14 : Increase Resource Output (Specific Type)
+//   15 : Reduce Resource Intakes (Specific Type)
+//   16 : Gain Extra Life
+//   17 : Less Draw Consumption
+//   18 : Receive T1 Resource Every Turn
+//   19 : Receive 2 Random Upgrades
+//   20 : Increase Duration (Specific Type)
+//  Format:
 //{0:level,1:value 2:level,3:value......}
 vector<vector<double>> Upgrade_List;
 
@@ -139,16 +141,21 @@ vector<int> Upgrade_Weighting{
 int Sum_Upgrade_Weighting, Sum_Building_Weighting, Sum_Tool_Weighting;
 
 vector<int> Screen_Size{0, 0};
-// 00 Free Draw
-// 01 Prevent 1 round corruption
-// 02 Energy level bonus
+
+// Needs to be saved
+//  00 Free Draw
+//  01 Prevent 1 round corruption
+//  02 Energy level bonus
 vector<double> Other_Buffs{0, 0, 0};
 
 bool End_turn_able = 0;
 
+// Needs to be saved
 int Turn_No = 0;
 
+// Needs to be saved
 int Corruption_gap;
+// Needs to be saved
 int turn_counter;
 
 // 0:Draw_Button
@@ -216,11 +223,21 @@ private:
     Building Building_cache;
 
 private:
+    // Needs to be saved
     int Corruption_no;
+
+    // SL module
+public:
+    void Save(int id);
+    void Load(int id);
+
+private:
+    int Auto_Save_counter = 0;
 };
 
-void Data_Storage::Restart_Game(){
-    EGY_Energy=100;
+void Data_Storage::Restart_Game()
+{
+    EGY_Energy = 100;
     Grid_Clear_Disasters();
 }
 
@@ -318,13 +335,15 @@ void Data_Storage::Next_turn()
     if (EGY_Energy < 0)
     {
         // Game over
-        if (Upgrade_List[16][1]!=0){
-            Upgrade_List[16][1]=0;
+        if (Upgrade_List[16][1] != 0)
+        {
+            Upgrade_List[16][1] = 0;
             Restart_Game();
         }
-        else{
+        else
+        {
             cout << '\n'
-                << "Game Over" << '\n';
+                 << "Game Over" << '\n';
             exit(0);
         }
     }
@@ -342,6 +361,12 @@ void Data_Storage::Next_turn()
         Grid_Plant_Disaster(0);
         Corruption_no += 1;
     }
+    Auto_Save_counter++;
+    if (Auto_Save_counter > 4)
+    {
+        Save(0);
+        Auto_Save_counter = 0;
+    }
 }
 
 void Data_Storage ::Upgrade_Apply(Upgrade input)
@@ -352,8 +377,9 @@ void Data_Storage ::Upgrade_Apply(Upgrade input)
     {
         Check_Size();
     }
-    if (input.type == 12){
-        EGY_Energy+=input.value;
+    if (input.type == 12)
+    {
+        EGY_Energy += input.value;
     }
 }
 
@@ -917,8 +943,8 @@ void Data_Storage::Relocate()
 
     Screen_Size[0] = EGY_Size[0];
     Screen_Size[1] = INV_st_xy[1] + INV_Size[1];
-    
-    R_Main.Set_Size(Screen_Size[0]+1, Screen_Size[1]);
+
+    R_Main.Set_Size(Screen_Size[0] + 1, Screen_Size[1]);
 }
 
 void Data_Storage::Initialize()
@@ -1002,6 +1028,190 @@ void Data_Storage::Initialize()
         cout << "R_Main initialized" << '\n';
     }
     Relocate();
+    Load(0);
+}
+
+// Order:
+// int Turn_No
+// int Corruption_gap
+// int turn_counter
+// int Corruption_no
+// int EGY_Energy
+// vector<vector<double>> Upgrade_List
+// vector<double> Other_Buffs
+// Grid Building Data
+// INV Card Data
+void Data_Storage::Save(int id)
+{
+    string file_name = string("Save") + to_string(id) + ".txt";
+    ofstream File(file_name);
+    File << Turn_No << '\n'
+         << '\n';
+    File << Corruption_gap << '\n'
+         << '\n';
+    File << turn_counter << '\n'
+         << '\n';
+    File << Corruption_no << '\n'
+         << '\n';
+    File << EGY_Energy << '\n'
+         << '\n';
+    for (int y = 0; y < Upgrade_List.size(); y++)
+    {
+        File << Upgrade_List[y].size() << '\n';
+        for (int x = 0; x < Upgrade_List[y].size(); x++)
+        {
+            File << Upgrade_List[y][x] << '\n';
+        }
+    }
+    File << '\n';
+    for (int y = 0; y < Other_Buffs.size(); y++)
+    {
+        File << Other_Buffs[y] << '\n';
+    }
+    File << '\n';
+    vector<string> temp = Grid_Save();
+    for (int y = 0; y < temp.size(); y++)
+    {
+        File << temp[y] << '\n';
+    }
+    File << '\n';
+    temp = INV_Save();
+    for (int y = 0; y < temp.size(); y++)
+    {
+        File << temp[y] << '\n';
+    }
+    File << '\n';
+    temp.clear();
+    File.close();
+}
+
+void Data_Storage::Load(int id)
+{
+    string file_name = string("Save") + to_string(id) + ".txt";
+    ifstream File(file_name);
+    string Line;
+    vector <string> temp;
+    int counter, subcounter, gap, phase, subcounter2;
+    counter = subcounter = gap = phase = subcounter2 = 0;
+    while (getline(File, Line))
+    {
+        // int Turn_No
+        if (Line == "")
+        {
+            phase++;
+            counter = 0;
+            subcounter = 0;
+            subcounter2 = 0;
+            gap = 0;
+            temp.clear();
+        }
+        else if (phase == 0)
+        {
+            Turn_No = stoi(Line);
+        }
+        // int Corruption_gap
+        else if (phase == 1)
+        {
+            Corruption_gap = stoi(Line);
+        }
+        // int turn_counter
+        else if (phase == 2)
+        {
+            turn_counter = stoi(Line);
+        }
+        // int Corruption_no
+        else if (phase == 3)
+        {
+            Corruption_no = stoi(Line);
+        }
+        // int EGY_Energy
+        else if (phase == 4)
+        {
+            EGY_Energy = stoi(Line);
+        }
+        // vector<vector<double>> Upgrade_List
+        else if (phase == 5)
+        {
+            if (subcounter == 0)
+            {
+                gap = stoi(Line);
+                subcounter++;
+            }
+            else if (subcounter == gap+1)
+            {
+                counter++;
+                gap = stoi(Line);
+                subcounter = 1;
+            }
+            else
+            {
+                Upgrade_List[counter][subcounter - 1] = stod(Line);
+                subcounter++;
+            }
+            //cout<<'\n'<<"counter: "<<counter<<"  subcounter: "<<subcounter<<'\n';
+        }
+        // vector<double> Other_Buffs
+        else if (phase == 6)
+        {
+            Other_Buffs[counter] = stod(Line);
+            counter++;
+        }
+        // Grid Building Data
+        else if (phase == 7)
+        {
+            cout<<'\n'<<"counter: "<<counter<<"  subcounter: "<<subcounter<<"  subcounter2: "<<subcounter2<<'\n';
+            cout<<Line<<'\n';
+            if (gap == 0)
+            {
+                temp.push_back(Line);
+                gap = stoi(Line);
+                subcounter=1;
+                counter++;
+            }
+            else if (subcounter==gap){
+                temp.push_back(Line);
+                Grid_Set_Building(temp,counter-1);
+                gap=0;
+                temp.clear();
+            }
+            else{
+                temp.push_back(Line);
+                subcounter++;
+            }
+        }
+        // INV Card Data
+        else if (phase == 8)
+        {
+            cout<<'\n'<<"counter: "<<counter<<"  subcounter: "<<subcounter<<"  subcounter2: "<<subcounter2<<'\n';
+            cout<<Line<<'\n';
+            if (subcounter == 0)
+            {
+                subcounter = stoi(Line);
+                if (subcounter!=0){
+                    temp.push_back(Line);
+                }
+            }
+            else if (subcounter2==0&&subcounter != 0)
+            {
+                gap=stoi(Line);
+                temp.push_back(Line);
+                subcounter2=1;
+                counter++;
+            }
+            else if (subcounter2==gap){
+                temp.push_back(Line);
+                INV_item_list[counter-1].Load_Card(temp);
+                subcounter=0;
+                subcounter2=0;
+                temp.clear();
+            }
+            else{
+                temp.push_back(Line);
+                subcounter2++;
+            }
+        }
+    }
+    File.close();
 }
 
 #endif

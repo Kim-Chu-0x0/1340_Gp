@@ -30,8 +30,10 @@ protected:
     void Grid_Place_Building(Building item);
     void Grid_Restore_Building(double value);
     void Grid_Building_On_Off();
+    vector<string> Grid_Save();
 
 protected:
+    //Needs to be saved
     vector<Building> Grid_Building_list;
     vector<int> Grid_Highlight_Data;
     int Grid_Phase = 0;
@@ -78,6 +80,7 @@ protected:
     void Grid_Demolish_Building();
     int Grid_Get_pos();
     void Grid_Clear_Disasters();
+    void Grid_Set_Building(vector <string> input,int id);
 
 private:
     vector<int> Grid_Grid_Size{0, 0};
@@ -85,6 +88,21 @@ private:
     void Grid_Popup();
     int Grid_Disaster_Fix_Highlight_Data;
 };
+
+void Map_Grid::Grid_Set_Building(vector <string> input,int id){
+    Grid_Building_list[id].Load_Building(input);
+}
+
+vector<string> Map_Grid::Grid_Save(){
+    vector <string> Output;
+    for (int id = 0 ;id<Grid_Building_list.size();id++){
+        vector <string> temp = Grid_Building_list[id].Save_Building();
+        for (int no = 0;no<temp.size();no++){
+            Output.push_back(temp[no]);
+        }
+    }
+    return Output;
+}
 
 void Map_Grid::Grid_Clear_Disasters(){
     Building Null;

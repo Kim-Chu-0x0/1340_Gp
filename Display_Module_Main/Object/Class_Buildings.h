@@ -99,19 +99,26 @@ private:
   bool TestBounus = 0;
 
 public:
+  //Needs to be saved
   string type;
+  //Needs to be saved
   string name;
   vector<Pixel> graphic_S;
   vector<Pixel> description;
   vector<int> output_graphic_size_S{6, 6};
+  //Needs to be saved
   vector<io_building> input_list;
+  //Needs to be saved
   vector<io_building> output_list;
   int duration = -1;
+  //Needs to be saved
   int countdown = -1;
+  //Needs to be saved
   // 1:On 0:Off
   bool On_Off = 1;
 
 private:
+  //Needs to be saved
   int duration_base = -1;
 
 private:
@@ -131,7 +138,8 @@ private:
   int out_constant;
   int in_complexity;
   int out_complexity;
-  bool costume = 0;
+  //Needs to be saved
+  bool customized = 0;
 
 public:
   void Input_type(int id);
@@ -141,6 +149,8 @@ public:
   vector<vector<int>> Return_Req();
   vector<int> Get_Disaster_Req();
   void Restore_Lifespan(double value);
+  void Load_Building(vector <string> input);
+  vector <string> Save_Building();
 
 private:
   void Search_Location();
@@ -148,8 +158,10 @@ private:
   void normal_refresh();
   void basestat_bounus();
   void finalstat_bounus();
-  void Costume_initialize();
+  void customized_initialize();
   void Generate_Description();
+  void Get_Graphic();
+  void Custom_Graphic();
 };
 
 void Building::Restore_Lifespan(double value){
@@ -165,7 +177,7 @@ void Building::Restore_Lifespan(double value){
 // return 1 if lifespan <=0
 bool Building::Pass_Turn()
 {
-  if (costume == 0)
+  if (customized == 0)
   {
     countdown -= 1;
     if (countdown <= 0)
@@ -215,7 +227,7 @@ vector<vector<int>> Building::Return_Req()
 
 void Building::Countdown_St()
 {
-  if (costume == 0)
+  if (customized == 0)
   {
     countdown = duration;
   }
@@ -223,7 +235,7 @@ void Building::Countdown_St()
 
 void Building::Refresh_stat()
 {
-  if (costume == 0)
+  if (customized == 0)
   {
     normal_refresh();
   }
@@ -462,8 +474,7 @@ void Building::normal_refresh()
   Generate_Description();
 }
 
-void Building::Costume_initialize()
-{
+void Building::Custom_Graphic(){
   graphic_S.clear();
   if (name == "Empty/sSpace")
   {
@@ -473,14 +484,8 @@ void Building::Costume_initialize()
     {
       graphic_S.push_back(temp);
     }
-    if (TestMod)
-    {
-      cout << '\n'
-           << "Blank object created" << '\n'
-           << "graphic_S size: " << graphic_S.size() << '\n';
-    }
   }
-  if (name == "Disaster")
+  else if (name == "Disaster")
   {
     Pixel temp;
     for (int id = 0; id < graphic_size[0] * (no_each_tier + 2); id++)
@@ -521,6 +526,24 @@ void Building::Costume_initialize()
       }
       graphic_S.push_back(temp);
     }
+  }
+}
+
+void Building::customized_initialize()
+{
+  graphic_S.clear();
+  if (name == "Empty/sSpace")
+  {
+    Custom_Graphic();
+    if (TestMod)
+    {
+      cout << '\n'
+           << "Blank object created" << '\n'
+           << "graphic_S size: " << graphic_S.size() << '\n';
+    }
+  }
+  if (name == "Disaster"){
+    Custom_Graphic();
     countdown = 1;
     input_list.clear();
     output_list.clear();
@@ -552,7 +575,7 @@ void Building::Costume_initialize()
       input_temp = rand() % input_list.size();
       double cost = 1.0 *input_list[input_temp].item / no_each_tier;
       cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
-      input_list[input_temp].quantity++;
+      input_list[input_temp].quantity_base++;
       counter -= cost;
     }
     Generate_Description();
@@ -588,7 +611,7 @@ void Building::Generate_Description()
 {
   description.clear();
   vector<string> text_raw_1;
-  if ((!costume)||(type =="Generator"))
+  if ((!customized)||(type =="Generator"))
   {
     vector<string> text_temp{
         "Name:",
@@ -663,7 +686,7 @@ void Building::Generate_Description()
         text_temp.push_back("");
         for (int no = 0; (no < 3) && (((id * 3) + no) < input_list.size()); no++){
           text_temp[id+1] += "/s";
-          text_temp[id+1] += to_string(input_list[((id * 3) + no)].quantity);
+          text_temp[id+1] += to_string(input_list[((id * 3) + no)].quantity_base);
           text_temp[id+1] += "/";
           if (input_list[((id * 3) + no)].item < 10)
           {
@@ -851,6 +874,183 @@ void Building::Search_Location()
   }
 }
 
+void Building::Get_Graphic(){
+  if (name=="Tier/s0/sproducer"){
+    vector<string> temp_vector{
+        "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
+        "0", "╔", "╣", "0", "0", "0", "■", "0", "0", "0", "║",
+        "╔", "╩", "╩", "═", "═", "═", "═", "═", "═", "═", "╣",
+        "╚", "═", "═", "═", "═", "═", "═", "═", "═", "═", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name=="Tier/s1/sproducer"){
+    vector<string> temp_vector{
+        "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
+        "0", "╔", "╣", "0", "■", "0", "■", "0", "0", "0", "║",
+        "╔", "╩", "╩", "╦", "═", "═", "═", "╦", "═", "═", "╣",
+        "╚", "═", "═", "╩", "═", "═", "═", "╩", "═", "═", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name=="Tier/s2/sproducer"){
+    vector<string> temp_vector{
+        "0", "0", "╔", "╩", "═", "╬", "═", "╦", "═", "═", "╗",
+        "0", "╔", "╣", "0", "■", "║", "■", "║", "■", "0", "║",
+        "╔", "╩", "╩", "╦", "═", "╩", "═", "╬", "═", "═", "╣",
+        "╚", "═", "═", "╩", "═", "═", "═", "╩", "═", "═", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s0/sprocessor"){
+    vector<string> temp_vector{
+        "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
+        "╔", "╝", "0", "0", "0", "▲", "0", "0", "0", "╚", "╗",
+        "╠", "═", "═", "╦", "═", "═", "═", "╦", "═", "═", "╣",
+        "╚", "═", "═", "╝", "0", "0", "0", "╚", "═", "═", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s1/sprocessor"){
+    vector<string> temp_vector{
+        "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
+        "╔", "╣", "0", "▲", "0", "▲", "0", "0", "0", "╠", "╗",
+        "╠", "╩", "═", "╦", "═", "═", "═", "╦", "═", "╩", "╣",
+        "╚", "═", "═", "╝", "0", "0", "0", "╚", "═", "═", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s2/sprocessor"){
+    vector<string> temp_vector{
+        "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
+        "╔", "╣", "0", "▲", "0", "▲", "0", "▲", "0", "╠", "╗",
+        "╠", "╩", "╦", "╦", "═", "╦", "═", "╦", "╦", "╩", "╣",
+        "╚", "═", "╩", "╝", "0", "╩", "0", "╚", "╩", "═", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s0/sExtractor"){
+    vector<string> temp_vector{
+        "╔", "╗", "0", "╔", "═", "═", "═", "╗", "0", "╔", "╗",
+        "║", "║", "0", "║", "0", "●", "0", "║", "0", "║", "║",
+        "║", "║", "0", "╚", "═", "═", "═", "╝", "0", "║", "║",
+        "╚", "╩", "═", "═", "═", "═", "═", "═", "═", "╩", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s1/sExtractor"){
+    vector<string> temp_vector{
+        "╔", "●", "0", "╔", "═", "═", "═", "╗", "0", "●", "╗",
+        "╠", "╗", "0", "║", "0", "0", "0", "║", "0", "╔", "╣",
+        "║", "║", "0", "╚", "═", "╦", "═", "╝", "0", "║", "║",
+        "╚", "╩", "═", "═", "═", "╩", "═", "═", "═", "╩", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s2/sExtractor"){
+    vector<string> temp_vector{
+        "╔", "●", "0", "╔", "═", "═", "═", "╗", "0", "●", "╗",
+        "╠", "╦", "═", "╣", "0", "●", "0", "╠", "═", "╦", "╣",
+        "║", "║", "0", "╚", "═", "╦", "═", "╝", "0", "║", "║",
+        "╚", "╩", "═", "═", "═", "╩", "═", "═", "═", "╩", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s0/sDismantler"){
+    vector<string> temp_vector{
+        "╔", "╦", "═", "╦", "═", "╦", "═", "╦", "═", "╦", "╗",
+        "0", "║", "0", "0", "0", "✖︎", "0", "0", "0", "║", "0",
+        "0", "║", "0", "0", "0", "0", "0", "0", "0", "║", "0",
+        "╚", "╩", "═", "╩", "═", "╩", "═", "╩", "═", "╩", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s1/sDismantler"){
+    vector<string> temp_vector{
+        "╔", "╦", "╦", "╦", "═", "╦", "═", "╦", "╦", "╦", "╗",
+        "0", "║", "0", "0", "0", "✖︎", "0", "0", "0", "║", "0",
+        "0", "║", "0", "╦", "═", "✖︎", "═", "╦", "0", "║", "0",
+        "╚", "╩", "═", "╩", "═", "╩", "═", "╩", "═", "╩", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s20/sDismantler"){
+    vector<string> temp_vector{
+        "╔", "╦", "╦", "╦", "═", "╦", "═", "╦", "╦", "╦", "╗",
+        "0", "╬", "0", "0", "✖︎", "✖︎", "✖︎", "0", "0", "╬", "0",
+        "0", "║", "0", "╦", "╩", "╬", "╩", "╦", "0", "║", "0",
+        "╚", "╩", "╩", "╩", "═", "╩", "═", "╩", "╩", "╩", "╝"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s0/sGenerator"){
+    vector<string> temp_vector{
+        "0", "0", "0", "0", "╦", "═", "╦", "0", "0", "0", "0",
+        "0", "0", "0", "0", "║", "⧰", "║", "0", "0", "0", "0",
+        "0", "0", "╦", "╦", "║", "0", "║", "╦", "╦", "0", "0",
+        "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s1/sGenerator"){
+    vector<string> temp_vector{
+        "0", "0", "0", "0", "╦", "╦", "╦", "0", "0", "0", "0",
+        "0", "0", "╦", "╦", "║", "⧰", "║", "╦", "╦", "0", "0",
+        "0", "0", "║", "║", "║", "⧰", "║", "║", "║", "0", "0",
+        "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
+    unprocessed_graphic = temp_vector;
+  }
+  else if (name == "Tier/s2/sGenerator"){
+    vector<string> temp_vector{
+        "0", "0", "0", "0", "╦", "╬", "╦", "0", "0", "0", "0",
+        "0", "0", "╔", "╬", "║", "⧰", "║", "╬", "╗", "0", "0",
+        "0", "0", "║", "⧰", "╠", "═", "╣", "⧰", "║", "0", "0",
+        "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
+    unprocessed_graphic = temp_vector;
+  }
+}
+
+vector <string> Building::Save_Building(){
+  vector <string> Output{name,type,to_string(customized),to_string(On_Off),to_string(countdown),to_string(duration_base)};
+  Output.push_back(to_string(input_list.size()));
+  for (int id = 0;id<input_list.size();id++){
+    Output.push_back(to_string(input_list[id].item));
+    Output.push_back(to_string(input_list[id].quantity_base));
+  }
+  Output.push_back(to_string(output_list.size()));
+  for (int id = 0;id<output_list.size();id++){
+    Output.push_back(to_string(output_list[id].item));
+    Output.push_back(to_string(output_list[id].quantity_base));
+  }
+  Output.insert(Output.begin(),to_string(Output.size()));
+  return Output;
+}
+
+void Building::Load_Building(vector <string> input){
+  input.erase(input.begin());
+  name=input[0];
+  type=input[1];
+  customized=stoi(input[2]);
+  On_Off=stoi(input[3]);
+  countdown=stoi(input[4]);
+  duration_base=stoi(input[5]);
+  int in_size=stoi(input[6]);
+  int out_size=stoi(input[(2*in_size)+7]);
+  io_building temp;
+  input_list.clear();
+  output_list.clear();
+  for (int id = 0;id<(in_size*2);id+=2){
+    temp.item=stoi(input[7+id]);
+    temp.quantity_base=stoi(input[8+id]);
+    input_list.push_back(temp);
+  }
+  for (int id = 0;id<(out_size*2);id+=2){
+    temp.item=stoi(input[(2*in_size)+8+id]);
+    temp.quantity_base=stoi(input[(2*in_size)+9+id]);
+    output_list.push_back(temp);
+  }
+  if (name=="Empty/sSpace"){
+    customized_initialize();
+  }
+  else if (name=="Disaster"){
+    Custom_Graphic();
+    Generate_Description();
+  }
+  else{
+    Search_Location();
+    Get_Graphic();
+    normal_refresh();
+    Generate_Description();
+  }
+}
+
 // Generate a building item in random
 void Building::Input_type(int id)
 {
@@ -864,12 +1064,6 @@ void Building::Input_type(int id)
   {
     type = "Producer";
     name = "Tier/s0/sproducer";
-    vector<string> temp_vector{
-        "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
-        "0", "╔", "╣", "0", "0", "0", "■", "0", "0", "0", "║",
-        "╔", "╩", "╩", "═", "═", "═", "═", "═", "═", "═", "╣",
-        "╚", "═", "═", "═", "═", "═", "═", "═", "═", "═", "╝"};
-    unprocessed_graphic = temp_vector;
     req_constant = 0;
     out_tier[0] = 1;
     out_constant = 10;
@@ -881,12 +1075,6 @@ void Building::Input_type(int id)
   {
     type = "Producer";
     name = "Tier/s1/sproducer";
-    vector<string> temp_vector{
-        "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
-        "0", "╔", "╣", "0", "■", "0", "■", "0", "0", "0", "║",
-        "╔", "╩", "╩", "╦", "═", "═", "═", "╦", "═", "═", "╣",
-        "╚", "═", "═", "╩", "═", "═", "═", "╩", "═", "═", "╝"};
-    unprocessed_graphic = temp_vector;
     req_constant = 0;
     out_tier[0] = 1;
     out_constant = 13;
@@ -898,12 +1086,6 @@ void Building::Input_type(int id)
   {
     type = "Producer";
     name = "Tier/s2/sproducer";
-    vector<string> temp_vector{
-        "0", "0", "╔", "╩", "═", "╬", "═", "╦", "═", "═", "╗",
-        "0", "╔", "╣", "0", "■", "║", "■", "║", "■", "0", "║",
-        "╔", "╩", "╩", "╦", "═", "╩", "═", "╬", "═", "═", "╣",
-        "╚", "═", "═", "╩", "═", "═", "═", "╩", "═", "═", "╝"};
-    unprocessed_graphic = temp_vector;
     req_constant = 0;
     out_tier[0] = 1;
     out_tier[1] = 1;
@@ -916,12 +1098,6 @@ void Building::Input_type(int id)
   {
     type = "Processor";
     name = "Tier/s0/sprocessor";
-    vector<string> temp_vector{
-        "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
-        "╔", "╝", "0", "0", "0", "▲", "0", "0", "0", "╚", "╗",
-        "╠", "═", "═", "╦", "═", "═", "═", "╦", "═", "═", "╣",
-        "╚", "═", "═", "╝", "0", "0", "0", "╚", "═", "═", "╝"};
-    unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_constant = 4;
     out_tier[0] = 1;
@@ -935,12 +1111,6 @@ void Building::Input_type(int id)
   {
     type = "Processor";
     name = "Tier/s1/sprocessor";
-    vector<string> temp_vector{
-        "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
-        "╔", "╣", "0", "▲", "0", "▲", "0", "0", "0", "╠", "╗",
-        "╠", "╩", "═", "╦", "═", "═", "═", "╦", "═", "╩", "╣",
-        "╚", "═", "═", "╝", "0", "0", "0", "╚", "═", "═", "╝"};
-    unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_constant = 5;
     out_tier[0] = 1;
@@ -954,12 +1124,6 @@ void Building::Input_type(int id)
   {
     type = "Processor";
     name = "Tier/s2/sprocessor";
-    vector<string> temp_vector{
-        "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
-        "╔", "╣", "0", "▲", "0", "▲", "0", "▲", "0", "╠", "╗",
-        "╠", "╩", "╦", "╦", "═", "╦", "═", "╦", "╦", "╩", "╣",
-        "╚", "═", "╩", "╝", "0", "╩", "0", "╚", "╩", "═", "╝"};
-    unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_tier[1] = 1;
     req_constant = 6;
@@ -973,23 +1137,19 @@ void Building::Input_type(int id)
   else if (id == 6)
   {
     name = "Empty/sSpace";
-    costume = 1;
+    type = "Empty/sSpace";
+    customized = 1;
   }
   else if (id == 7)
   {
     name = "Disaster";
-    costume = 1;
+    type="Disaster";
+    customized = 1;
   }
   else if (id == 8)
   {
     type = "Extractor";
     name = "Tier/s0/sExtractor";
-    vector<string> temp_vector{
-        "╔", "╗", "0", "╔", "═", "═", "═", "╗", "0", "╔", "╗",
-        "║", "║", "0", "║", "0", "●", "0", "║", "0", "║", "║",
-        "║", "║", "0", "╚", "═", "═", "═", "╝", "0", "║", "║",
-        "╚", "╩", "═", "═", "═", "═", "═", "═", "═", "╩", "╝"};
-    unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_tier[1] = 1;
     req_constant = 7;
@@ -1005,12 +1165,6 @@ void Building::Input_type(int id)
   {
     type = "Extractor";
     name = "Tier/s1/sExtractor";
-    vector<string> temp_vector{
-        "╔", "●", "0", "╔", "═", "═", "═", "╗", "0", "●", "╗",
-        "╠", "╗", "0", "║", "0", "0", "0", "║", "0", "╔", "╣",
-        "║", "║", "0", "╚", "═", "╦", "═", "╝", "0", "║", "║",
-        "╚", "╩", "═", "═", "═", "╩", "═", "═", "═", "╩", "╝"};
-    unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_tier[1] = 1;
     req_constant = 9;
@@ -1026,12 +1180,6 @@ void Building::Input_type(int id)
   {
     type = "Extractor";
     name = "Tier/s2/sExtractor";
-    vector<string> temp_vector{
-        "╔", "●", "0", "╔", "═", "═", "═", "╗", "0", "●", "╗",
-        "╠", "╦", "═", "╣", "0", "●", "0", "╠", "═", "╦", "╣",
-        "║", "║", "0", "╚", "═", "╦", "═", "╝", "0", "║", "║",
-        "╚", "╩", "═", "═", "═", "╩", "═", "═", "═", "╩", "╝"};
-    unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_tier[1] = 1;
     req_tier[2] = 1;
@@ -1047,12 +1195,6 @@ void Building::Input_type(int id)
   {
     type = "Dismantler";
     name = "Tier/s0/sDismantler";
-    vector<string> temp_vector{
-        "╔", "╦", "═", "╦", "═", "╦", "═", "╦", "═", "╦", "╗",
-        "0", "║", "0", "0", "0", "✖︎", "0", "0", "0", "║", "0",
-        "0", "║", "0", "0", "0", "0", "0", "0", "0", "║", "0",
-        "╚", "╩", "═", "╩", "═", "╩", "═", "╩", "═", "╩", "╝"};
-    unprocessed_graphic = temp_vector;
     req_tier[1] = 1;
     req_tier[2] = 1;
     req_tier[3] = 1;
@@ -1067,12 +1209,6 @@ void Building::Input_type(int id)
   {
     type = "Dismantler";
     name = "Tier/s1/sDismantler";
-    vector<string> temp_vector{
-        "╔", "╦", "╦", "╦", "═", "╦", "═", "╦", "╦", "╦", "╗",
-        "0", "║", "0", "0", "0", "✖︎", "0", "0", "0", "║", "0",
-        "0", "║", "0", "╦", "═", "✖︎", "═", "╦", "0", "║", "0",
-        "╚", "╩", "═", "╩", "═", "╩", "═", "╩", "═", "╩", "╝"};
-    unprocessed_graphic = temp_vector;
     req_tier[1] = 1;
     req_tier[2] = 1;
     req_tier[3] = 1;
@@ -1087,12 +1223,6 @@ void Building::Input_type(int id)
   {
     type = "Dismantler";
     name = "Tier/s2/sDismantler";
-    vector<string> temp_vector{
-        "╔", "╦", "╦", "╦", "═", "╦", "═", "╦", "╦", "╦", "╗",
-        "0", "╬", "0", "0", "✖︎", "✖︎", "✖︎", "0", "0", "╬", "0",
-        "0", "║", "0", "╦", "╩", "╬", "╩", "╦", "0", "║", "0",
-        "╚", "╩", "╩", "╩", "═", "╩", "═", "╩", "╩", "╩", "╝"};
-    unprocessed_graphic = temp_vector;
     req_tier[2] = 1;
     req_tier[3] = 1;
     req_constant = 9;
@@ -1107,12 +1237,6 @@ void Building::Input_type(int id)
   {
     type = "Generator";
     name = "Tier/s0/sGenerator";
-    vector<string> temp_vector{
-        "0", "0", "0", "0", "╦", "═", "╦", "0", "0", "0", "0",
-        "0", "0", "0", "0", "║", "⧰", "║", "0", "0", "0", "0",
-        "0", "0", "╦", "╦", "║", "0", "║", "╦", "╦", "0", "0",
-        "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
-    unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_tier[1] = 1;
     req_tier[2] = 1;
@@ -1121,18 +1245,12 @@ void Building::Input_type(int id)
     in_complexity = 2;
     out_complexity = 1;
     duration_base = 6;
-    costume = 1;
+    customized = 1;
   }
   else if (id == 15)
   {
     type = "Generator";
     name = "Tier/s1/sGenerator";
-    vector<string> temp_vector{
-        "0", "0", "0", "0", "╦", "╦", "╦", "0", "0", "0", "0",
-        "0", "0", "╦", "╦", "║", "⧰", "║", "╦", "╦", "0", "0",
-        "0", "0", "║", "║", "║", "⧰", "║", "║", "║", "0", "0",
-        "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
-    unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_tier[1] = 1;
     req_tier[2] = 1;
@@ -1141,18 +1259,12 @@ void Building::Input_type(int id)
     in_complexity = 2;
     out_complexity = 1;
     duration_base = 5;
-    costume = 1;
+    customized = 1;
   }
   else if (id == 16)
   {
     type = "Generator";
     name = "Tier/s2/sGenerator";
-    vector<string> temp_vector{
-        "0", "0", "0", "0", "╦", "╬", "╦", "0", "0", "0", "0",
-        "0", "0", "╔", "╬", "║", "⧰", "║", "╬", "╗", "0", "0",
-        "0", "0", "║", "⧰", "╠", "═", "╣", "⧰", "║", "0", "0",
-        "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
-    unprocessed_graphic = temp_vector;
     req_tier[0] = 1;
     req_tier[1] = 1;
     req_constant = 8;
@@ -1160,7 +1272,7 @@ void Building::Input_type(int id)
     in_complexity = 2;
     out_complexity = 1;
     duration_base = 5;
-    costume = 1;
+    customized = 1;
   }
   else
   {
@@ -1177,7 +1289,8 @@ void Building::Input_type(int id)
     cout << "out_complexity: " << out_complexity << '\n';
     cout << "duration_base: " << duration_base << '\n';
     }
-  if (!costume)
+  Get_Graphic();
+  if (!customized)
   {
     Search_Location();
     basestat_bounus();
@@ -1186,7 +1299,7 @@ void Building::Input_type(int id)
   }
   else
   {
-    Costume_initialize();
+    customized_initialize();
   }
 }
 

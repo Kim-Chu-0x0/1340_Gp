@@ -2,13 +2,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Control_Module_Main/Action_Process.h"
+#include "Action_Process.h"
 Action_Processor R_Main;
 
-#include "Control_Module_Main/Data_Storage.h"
+#include "Data_Storage.h"
 Data_Storage D_Main;
 
-#include "Control_Module_Main/Input.h"
+#include "Input.h"
 Input I_Main;
 
 using namespace std;

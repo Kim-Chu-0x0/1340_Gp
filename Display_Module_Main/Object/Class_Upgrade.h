@@ -27,7 +27,7 @@ public:
 
 public:
     void Input_type(int id);
-    void Text_Formation(int id);
+    void Generate_Description();
 };
 
 // Type:
@@ -197,15 +197,15 @@ void Upgrade::Input_type(int id)
         cout << "Value: " << value << '\n';
         ;
     }
-    Text_Formation(id);
+    Generate_Description();
 }
 
-void Upgrade::Text_Formation(int id)
+void Upgrade::Generate_Description()
 {
     vector<string> insert_list;
     string raw_text = ",Level:-" + to_string(level) + ",";
     string value_string = to_string(value).substr(0, 4);
-    switch (id)
+    switch (type)
     {
     case 0:
         raw_text += "When-you-draw-cards,Gain-a-extra-choice";
