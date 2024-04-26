@@ -66,7 +66,7 @@ Project reqs:
   
 4.File input/output (e.g., for loading/saving game status):
 
-  The game is a rougue-like style game, in this kind of game, every playthrough is not related to the previous one, SL is not needed
+  The game provides a well developed SL system, includes Auto-Saving, and Multiple Save-Slots for play to save their progress
 
   
 5.Program codes in multiple files:
