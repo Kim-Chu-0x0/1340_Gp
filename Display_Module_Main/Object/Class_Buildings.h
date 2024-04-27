@@ -1051,7 +1051,10 @@ vector<string> Building::Save_Building()
 
 void Building::Load_Building(vector<string> input)
 {
-  input.erase(input.begin());
+  vector <string> temp1 =input;
+  temp1.erase(temp1.begin());
+  input=temp1;
+  temp1.clear();
   name = input[0];
   type = input[1];
   customized = stoi(input[2]);

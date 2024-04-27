@@ -1335,7 +1335,6 @@ void Data_Storage::Save(int id)
     {
         File << Res_Resource_List[y] << '\n';
     }
-    File << '\n';
     temp.clear();
     File.close();
 }
@@ -1350,10 +1349,11 @@ void Data_Storage::Load(int id)
         vector<string> temp;
         int counter, subcounter, gap, phase, subcounter2;
         counter = subcounter = gap = phase = subcounter2 = 0;
+        int nono=0;
         while (getline(File, Line))
         {
             // int Turn_No
-            if (Line == "")
+            if (Line.size()==0)
             {
                 phase++;
                 counter = 0;
