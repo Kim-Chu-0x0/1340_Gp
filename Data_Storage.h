@@ -173,7 +173,7 @@ vector<bool> Visible{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 // 08:Setting
 vector<bool> Selectable_List;
 
-vector <int> Setting_List{0};
+vector<int> Setting_List{0};
 
 // 0:Auto Save
 vector<bool> Save_Existence{0, 0, 0, 0, 0, 0, 0};
@@ -278,10 +278,13 @@ void Data_Storage::Check_Save_Existence()
         }
         file.close();
     }
-    if (Testmod_SL){
-        cout<<'\n'<<"Save_Condition: "<<'\n';
-        for (int id = 0;id<Save_Existence.size();id++){
-            cout<<Save_Existence[id]<<'\n';
+    if (Testmod_SL)
+    {
+        cout << '\n'
+             << "Save_Condition: " << '\n';
+        for (int id = 0; id < Save_Existence.size(); id++)
+        {
+            cout << Save_Existence[id] << '\n';
         }
     }
 }
@@ -446,25 +449,31 @@ void Data_Storage::Setting(int id)
     {
         SET_Phase = 0;
     }
-    else if (id == 2){
-        if (Setting_List[0]==0){
-            Setting_List[0]=1;
+    else if (id == 2)
+    {
+        if (Setting_List[0] == 0)
+        {
+            Setting_List[0] = 1;
         }
-        else{
-            Setting_List[0]=0;
+        else
+        {
+            Setting_List[0] = 0;
         }
     }
-    else if (id == 3){
+    else if (id == 3)
+    {
         Save(0);
         exit(0);
     }
-    else if (id == 4){
+    else if (id == 4)
+    {
         SET_Phase = 0;
         Visible[10] = 1;
         SUI_Phase = 1;
         Save_no = 1;
     }
-    else if (id == 5){
+    else if (id == 5)
+    {
         SET_Phase = 1;
         Visible[10] = 0;
     }
@@ -513,7 +522,8 @@ void Data_Storage::Save_Selection(int id)
             Check_Save_Existence();
         }
     }
-    else if(id == 5){
+    else if (id == 5)
+    {
         if (Save_no == 1)
         {
             Save_no = 6;
@@ -523,7 +533,8 @@ void Data_Storage::Save_Selection(int id)
             Save_no--;
         }
     }
-    else if(id == 6){
+    else if (id == 6)
+    {
         if (Save_no == 6)
         {
             Save_no = 1;
@@ -973,10 +984,7 @@ void Data_Storage::Test_Specific_Card(int id)
 
 void Data_Storage::Refresh_Layer(string id)
 {
-    if (Game_Phase == 0)
-    {
-    }
-    else if (Game_Phase == 1)
+    if (Game_Phase == 1)
     {
         Availability_Check();
     }
@@ -1037,7 +1045,7 @@ void Data_Storage::Refresh_Layer(string id)
             Stat_Output();
         }
     }
-    if ((SET_Layer_name == id)|| (SET_Popup_Layer_name == id))
+    if ((SET_Layer_name == id) || (SET_Popup_Layer_name == id))
     {
         if (Visible[8])
         {
@@ -1062,10 +1070,7 @@ void Data_Storage::Refresh_Layer(string id)
 
 void Data_Storage::Refresh()
 {
-    if (Game_Phase == 0)
-    {
-    }
-    else if (Game_Phase == 1)
+    if (Game_Phase == 1)
     {
         Availability_Check();
     }
@@ -1326,7 +1331,8 @@ void Data_Storage::Save(int id)
         File << temp[y] << '\n';
     }
     File << '\n';
-    for (int y = 0; y< Res_Resource_List.size();y++){
+    for (int y = 0; y < Res_Resource_List.size(); y++)
+    {
         File << Res_Resource_List[y] << '\n';
     }
     File << '\n';
@@ -1463,8 +1469,9 @@ void Data_Storage::Load(int id)
                 }
             }
             // Res_Resource_List
-            else if (phase == 9){
-                Res_Resource_List[counter]=stoi(Line);
+            else if (phase == 9)
+            {
+                Res_Resource_List[counter] = stoi(Line);
                 counter++;
             }
         }

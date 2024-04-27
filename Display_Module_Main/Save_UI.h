@@ -33,7 +33,6 @@ void Save_UI::SUI_Output()
 {
     if (SUI_Testmod){
         cout<<'\n'<<"Save number: "<<Save_no<<'\n';
-        cout<<'\n'<<"Save Existence: "<<Save_Existence[Save_no]<<'\n';
     }
     string temp_string = string("000000000000000") + "0Save0Selected0" + "000000000000000";
     vector<Pixel> Output_Map;
@@ -90,7 +89,7 @@ void Save_UI::SUI_Output()
             }
         }
     }
-    if (SUI_Phase == 1)
+    else if (SUI_Phase == 1)
     {
         string Text = to_string(Save_no);
         temp_string = string("000000000000000") + "000Save0No0" + Text + "000" + "0000State:00000";
@@ -117,7 +116,10 @@ void Save_UI::SUI_Output()
         }
         if (id > 44 && id < 60)
         {
-            if (SUI_Phase == 0)
+            if (Save_no==-1){
+                temp.colour = White;
+            }
+            else if (SUI_Phase == 0)
             {
                 if (Save_Existence[Save_no])
                 {
