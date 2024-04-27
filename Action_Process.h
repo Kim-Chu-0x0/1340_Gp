@@ -19,14 +19,28 @@ public:
     int Move(int direction);
     int Switch_Layer(string name);
     void Restore_Textbox_id(int id);
+    void Set_Move_const(int co1,int co2){
+        if (co1!=-1){
+            Distance_threshold_1=co1;
+        }
+        if (co2!=-1){
+            Distance_threshold_2=co2;
+        }
+        if (co1==-1&&co2==-1){
+            Distance_threshold_1=0;
+            Distance_threshold_2=15;
+        }
+    }
 
 public:
     void Initialize();
     string Current_Item_Name;
     void Refresh_Current_Name()
     {
-        if (A_P_TestMod){
-            cout<<'\n'<<"Refresh_Current_Name"<<'\n';
+        if (A_P_TestMod)
+        {
+            cout << '\n'
+                 << "Refresh_Current_Name" << '\n';
         }
         Highlight_Refresh();
         AP_Layer_Location = Layer_id_search(Highlight_Choice_Layer);
@@ -42,8 +56,11 @@ public:
 
 public:
     int AP_Layer_Location;
+
 private:
     int Textbox_Location;
+    int Distance_threshold_1 = 0;
+    int Distance_threshold_2 = 15;
 };
 
 void Action_Processor::Initialize()
@@ -53,8 +70,9 @@ void Action_Processor::Initialize()
     Add_Layer_object("Setting", 0);
 }
 
-void Action_Processor::Restore_Textbox_id(int id){
-    Highlight_Choice_Textbox_id[AP_Layer_Location]=id;
+void Action_Processor::Restore_Textbox_id(int id)
+{
+    Highlight_Choice_Textbox_id[AP_Layer_Location] = id;
 }
 
 // Move between selectable textboxes
@@ -86,8 +104,6 @@ int Action_Processor::Move(int direction)
              << "Layer name: " << Highlight_Choice_Layer << '\n';
         cout << "Current Item id: " << Highlight_Choice_Textbox_id[AP_Layer_Location] << '\n';
     }
-    const int Distance_threshold_1 = 0;
-    const int Distance_threshold_2 = 10;
     // fetch all required data
 
     // This list is not in order, plz do not use id to access it
@@ -337,27 +353,27 @@ int Action_Processor::Move(int direction)
     int min_id = 0;
     for (int id = 0; id < A_P_Layer_Textbox_id.size(); id++)
     {
-        if (perpendicular_distance[id] < perpendicular_distance[min_id])
+        if (parallel_distance[id] < parallel_distance[min_id])
         {
             min_id = id;
         }
     }
-    int min_value = perpendicular_distance[min_id];
+    int min_value = parallel_distance[min_id];
     for (int id = A_P_Layer_Textbox_id.size() - 1; id >= 0; id--)
     {
-        if (perpendicular_distance[id] > min_value)
+        if (parallel_distance[id] > min_value)
         {
             A_P_Layer_Textbox_id.erase(A_P_Layer_Textbox_id.begin() + id);
             A_P_st_pt.erase(A_P_st_pt.begin() + A_P_Textbox_position[id]);
             A_P_en_pt.erase(A_P_en_pt.begin() + A_P_Textbox_position[id]);
-            parallel_distance.erase(parallel_distance.begin() + id);
             perpendicular_distance.erase(perpendicular_distance.begin() + id);
+            parallel_distance.erase(parallel_distance.begin() + id);
         }
     }
     min_id = 0;
     for (int id = 0; id < A_P_Layer_Textbox_id.size(); id++)
     {
-        if (parallel_distance[id] < parallel_distance[min_id])
+        if (perpendicular_distance[id] < perpendicular_distance[min_id])
         {
             min_id = id;
         }

@@ -76,7 +76,7 @@ public:
     // store which Layer's highlight will be triggered
     string Highlight_Choice_Layer = "Map";
     // store which textbox is chosen to be highlighted
-    vector <int> Highlight_Choice_Textbox_id;
+    vector<int> Highlight_Choice_Textbox_id;
     void Set_Size(int x_len, int y_len)
     {
         if ((x_len <= 0) || (y_len <= 0))

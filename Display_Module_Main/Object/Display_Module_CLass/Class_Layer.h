@@ -120,8 +120,8 @@ void Layer::Highlight(vector<Pixel> &Map_)
     starting_xy[1]--;
     endpt_xy[0]++;
     endpt_xy[1]++;
-    starting_xy[0]*=2;
-    endpt_xy[0]*=2;
+    starting_xy[0] *= 2;
+    endpt_xy[0] *= 2;
     for (int x = starting_xy[0]; x <= endpt_xy[0]; x++)
     {
         Map_[starting_xy[1] * Map_xy[0] + x].set_colour(9);

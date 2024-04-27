@@ -33,15 +33,6 @@
 //{0:level,1:value 2:level,3:value......}
 vector<vector<double>> Upgrade_List;
 
-// 00:Draw
-// 01:DUI
-// 02:EGY
-// 03:INV
-// 04:Grid
-// 05:Res
-// 06:NTB
-vector<bool> Selectable_List;
-
 vector<int> Weighting_Tier_List{0, 4, 8, 12, 17, 25, 35, 45, 90};
 
 vector<int> Tool_Weighting{
@@ -166,7 +157,27 @@ int turn_counter;
 // 5:Resources_Display
 // 6:Next_Turn_Button
 // 7:Stat_Display
-vector<bool> Visible{0, 0, 0, 0, 0, 0, 0, 0};
+// 8:Setting
+// 9:Start_Interface
+// 10:Save_UI
+vector<bool> Visible{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+// 00:Draw
+// 01:DUI
+// 02:EGY
+// 03:INV
+// 04:Grid
+// 05:Res
+// 06:NTB
+// 07:Stat_Display
+// 08:Setting
+vector<bool> Selectable_List;
+
+vector <int> Setting_List{0};
+
+// 0:Auto Save
+vector<bool> Save_Existence{0, 0, 0, 0, 0, 0, 0};
+int Save_no;
 
 #include "Display_Module_Main/Draw_Button.h"
 #include "Display_Module_Main/Map_Grid.h"
@@ -176,16 +187,20 @@ vector<bool> Visible{0, 0, 0, 0, 0, 0, 0, 0};
 #include "Display_Module_Main/Inventory.h"
 #include "Display_Module_Main/Next_Turn_Button.h"
 #include "Display_Module_Main/Stat_Display.h"
+#include "Display_Module_Main/Setting.h"
+#include "Display_Module_Main/Start_Interface.h"
+#include "Display_Module_Main/Save_UI.h"
 
 using namespace std;
 
-class Data_Storage : public Map_Grid, public Resources_Display, public Draw_Button, public Energy_Bar, public Draw_UI, public Inventory, public Next_Turn_Button, public Stat_Display
+class Data_Storage : public Map_Grid, public Resources_Display, public Draw_Button, public Energy_Bar, public Draw_UI, public Inventory, public Next_Turn_Button, public Stat_Display, public Setting, public Start_Interface, public Save_UI
 {
 public:
     void Test_Specific_Card(int id);
 
 private:
     bool Testmod = 0;
+    bool Testmod_SL = 0;
 
 public:
     void Initialize();
@@ -200,8 +215,13 @@ public:
     void Discard(int id);
     void Fix(int id);
     void Use_INV_item(int id);
+    void Save_Selection(int id);
+    void Setting(int id);
+
+public:
     void Building_On_Off();
     int Building_Grid_Selection_Result(int id);
+    void Call_Start_Interface();
 
 private:
     void Upgrade_Apply(Upgrade input);
@@ -211,6 +231,7 @@ private:
     void Availability_Check();
     void Refresh_stat();
     void Restart_Game();
+    void Check_Save_Existence();
 
 public:
     int slot_id_cache;
@@ -233,12 +254,43 @@ public:
 
 private:
     int Auto_Save_counter = 0;
+
+private:
+    // 0: ST
+    // 1: Main
+    int Game_Phase;
 };
+
+void Data_Storage::Check_Save_Existence()
+{
+    ifstream file;
+    for (int id = 0; id < 7; id++)
+    {
+        string name = string("Save") + to_string(id) + ".txt";
+        file.open(name);
+        if (file)
+        {
+            Save_Existence[id] = 1;
+        }
+        else
+        {
+            Save_Existence[id] = 0;
+        }
+    }
+    if (Testmod_SL){
+        cout<<'\n'<<"Save_Condition: "<<'\n';
+        for (int id = 0;id<Save_Existence.size();id++){
+            cout<<Save_Existence[id]<<'\n';
+        }
+    }
+}
 
 void Data_Storage::Restart_Game()
 {
     EGY_Energy = 100;
     Grid_Clear_Disasters();
+    Save(0);
+    Auto_Save_counter = 0;
 }
 
 void Data_Storage::Building_On_Off()
@@ -380,6 +432,110 @@ void Data_Storage ::Upgrade_Apply(Upgrade input)
     if (input.type == 12)
     {
         EGY_Energy += input.value;
+    }
+}
+
+void Data_Storage::Setting(int id)
+{
+    if (id == 0)
+    {
+        SET_Phase = 1;
+    }
+    else if (id == 1)
+    {
+        SET_Phase = 0;
+    }
+    else if (id == 2){
+        if (Setting_List[0]==0){
+            Setting_List[0]=1;
+        }
+        else{
+            Setting_List[0]=0;
+        }
+    }
+    else if (id == 3){
+        Save(0);
+        exit(0);
+    }
+    else if (id == 4){
+        SET_Phase = 0;
+        Visible[10] = 1;
+        SUI_Phase = 1;
+        Save_no = 1;
+    }
+    else if (id == 5){
+        SET_Phase = 1;
+        Visible[10] = 0;
+    }
+}
+
+void Data_Storage::Save_Selection(int id)
+{
+    if (id == 0)
+    {
+        Visible[10] = 1;
+        SUI_Phase = 0;
+    }
+    else if (id == 1)
+    {
+        Visible[10] = 0;
+        SUI_Phase = 0;
+    }
+    else if (id == 2)
+    {
+        if (Save_no == -1)
+        {
+            Save_no = 6;
+        }
+        else
+        {
+            Save_no--;
+        }
+    }
+    else if (id == 3)
+    {
+        if (Save_no == 6)
+        {
+            Save_no = -1;
+        }
+        else
+        {
+            Save_no++;
+        }
+    }
+    else if (id == 4)
+    {
+        if (Save_Existence[Save_no])
+        {
+            string name = string("Save") + to_string(Save_no) + ".txt";
+            remove(name.c_str());
+            Check_Save_Existence();
+        }
+    }
+    else if(id == 5){
+        if (Save_no == 1)
+        {
+            Save_no = 6;
+        }
+        else
+        {
+            Save_no--;
+        }
+    }
+    else if(id == 6){
+        if (Save_no == 6)
+        {
+            Save_no = 1;
+        }
+        else
+        {
+            Save_no++;
+        }
+    }
+    else if (id == 7)
+    {
+        Save(Save_no);
+        Check_Save_Existence();
     }
 }
 
@@ -682,6 +838,8 @@ void Data_Storage ::D_Phase_Switch(int id)
         Selectable_List[4] = 1;
         Selectable_List[5] = 1;
         Selectable_List[6] = 1;
+        Selectable_List[7] = 1;
+        Selectable_List[8] = 1;
         Grid_Phase = 0;
     }
     // Building Grid Selection
@@ -694,6 +852,8 @@ void Data_Storage ::D_Phase_Switch(int id)
         Selectable_List[4] = 1;
         Selectable_List[5] = 0;
         Selectable_List[6] = 0;
+        Selectable_List[7] = 0;
+        Selectable_List[8] = 0;
         Grid_Phase = 1;
     }
 }
@@ -812,7 +972,13 @@ void Data_Storage::Test_Specific_Card(int id)
 
 void Data_Storage::Refresh_Layer(string id)
 {
-    Availability_Check();
+    if (Game_Phase == 0)
+    {
+    }
+    else if (Game_Phase == 1)
+    {
+        Availability_Check();
+    }
     Relocate();
     if (Draw_Layer_name == id)
     {
@@ -870,11 +1036,38 @@ void Data_Storage::Refresh_Layer(string id)
             Stat_Output();
         }
     }
+    if ((SET_Layer_name == id)|| (SET_Popup_Layer_name == id))
+    {
+        if (Visible[8])
+        {
+            SET_Output();
+        }
+    }
+    if (STI_Layer_name == id)
+    {
+        if (Visible[9])
+        {
+            STI_Output();
+        }
+    }
+    if (SUI_Layer_name == id)
+    {
+        if (Visible[10])
+        {
+            SUI_Output();
+        }
+    }
 }
 
 void Data_Storage::Refresh()
 {
-    Availability_Check();
+    if (Game_Phase == 0)
+    {
+    }
+    else if (Game_Phase == 1)
+    {
+        Availability_Check();
+    }
     Relocate();
     if (Visible[0])
     {
@@ -908,6 +1101,18 @@ void Data_Storage::Refresh()
     {
         Stat_Output();
     }
+    if (Visible[8])
+    {
+        SET_Output();
+    }
+    if (Visible[9])
+    {
+        STI_Output();
+    }
+    if (Visible[10])
+    {
+        SUI_Output();
+    }
 
     if (Testmod)
     {
@@ -918,48 +1123,86 @@ void Data_Storage::Refresh()
 
 void Data_Storage::Relocate()
 {
-    Stat_st_xy[0] = 0;
-    Stat_st_xy[1] = 0;
+    if (Game_Phase == 0)
+    {
+        R_Main.Set_Size(80, 40);
+        Screen_Size[0] = 80;
+        Screen_Size[1] = 40;
+    }
+    else if (Game_Phase == 1)
+    {
+        Stat_st_xy[0] = 0;
+        Stat_st_xy[1] = 0;
 
-    Res_st_xy[0] = Stat_st_xy[0];
-    Res_st_xy[1] = Stat_st_xy[1] + Stat_Size[1] + 1;
+        SET_st_xy[0] = Stat_st_xy[0] + Stat_Size[0] + 1;
+        SET_st_xy[1] = Stat_st_xy[1];
 
-    Grid_st_xy[0] = Res_Size[0] + Res_st_xy[0] + 1;
-    Grid_st_xy[1] = Res_st_xy[1];
+        Res_st_xy[0] = Stat_st_xy[0];
+        Res_st_xy[1] = Stat_st_xy[1] + Stat_Size[1] + 1;
 
-    Draw_st_xy[0] = Res_st_xy[0];
-    Draw_st_xy[1] = Grid_st_xy[1] + Grid_Size[1] - Draw_Size[1];
+        Grid_st_xy[0] = Res_Size[0] + Res_st_xy[0] + 1;
+        Grid_st_xy[1] = Res_st_xy[1];
 
-    NTB_st_xy[0] = Res_st_xy[0];
-    NTB_st_xy[1] = Res_st_xy[1] + Res_Size[1] + 1;
-    NTB_Size[1] = Draw_st_xy[1] - NTB_st_xy[1] - 1;
+        Draw_st_xy[0] = Res_st_xy[0];
+        Draw_st_xy[1] = Grid_st_xy[1] + Grid_Size[1] - Draw_Size[1];
 
-    EGY_st_xy[0] = Res_st_xy[0];
-    EGY_st_xy[1] = Grid_st_xy[1] + Grid_Size[1] + 1;
-    EGY_Size[0] = Grid_st_xy[0] + Grid_Size[0] - EGY_st_xy[0];
+        NTB_st_xy[0] = Res_st_xy[0];
+        NTB_st_xy[1] = Res_st_xy[1] + Res_Size[1] + 1;
+        NTB_Size[1] = Draw_st_xy[1] - NTB_st_xy[1] - 1;
 
-    INV_st_xy[0] = Res_st_xy[0];
-    INV_st_xy[1] = EGY_st_xy[1] + EGY_Size[1] + 1;
+        EGY_st_xy[0] = Res_st_xy[0];
+        EGY_st_xy[1] = Grid_st_xy[1] + Grid_Size[1] + 1;
+        EGY_Size[0] = Grid_st_xy[0] + Grid_Size[0] - EGY_st_xy[0];
 
-    Screen_Size[0] = EGY_Size[0];
-    Screen_Size[1] = INV_st_xy[1] + INV_Size[1];
+        INV_st_xy[0] = Res_st_xy[0];
+        INV_st_xy[1] = EGY_st_xy[1] + EGY_Size[1] + 1;
 
-    R_Main.Set_Size(Screen_Size[0] + 1, Screen_Size[1]);
+        Screen_Size[0] = EGY_Size[0];
+        Screen_Size[1] = INV_st_xy[1] + INV_Size[1];
+
+        R_Main.Set_Size(Screen_Size[0] + 1, Screen_Size[1]);
+    }
+}
+
+void Data_Storage::Call_Start_Interface()
+{
+    Game_Phase = 0;
+    Visible[0] = 0;
+    Visible[1] = 0;
+    Visible[2] = 0;
+    Visible[3] = 0;
+    Visible[4] = 0;
+    Visible[5] = 0;
+    Visible[6] = 0;
+    Visible[7] = 0;
+    Visible[8] = 0;
+    Visible[9] = 1;
+    Visible[10] = 0;
+    Relocate();
+    Save_no = -1;
+    Check_Save_Existence();
 }
 
 void Data_Storage::Initialize()
 {
-    for (int id = 0; id < 8; id++)
+    Check_Save_Existence();
+    Game_Phase = 1;
+    Selectable_List.clear();
+    for (int id = 0; id < 9; id++)
     {
         Selectable_List.push_back(1);
     }
     Visible[0] = 1;
+    Visible[1] = 0;
     Visible[2] = 1;
     Visible[3] = 1;
     Visible[4] = 1;
     Visible[5] = 1;
     Visible[6] = 1;
     Visible[7] = 1;
+    Visible[8] = 1;
+    Visible[9] = 0;
+    Visible[10] = 0;
     if (Testmod)
     {
         cout << '\n'
@@ -1028,7 +1271,7 @@ void Data_Storage::Initialize()
         cout << "R_Main initialized" << '\n';
     }
     Relocate();
-    Load(0);
+    Load(Save_no);
 }
 
 // Order:
@@ -1087,127 +1330,135 @@ void Data_Storage::Save(int id)
 
 void Data_Storage::Load(int id)
 {
-    string file_name = string("Save") + to_string(id) + ".txt";
-    ifstream File(file_name);
-    string Line;
-    vector <string> temp;
-    int counter, subcounter, gap, phase, subcounter2;
-    counter = subcounter = gap = phase = subcounter2 = 0;
-    while (getline(File, Line))
+    if (id != -1)
     {
-        // int Turn_No
-        if (Line == "")
+        string file_name = string("Save") + to_string(id) + ".txt";
+        ifstream File(file_name);
+        string Line;
+        vector<string> temp;
+        int counter, subcounter, gap, phase, subcounter2;
+        counter = subcounter = gap = phase = subcounter2 = 0;
+        while (getline(File, Line))
         {
-            phase++;
-            counter = 0;
-            subcounter = 0;
-            subcounter2 = 0;
-            gap = 0;
-            temp.clear();
-        }
-        else if (phase == 0)
-        {
-            Turn_No = stoi(Line);
-        }
-        // int Corruption_gap
-        else if (phase == 1)
-        {
-            Corruption_gap = stoi(Line);
-        }
-        // int turn_counter
-        else if (phase == 2)
-        {
-            turn_counter = stoi(Line);
-        }
-        // int Corruption_no
-        else if (phase == 3)
-        {
-            Corruption_no = stoi(Line);
-        }
-        // int EGY_Energy
-        else if (phase == 4)
-        {
-            EGY_Energy = stoi(Line);
-        }
-        // vector<vector<double>> Upgrade_List
-        else if (phase == 5)
-        {
-            if (subcounter == 0)
+            // int Turn_No
+            if (Line == "")
             {
-                gap = stoi(Line);
-                subcounter++;
-            }
-            else if (subcounter == gap+1)
-            {
-                counter++;
-                gap = stoi(Line);
-                subcounter = 1;
-            }
-            else
-            {
-                Upgrade_List[counter][subcounter - 1] = stod(Line);
-                subcounter++;
-            }
-            //cout<<'\n'<<"counter: "<<counter<<"  subcounter: "<<subcounter<<'\n';
-        }
-        // vector<double> Other_Buffs
-        else if (phase == 6)
-        {
-            Other_Buffs[counter] = stod(Line);
-            counter++;
-        }
-        // Grid Building Data
-        else if (phase == 7)
-        {
-            if (gap == 0)
-            {
-                temp.push_back(Line);
-                gap = stoi(Line);
-                subcounter=1;
-                counter++;
-            }
-            else if (subcounter==gap){
-                temp.push_back(Line);
-                Grid_Set_Building(temp,counter-1);
-                gap=0;
+                phase++;
+                counter = 0;
+                subcounter = 0;
+                subcounter2 = 0;
+                gap = 0;
                 temp.clear();
             }
-            else{
-                temp.push_back(Line);
-                subcounter++;
-            }
-        }
-        // INV Card Data
-        else if (phase == 8)
-        {
-            if (subcounter == 0)
+            else if (phase == 0)
             {
-                subcounter = stoi(Line);
-                if (subcounter!=0){
+                Turn_No = stoi(Line);
+            }
+            // int Corruption_gap
+            else if (phase == 1)
+            {
+                Corruption_gap = stoi(Line);
+            }
+            // int turn_counter
+            else if (phase == 2)
+            {
+                turn_counter = stoi(Line);
+            }
+            // int Corruption_no
+            else if (phase == 3)
+            {
+                Corruption_no = stoi(Line);
+            }
+            // int EGY_Energy
+            else if (phase == 4)
+            {
+                EGY_Energy = stoi(Line);
+            }
+            // vector<vector<double>> Upgrade_List
+            else if (phase == 5)
+            {
+                if (subcounter == 0)
+                {
+                    gap = stoi(Line);
+                    subcounter++;
+                }
+                else if (subcounter == gap + 1)
+                {
+                    counter++;
+                    gap = stoi(Line);
+                    subcounter = 1;
+                }
+                else
+                {
+                    Upgrade_List[counter][subcounter - 1] = stod(Line);
+                    subcounter++;
+                }
+                // cout<<'\n'<<"counter: "<<counter<<"  subcounter: "<<subcounter<<'\n';
+            }
+            // vector<double> Other_Buffs
+            else if (phase == 6)
+            {
+                Other_Buffs[counter] = stod(Line);
+                counter++;
+            }
+            // Grid Building Data
+            else if (phase == 7)
+            {
+                if (gap == 0)
+                {
                     temp.push_back(Line);
+                    gap = stoi(Line);
+                    subcounter = 1;
+                    counter++;
+                }
+                else if (subcounter == gap)
+                {
+                    temp.push_back(Line);
+                    Grid_Set_Building(temp, counter - 1);
+                    gap = 0;
+                    temp.clear();
+                }
+                else
+                {
+                    temp.push_back(Line);
+                    subcounter++;
                 }
             }
-            else if (subcounter2==0&&subcounter != 0)
+            // INV Card Data
+            else if (phase == 8)
             {
-                gap=stoi(Line);
-                temp.push_back(Line);
-                subcounter2=1;
-                counter++;
-            }
-            else if (subcounter2==gap){
-                temp.push_back(Line);
-                INV_item_list[counter-1].Load_Card(temp);
-                subcounter=0;
-                subcounter2=0;
-                temp.clear();
-            }
-            else{
-                temp.push_back(Line);
-                subcounter2++;
+                if (subcounter == 0)
+                {
+                    subcounter = stoi(Line);
+                    if (subcounter != 0)
+                    {
+                        temp.push_back(Line);
+                    }
+                }
+                else if (subcounter2 == 0 && subcounter != 0)
+                {
+                    gap = stoi(Line);
+                    temp.push_back(Line);
+                    subcounter2 = 1;
+                    counter++;
+                }
+                else if (subcounter2 == gap)
+                {
+                    temp.push_back(Line);
+                    INV_item_list[counter - 1].Load_Card(temp);
+                    subcounter = 0;
+                    subcounter2 = 0;
+                    temp.clear();
+                }
+                else
+                {
+                    temp.push_back(Line);
+                    subcounter2++;
+                }
             }
         }
+        File.close();
     }
-    File.close();
 }
 
 #endif

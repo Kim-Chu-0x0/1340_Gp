@@ -18,7 +18,7 @@ private:
     bool Res_TestMod = 0;
 
 protected:
-    //Needs to be saved
+    // Needs to be saved
     vector<int> Res_Resource_List{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     vector<int> Res_Future_List{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     vector<bool> Res_Issue{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -31,6 +31,7 @@ protected:
 protected:
     void Res_PsssTurn();
     string Res_Layer_name = "Map";
+
 private:
     int Res_selectable;
 };
@@ -46,7 +47,7 @@ void Resources_Display::Res_PsssTurn()
 
 void Resources_Display::Res_Output()
 {
-    Res_selectable=Selectable_List[5];
+    Res_selectable = Selectable_List[5];
     vector<Pixel> Output_Map;
     Pixel Space, Semicolon;
     Space.text = "/s";
@@ -125,7 +126,8 @@ void Resources_Display::Res_Output()
                 temp.colour = H_Red;
                 temp.text = "-";
             }
-            if (Res_Issue[id]){
+            if (Res_Issue[id])
+            {
                 temp.colour = H_Yellow;
             }
             Output_Map.push_back(temp);
@@ -165,7 +167,8 @@ void Resources_Display::Res_Output()
                     temp.colour = H_Red;
                     temp.text = "-";
                 }
-                if (Res_Issue[id + Y_Size]){
+                if (Res_Issue[id + Y_Size])
+                {
                     temp.colour = H_Yellow;
                 }
                 Output_Map.push_back(temp);

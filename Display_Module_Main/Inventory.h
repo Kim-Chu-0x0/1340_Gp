@@ -36,37 +36,42 @@ protected:
 protected:
     int INV_selection;
     int INV_selection_id;
-    //Needs to be saved
+    // Needs to be saved
     vector<Card> INV_item_list;
     vector<int> INV_highlight_id;
     int INV_button_highlight_id;
     string INV_Layer_name = "Map";
     string INV_Popup_Layer_Name = "PopUp_Map";
     int INV_Phase = 0;
-    vector <string> INV_Save();
+    vector<string> INV_Save();
 
 private:
     int INV_selectable;
 };
 
-vector <string> Inventory::INV_Save(){
-    vector <string> Output;
-    for (int id = 0 ;id<INV_item_list.size();id++){
-        vector <string> temp = INV_item_list[id].Save_Card();
-        for (int no = 0;no<temp.size();no++){
+vector<string> Inventory::INV_Save()
+{
+    vector<string> Output;
+    for (int id = 0; id < INV_item_list.size(); id++)
+    {
+        vector<string> temp = INV_item_list[id].Save_Card();
+        for (int no = 0; no < temp.size(); no++)
+        {
             Output.push_back(temp[no]);
         }
     }
     return Output;
 }
 
-void Inventory::INV_Discard(){
+void Inventory::INV_Discard()
+{
     Card temp;
     temp.Blank();
-    INV_item_list[INV_selection]=temp;
+    INV_item_list[INV_selection] = temp;
 }
 
-Card Inventory::INV_Slot_Output(){
+Card Inventory::INV_Slot_Output()
+{
     return INV_item_list[INV_selection];
 }
 
@@ -101,9 +106,12 @@ void Inventory::INV_Reset()
     }
 }
 
-void Inventory::INV_Refresh_stat(){
-    for (int id = 0; id < Upgrade_List[9][1]; id++){
-        if(INV_item_list[id].Type==3){
+void Inventory::INV_Refresh_stat()
+{
+    for (int id = 0; id < Upgrade_List[9][1]; id++)
+    {
+        if (INV_item_list[id].Type == 3)
+        {
             INV_item_list[id].Refresh_stat();
         }
     }
@@ -127,8 +135,10 @@ void Inventory::INV_Output()
                 }
             }
         }
-        if (INV_Testmod){
-            cout<<'\n'<<"Select: "<<INV_selection<<'\n';
+        if (INV_Testmod)
+        {
+            cout << '\n'
+                 << "Select: " << INV_selection << '\n';
         }
     }
     for (int id = 0; id < Upgrade_List[9][1]; id++)
@@ -158,7 +168,7 @@ void Inventory::INV_Output()
                      << "Item " << id << " id: " << INV_highlight_id[id] << '\n';
             }
         }
-        else if ((INV_Phase == 1)||(INV_Phase == 2))
+        else if ((INV_Phase == 1) || (INV_Phase == 2))
         {
             R_Main.Add_Textbox("", 0, 0, INV_Layer_name, INV_item_list[id].Graphic, temp_St, temp_En, 0);
         }

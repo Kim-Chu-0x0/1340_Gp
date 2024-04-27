@@ -23,27 +23,29 @@ public:
     void Random();
     void Blank();
     void Refresh_stat();
-    void Load_Card(vector <string> input);
-    vector <string> Save_Card();
+    void Load_Card(vector<string> input);
+    vector<string> Save_Card();
 
 public:
     vector<Pixel> Graphic, Description, Detail_in_Inv;
     vector<int> Size_of_Description{17, 0};
-    //0: NULL
-    //1: Upgrade
-    //2: Tool
-    //3: Building
+    // 0: NULL
+    // 1: Upgrade
+    // 2: Tool
+    // 3: Building
     int Type = 0;
     Building B_Data;
     Tool T_Data;
     Upgrade U_Data;
 };
 
-void Card::Load_Card(vector <string> input){
+void Card::Load_Card(vector<string> input)
+{
     Graphic.clear();
-    Type=stoi(input[0]);
+    Type = stoi(input[0]);
     input.erase(input.begin());
-    if (Type==2){
+    if (Type == 2)
+    {
         T_Data.Load_Tool(input);
         vector<string> temp_vector{
             "0", "╔", "═", "═", "═", "═", "═", "╗", "0",
@@ -67,7 +69,8 @@ void Card::Load_Card(vector <string> input){
         Description = T_Data.description;
         Size_of_Description[1] = T_Data.description.size() / 33;
     }
-    else if (Type==3){
+    else if (Type == 3)
+    {
         B_Data.Load_Building(input);
         vector<string> temp_vector{
             "0", "╦", "0", "0", "╦", "0", "0", "╦", "0",
@@ -93,25 +96,31 @@ void Card::Load_Card(vector <string> input){
     }
 }
 
-vector <string> Card::Save_Card(){
-    if (Type==1){
-        cout<<'\n'<<"Upgrade Card can't be saved"<<'\n';
+vector<string> Card::Save_Card()
+{
+    if (Type == 1)
+    {
+        cout << '\n'
+             << "Upgrade Card can't be saved" << '\n';
         exit(0);
     }
-    vector <string> Output;
-    if (Type==2){
-        Output=T_Data.Save_Tool();
+    vector<string> Output;
+    if (Type == 2)
+    {
+        Output = T_Data.Save_Tool();
     }
-    else if (Type==3){
-        Output=B_Data.Save_Building();
+    else if (Type == 3)
+    {
+        Output = B_Data.Save_Building();
     }
-    Output.insert(Output.begin(),to_string(Type));
+    Output.insert(Output.begin(), to_string(Type));
     return Output;
 }
 
-void Card::Refresh_stat(){
+void Card::Refresh_stat()
+{
     B_Data.Refresh_stat();
-    Description=B_Data.description;
+    Description = B_Data.description;
 }
 
 // Locate in Class_Card.h
@@ -219,8 +228,9 @@ void Card::Random()
         {
             cout << "Choice: " << Choice << '\n';
         }
-        if (Choice>=6){
-            Choice+=2;
+        if (Choice >= 6)
+        {
+            Choice += 2;
         }
         B_Data.Input_type(Choice);
         vector<string> temp_vector{

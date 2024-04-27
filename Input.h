@@ -20,6 +20,7 @@ public:
     void Read_input();
     void Execute_Command();
     void Initialize();
+    void Call_Start_Interface();
     int Key_to_Action(string type, char Input_Key);
 
 private:
@@ -127,13 +128,16 @@ int Input::Key_to_Action(string type, char Input_Key)
         Q = 18;
         E = 19;
     }
-    else if (type == "NTB_T"){
+    else if (type == "NTB_T")
+    {
         E = 20;
     }
-    else if (type == "Disaster"){
+    else if (type == "Disaster")
+    {
         E = 21;
     }
-    else if (type == "Disaster_Fix_F"){
+    else if (type == "Disaster_Fix_F")
+    {
         W = 22;
         S = 22;
         A = 22;
@@ -141,13 +145,70 @@ int Input::Key_to_Action(string type, char Input_Key)
         Q = 22;
         E = 22;
     }
-    else if (type == "Disaster_Fix_T"){
+    else if (type == "Disaster_Fix_T")
+    {
         W = 0;
         S = 0;
         A = 0;
         D = 0;
         Q = 22;
         E = 23;
+    }
+    else if (type == "New_Game")
+    {
+        E = 24;
+    }
+    else if (type == "Load_Save")
+    {
+        E = 25;
+    }
+    else if (type == "Save_Left_0")
+    {
+        Q = 26;
+        A = 27;
+        E = 27;
+    }
+    else if (type == "Save_Right_0")
+    {
+        Q = 26;
+        D = 28;
+        E = 28;
+    }
+    else if (type == "Save_Left_1")
+    {
+        Q = 35;
+        A = 36;
+        E = 36;
+    }
+    else if (type == "Save_Right_1")
+    {
+        Q = 35;
+        D = 37;
+        E = 37;
+    }
+    else if (type == "Clear_Save")
+    {
+        Q = 26;
+        E = 29;
+    }
+    else if(type == "Save_Game"){
+        Q = 35;
+        E = 38;
+    }
+    else if (type == "Setting"){
+        E = 30;
+    }
+    else if (type == "Setting_ANSI"){
+        Q = 31;
+        E = 32;
+    }
+    else if (type == "Setting_Save"){
+        Q = 31;
+        E = 34;
+    }
+    else if (type == "Setting_Quit"){
+        Q = 31;
+        E = 33;
     }
     vector<int> Key{W, A, S, D, Q, E};
     if (I_TestMod)
@@ -157,21 +218,32 @@ int Input::Key_to_Action(string type, char Input_Key)
     return Key[Command];
 }
 
-void Input::Initialize()
-{
+void Input::Call_Start_Interface(){
     R_Main.Initialize();
+    R_Main.Set_Move_const(5,30);
     if (I_TestMod)
     {
         cout << '\n';
         cout << "R_Main initialized" << '\n';
     }
-    D_Main.Initialize();
+    D_Main.Call_Start_Interface();
     if (I_TestMod)
     {
         cout << "D_Main initialized" << '\n';
     }
     I_Refresh();
     I_Output();
+}
+
+void Input::Initialize()
+{
+    R_Main.Set_Move_const(-1,-1);
+    D_Main.Initialize();
+    if (I_TestMod)
+    {
+        cout << "D_Main initialized" << '\n';
+    }
+    I_Refresh();
 }
 
 // Clear all temp data stored in Main
@@ -222,7 +294,8 @@ void Input::Execute_Command()
     int Temp;
     for (int id = 0; id < input_stack.size(); id++)
     {
-        if (Ref){
+        if (Ref)
+        {
             R_Main.Refresh_Current_Name();
         }
         Ref = 0;
@@ -439,6 +512,131 @@ void Input::Execute_Command()
             Sus = 1;
             D_Main.Fix(2);
             Switch_Layer("Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Start_New_Game
+        case 24:
+            Ref = 1;
+            Sus = 1;
+            Initialize();
+            id = input_stack.size() - 1;
+            break;
+        // Select_Save
+        case 25:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Save_Selection(0);
+            Switch_Layer("Setting");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Quit Select_Save
+        case 26:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Save_Selection(1);
+            Switch_Layer("Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Select_Save Left
+        case 27:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Save_Selection(2);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Select_Save Right
+        case 28:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Save_Selection(3);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Select_Save Delete
+        case 29:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Save_Selection(4);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Open Setting Page
+        case 30:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Setting(0);
+            Switch_Layer("Setting");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Close Setting Page
+        case 31:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Setting(1);
+            Switch_Layer("Map");
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Setting Simple ANSI
+        case 32:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Setting(2);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Setting S_Quit
+        case 33:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Setting(3);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Setting Save
+        case 34:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Setting(4);
+            R_Main.Set_Move_const(5,30);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Setting Save Return
+        case 35:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Setting(5);
+            R_Main.Set_Move_const(-1,-1);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Setting Select_Save Left
+        case 36:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Save_Selection(5);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Setting Select_Save Right
+        case 37:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Save_Selection(6);
+            I_Refresh();
+            id = input_stack.size() - 1;
+            break;
+        // Setting Select_Save Save
+        case 38:
+            Ref = 1;
+            Sus = 1;
+            D_Main.Save_Selection(7);
             I_Refresh();
             id = input_stack.size() - 1;
             break;

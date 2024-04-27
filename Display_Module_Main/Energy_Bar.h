@@ -18,7 +18,7 @@ private:
     bool EGY_TestMod = 0;
 
 protected:
-    //Needs to be saved
+    // Needs to be saved
     double EGY_Energy = 100;
     double EGY_Future_Energy = 0;
 
@@ -28,6 +28,7 @@ protected:
     vector<int> EGY_st_xy{0, 0};
     vector<int> EGY_Size{0, 2};
     string EGY_Layer_name = "Map";
+
 private:
     int EGY_selectable;
 
@@ -37,7 +38,7 @@ private:
 
 void Energy_Bar::EGY_Output()
 {
-    EGY_selectable=Selectable_List[2];
+    EGY_selectable = Selectable_List[2];
     vector<Pixel> Output_Map;
     string temp_s = "Energy:0000000";
     Pixel temp_P;
@@ -101,14 +102,17 @@ void Energy_Bar::EGY_Output()
 
 int Energy_Bar::EGY_Energy_Level()
 {
-    double percentage=EGY_Energy / Upgrade_List[12][1];
-    if (percentage>0.8){
+    double percentage = EGY_Energy / Upgrade_List[12][1];
+    if (percentage > 0.8)
+    {
         return 3;
     }
-    if (percentage>0.5){
+    if (percentage > 0.5)
+    {
         return 2;
     }
-    if (percentage>0.2){
+    if (percentage > 0.2)
+    {
         return 1;
     }
     return 0;

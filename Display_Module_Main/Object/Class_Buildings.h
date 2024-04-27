@@ -99,26 +99,26 @@ private:
   bool TestBounus = 0;
 
 public:
-  //Needs to be saved
+  // Needs to be saved
   string type;
-  //Needs to be saved
+  // Needs to be saved
   string name;
   vector<Pixel> graphic_S;
   vector<Pixel> description;
   vector<int> output_graphic_size_S{6, 6};
-  //Needs to be saved
+  // Needs to be saved
   vector<io_building> input_list;
-  //Needs to be saved
+  // Needs to be saved
   vector<io_building> output_list;
   int duration = -1;
-  //Needs to be saved
+  // Needs to be saved
   int countdown = -1;
-  //Needs to be saved
-  // 1:On 0:Off
+  // Needs to be saved
+  //  1:On 0:Off
   bool On_Off = 1;
 
 private:
-  //Needs to be saved
+  // Needs to be saved
   int duration_base = -1;
 
 private:
@@ -132,13 +132,13 @@ private:
 private:
   vector<int> graphic_size{11, 4};
   vector<string> unprocessed_graphic;
-  vector<bool> req_tier{0,0,0,0};
+  vector<bool> req_tier{0, 0, 0, 0};
   int req_constant;
-  vector<bool> out_tier{0,0,0,0};
+  vector<bool> out_tier{0, 0, 0, 0};
   int out_constant;
   int in_complexity;
   int out_complexity;
-  //Needs to be saved
+  // Needs to be saved
   bool customized = 0;
 
 public:
@@ -149,8 +149,8 @@ public:
   vector<vector<int>> Return_Req();
   vector<int> Get_Disaster_Req();
   void Restore_Lifespan(double value);
-  void Load_Building(vector <string> input);
-  vector <string> Save_Building();
+  void Load_Building(vector<string> input);
+  vector<string> Save_Building();
 
 private:
   void Search_Location();
@@ -164,13 +164,16 @@ private:
   void Custom_Graphic();
 };
 
-void Building::Restore_Lifespan(double value){
-  int T_value = (duration* value) /100 ;
-  if ((T_value+countdown)>=duration){
-    countdown=duration;
+void Building::Restore_Lifespan(double value)
+{
+  int T_value = (duration * value) / 100;
+  if ((T_value + countdown) >= duration)
+  {
+    countdown = duration;
   }
-  else{
-    countdown+=T_value;
+  else
+  {
+    countdown += T_value;
   }
 }
 
@@ -192,8 +195,9 @@ bool Building::Pass_Turn()
   return 0;
 }
 
-//For Disaster only
-vector<int> Building::Get_Disaster_Req(){
+// For Disaster only
+vector<int> Building::Get_Disaster_Req()
+{
   vector<int> Tp_1(17, 0);
   for (int id = 0; id < input_list.size(); id++)
   {
@@ -208,13 +212,15 @@ vector<vector<int>> Building::Return_Req()
   vector<int> Tp_2(17, 0);
   if (On_Off == 1)
   {
-    if (name!="Disaster"){
+    if (name != "Disaster")
+    {
       for (int id = 0; id < input_list.size(); id++)
       {
         Tp_1[input_list[id].item] += input_list[id].quantity;
       }
     }
-    if (!(name=="Disaster"&&Other_Buffs[1]>0)){
+    if (!(name == "Disaster" && Other_Buffs[1] > 0))
+    {
       for (int id = 0; id < output_list.size(); id++)
       {
         Tp_2[output_list[id].item] += output_list[id].quantity;
@@ -241,7 +247,7 @@ void Building::Refresh_stat()
   }
   else if (name == "Disaster")
   {
-    output_list[0].quantity = (1+(countdown/2)) * output_list[0].quantity_base;
+    output_list[0].quantity = (1 + (countdown / 2)) * output_list[0].quantity_base;
     Generate_Description();
   }
 }
@@ -311,8 +317,9 @@ void Building::finalstat_bounus()
   {
     Temp_d = output_list[id].quantity_base;
     Temp_d *= 1.0 + (counter / 100);
-    if (countdown != -1){
-      Temp_d*=Other_Buffs[2];
+    if (countdown != -1)
+    {
+      Temp_d *= Other_Buffs[2];
     }
     output_list[id].quantity = Temp_d;
   }
@@ -330,8 +337,9 @@ void Building::finalstat_bounus()
   {
     Temp_d = input_list[id].quantity_base;
     Temp_d *= 1.0 + (counter / 100);
-    if (countdown != -1){
-      Temp_d*=Other_Buffs[2];
+    if (countdown != -1)
+    {
+      Temp_d *= Other_Buffs[2];
     }
     input_list[id].quantity = Temp_d;
   }
@@ -408,7 +416,8 @@ void Building::normal_refresh()
     {
       temp_colour = Default_colour[output_list[id].item % no_each_tier];
     }
-    else if (output_list[id].item==16){
+    else if (output_list[id].item == 16)
+    {
       temp_colour = H_Yellow;
     }
     else
@@ -474,7 +483,8 @@ void Building::normal_refresh()
   Generate_Description();
 }
 
-void Building::Custom_Graphic(){
+void Building::Custom_Graphic()
+{
   graphic_S.clear();
   if (name == "Empty/sSpace")
   {
@@ -542,7 +552,8 @@ void Building::customized_initialize()
            << "graphic_S size: " << graphic_S.size() << '\n';
     }
   }
-  if (name == "Disaster"){
+  if (name == "Disaster")
+  {
     Custom_Graphic();
     countdown = 1;
     input_list.clear();
@@ -569,11 +580,11 @@ void Building::customized_initialize()
         input_list.push_back(temp_io);
       }
     }
-    double counter = 30 + (rand() % 6) + pow(Turn_No * (6 + (rand() % 2)),1.5);
+    double counter = 30 + (rand() % 6) + pow(Turn_No * (6 + (rand() % 2)), 1.5);
     while (counter > 0)
     {
       input_temp = rand() % input_list.size();
-      double cost = 1.0 *input_list[input_temp].item / no_each_tier;
+      double cost = 1.0 * input_list[input_temp].item / no_each_tier;
       cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
       input_list[input_temp].quantity_base++;
       counter -= cost;
@@ -586,10 +597,11 @@ void Building::customized_initialize()
            << "graphic_S size: " << graphic_S.size() << '\n';
     }
   }
-  else if (type =="Generator"){
+  else if (type == "Generator")
+  {
     Search_Location();
     basestat_bounus();
-    double Out_const_temp =out_constant;
+    double Out_const_temp = out_constant;
     out_constant = 0;
     type_process();
     io_building output_temp;
@@ -611,7 +623,7 @@ void Building::Generate_Description()
 {
   description.clear();
   vector<string> text_raw_1;
-  if ((!customized)||(type =="Generator"))
+  if ((!customized) || (type == "Generator"))
   {
     vector<string> text_temp{
         "Name:",
@@ -684,15 +696,16 @@ void Building::Generate_Description()
       for (int id = 0; id < 1 + ((input_list.size() - 1) / 3); id++)
       {
         text_temp.push_back("");
-        for (int no = 0; (no < 3) && (((id * 3) + no) < input_list.size()); no++){
-          text_temp[id+1] += "/s";
-          text_temp[id+1] += to_string(input_list[((id * 3) + no)].quantity_base);
-          text_temp[id+1] += "/";
+        for (int no = 0; (no < 3) && (((id * 3) + no) < input_list.size()); no++)
+        {
+          text_temp[id + 1] += "/s";
+          text_temp[id + 1] += to_string(input_list[((id * 3) + no)].quantity_base);
+          text_temp[id + 1] += "/";
           if (input_list[((id * 3) + no)].item < 10)
           {
-            text_temp[id+1] += "0";
+            text_temp[id + 1] += "0";
           }
-          text_temp[id+1] += to_string(input_list[((id * 3) + no)].item);
+          text_temp[id + 1] += to_string(input_list[((id * 3) + no)].item);
         }
       }
       text_raw_1 = text_temp;
@@ -740,9 +753,11 @@ void Building::type_process()
   vector<int> element_used;
   for (int y = 0; y < 4; y++)
   {
-    if (req_tier[y]){
-      for (int x = 0; x < no_each_tier; x++){
-        element_used.push_back(x+(y*no_each_tier));
+    if (req_tier[y])
+    {
+      for (int x = 0; x < no_each_tier; x++)
+      {
+        element_used.push_back(x + (y * no_each_tier));
       }
     }
   }
@@ -763,21 +778,23 @@ void Building::type_process()
     }
   }
   double Counter = req_constant;
-  while ( Counter > 0)
+  while (Counter > 0)
   {
     input_temp = rand() % input_list.size();
-    double cost =  1.0 * input_list[input_temp].item / no_each_tier;
+    double cost = 1.0 * input_list[input_temp].item / no_each_tier;
     cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
     input_list[input_temp].quantity_base++;
-     Counter -= cost;
+    Counter -= cost;
   }
   // output generation
   element_used.clear();
   for (int y = 0; y < 4; y++)
   {
-    if (out_tier[y]){
-      for (int x = 0; x < no_each_tier; x++){
-        element_used.push_back(x+(y*no_each_tier));
+    if (out_tier[y])
+    {
+      for (int x = 0; x < no_each_tier; x++)
+      {
+        element_used.push_back(x + (y * no_each_tier));
       }
     }
   }
@@ -874,8 +891,10 @@ void Building::Search_Location()
   }
 }
 
-void Building::Get_Graphic(){
-  if (name=="Tier/s0/sproducer"){
+void Building::Get_Graphic()
+{
+  if (name == "Tier/s0/sproducer")
+  {
     vector<string> temp_vector{
         "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
         "0", "╔", "╣", "0", "0", "0", "■", "0", "0", "0", "║",
@@ -883,7 +902,8 @@ void Building::Get_Graphic(){
         "╚", "═", "═", "═", "═", "═", "═", "═", "═", "═", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name=="Tier/s1/sproducer"){
+  else if (name == "Tier/s1/sproducer")
+  {
     vector<string> temp_vector{
         "0", "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗",
         "0", "╔", "╣", "0", "■", "0", "■", "0", "0", "0", "║",
@@ -891,7 +911,8 @@ void Building::Get_Graphic(){
         "╚", "═", "═", "╩", "═", "═", "═", "╩", "═", "═", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name=="Tier/s2/sproducer"){
+  else if (name == "Tier/s2/sproducer")
+  {
     vector<string> temp_vector{
         "0", "0", "╔", "╩", "═", "╬", "═", "╦", "═", "═", "╗",
         "0", "╔", "╣", "0", "■", "║", "■", "║", "■", "0", "║",
@@ -899,7 +920,8 @@ void Building::Get_Graphic(){
         "╚", "═", "═", "╩", "═", "═", "═", "╩", "═", "═", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s0/sprocessor"){
+  else if (name == "Tier/s0/sprocessor")
+  {
     vector<string> temp_vector{
         "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
         "╔", "╝", "0", "0", "0", "▲", "0", "0", "0", "╚", "╗",
@@ -907,7 +929,8 @@ void Building::Get_Graphic(){
         "╚", "═", "═", "╝", "0", "0", "0", "╚", "═", "═", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s1/sprocessor"){
+  else if (name == "Tier/s1/sprocessor")
+  {
     vector<string> temp_vector{
         "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
         "╔", "╣", "0", "▲", "0", "▲", "0", "0", "0", "╠", "╗",
@@ -915,7 +938,8 @@ void Building::Get_Graphic(){
         "╚", "═", "═", "╝", "0", "0", "0", "╚", "═", "═", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s2/sprocessor"){
+  else if (name == "Tier/s2/sprocessor")
+  {
     vector<string> temp_vector{
         "0", "╔", "═", "═", "═", "═", "═", "═", "═", "╗", "0",
         "╔", "╣", "0", "▲", "0", "▲", "0", "▲", "0", "╠", "╗",
@@ -923,7 +947,8 @@ void Building::Get_Graphic(){
         "╚", "═", "╩", "╝", "0", "╩", "0", "╚", "╩", "═", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s0/sExtractor"){
+  else if (name == "Tier/s0/sExtractor")
+  {
     vector<string> temp_vector{
         "╔", "╗", "0", "╔", "═", "═", "═", "╗", "0", "╔", "╗",
         "║", "║", "0", "║", "0", "●", "0", "║", "0", "║", "║",
@@ -931,7 +956,8 @@ void Building::Get_Graphic(){
         "╚", "╩", "═", "═", "═", "═", "═", "═", "═", "╩", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s1/sExtractor"){
+  else if (name == "Tier/s1/sExtractor")
+  {
     vector<string> temp_vector{
         "╔", "●", "0", "╔", "═", "═", "═", "╗", "0", "●", "╗",
         "╠", "╗", "0", "║", "0", "0", "0", "║", "0", "╔", "╣",
@@ -939,7 +965,8 @@ void Building::Get_Graphic(){
         "╚", "╩", "═", "═", "═", "╩", "═", "═", "═", "╩", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s2/sExtractor"){
+  else if (name == "Tier/s2/sExtractor")
+  {
     vector<string> temp_vector{
         "╔", "●", "0", "╔", "═", "═", "═", "╗", "0", "●", "╗",
         "╠", "╦", "═", "╣", "0", "●", "0", "╠", "═", "╦", "╣",
@@ -947,7 +974,8 @@ void Building::Get_Graphic(){
         "╚", "╩", "═", "═", "═", "╩", "═", "═", "═", "╩", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s0/sDismantler"){
+  else if (name == "Tier/s0/sDismantler")
+  {
     vector<string> temp_vector{
         "╔", "╦", "═", "╦", "═", "╦", "═", "╦", "═", "╦", "╗",
         "0", "║", "0", "0", "0", "✖︎", "0", "0", "0", "║", "0",
@@ -955,7 +983,8 @@ void Building::Get_Graphic(){
         "╚", "╩", "═", "╩", "═", "╩", "═", "╩", "═", "╩", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s1/sDismantler"){
+  else if (name == "Tier/s1/sDismantler")
+  {
     vector<string> temp_vector{
         "╔", "╦", "╦", "╦", "═", "╦", "═", "╦", "╦", "╦", "╗",
         "0", "║", "0", "0", "0", "✖︎", "0", "0", "0", "║", "0",
@@ -963,7 +992,8 @@ void Building::Get_Graphic(){
         "╚", "╩", "═", "╩", "═", "╩", "═", "╩", "═", "╩", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s20/sDismantler"){
+  else if (name == "Tier/s2/sDismantler")
+  {
     vector<string> temp_vector{
         "╔", "╦", "╦", "╦", "═", "╦", "═", "╦", "╦", "╦", "╗",
         "0", "╬", "0", "0", "✖︎", "✖︎", "✖︎", "0", "0", "╬", "0",
@@ -971,7 +1001,8 @@ void Building::Get_Graphic(){
         "╚", "╩", "╩", "╩", "═", "╩", "═", "╩", "╩", "╩", "╝"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s0/sGenerator"){
+  else if (name == "Tier/s0/sGenerator")
+  {
     vector<string> temp_vector{
         "0", "0", "0", "0", "╦", "═", "╦", "0", "0", "0", "0",
         "0", "0", "0", "0", "║", "⧰", "║", "0", "0", "0", "0",
@@ -979,7 +1010,8 @@ void Building::Get_Graphic(){
         "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s1/sGenerator"){
+  else if (name == "Tier/s1/sGenerator")
+  {
     vector<string> temp_vector{
         "0", "0", "0", "0", "╦", "╦", "╦", "0", "0", "0", "0",
         "0", "0", "╦", "╦", "║", "⧰", "║", "╦", "╦", "0", "0",
@@ -987,7 +1019,8 @@ void Building::Get_Graphic(){
         "0", "0", "╚", "╩", "╩", "═", "╩", "╩", "╝", "0", "0"};
     unprocessed_graphic = temp_vector;
   }
-  else if (name == "Tier/s2/sGenerator"){
+  else if (name == "Tier/s2/sGenerator")
+  {
     vector<string> temp_vector{
         "0", "0", "0", "0", "╦", "╬", "╦", "0", "0", "0", "0",
         "0", "0", "╔", "╬", "║", "⧰", "║", "╬", "╗", "0", "0",
@@ -997,53 +1030,62 @@ void Building::Get_Graphic(){
   }
 }
 
-vector <string> Building::Save_Building(){
-  vector <string> Output{name,type,to_string(customized),to_string(On_Off),to_string(countdown),to_string(duration_base)};
+vector<string> Building::Save_Building()
+{
+  vector<string> Output{name, type, to_string(customized), to_string(On_Off), to_string(countdown), to_string(duration_base)};
   Output.push_back(to_string(input_list.size()));
-  for (int id = 0;id<input_list.size();id++){
+  for (int id = 0; id < input_list.size(); id++)
+  {
     Output.push_back(to_string(input_list[id].item));
     Output.push_back(to_string(input_list[id].quantity_base));
   }
   Output.push_back(to_string(output_list.size()));
-  for (int id = 0;id<output_list.size();id++){
+  for (int id = 0; id < output_list.size(); id++)
+  {
     Output.push_back(to_string(output_list[id].item));
     Output.push_back(to_string(output_list[id].quantity_base));
   }
-  Output.insert(Output.begin(),to_string(Output.size()));
+  Output.insert(Output.begin(), to_string(Output.size()));
   return Output;
 }
 
-void Building::Load_Building(vector <string> input){
+void Building::Load_Building(vector<string> input)
+{
   input.erase(input.begin());
-  name=input[0];
-  type=input[1];
-  customized=stoi(input[2]);
-  On_Off=stoi(input[3]);
-  countdown=stoi(input[4]);
-  duration_base=stoi(input[5]);
-  int in_size=stoi(input[6]);
-  int out_size=stoi(input[(2*in_size)+7]);
+  name = input[0];
+  type = input[1];
+  customized = stoi(input[2]);
+  On_Off = stoi(input[3]);
+  countdown = stoi(input[4]);
+  duration_base = stoi(input[5]);
+  int in_size = stoi(input[6]);
+  int out_size = stoi(input[(2 * in_size) + 7]);
   io_building temp;
   input_list.clear();
   output_list.clear();
-  for (int id = 0;id<(in_size*2);id+=2){
-    temp.item=stoi(input[7+id]);
-    temp.quantity_base=stoi(input[8+id]);
+  for (int id = 0; id < (in_size * 2); id += 2)
+  {
+    temp.item = stoi(input[7 + id]);
+    temp.quantity_base = stoi(input[8 + id]);
     input_list.push_back(temp);
   }
-  for (int id = 0;id<(out_size*2);id+=2){
-    temp.item=stoi(input[(2*in_size)+8+id]);
-    temp.quantity_base=stoi(input[(2*in_size)+9+id]);
+  for (int id = 0; id < (out_size * 2); id += 2)
+  {
+    temp.item = stoi(input[(2 * in_size) + 8 + id]);
+    temp.quantity_base = stoi(input[(2 * in_size) + 9 + id]);
     output_list.push_back(temp);
   }
-  if (name=="Empty/sSpace"){
+  if (name == "Empty/sSpace")
+  {
     customized_initialize();
   }
-  else if (name=="Disaster"){
+  else if (name == "Disaster")
+  {
     Custom_Graphic();
     Generate_Description();
   }
-  else{
+  else
+  {
     Search_Location();
     Get_Graphic();
     normal_refresh();
@@ -1143,7 +1185,7 @@ void Building::Input_type(int id)
   else if (id == 7)
   {
     name = "Disaster";
-    type="Disaster";
+    type = "Disaster";
     customized = 1;
   }
   else if (id == 8)
@@ -1288,7 +1330,7 @@ void Building::Input_type(int id)
     cout << "in_complexity: " << in_complexity << '\n';
     cout << "out_complexity: " << out_complexity << '\n';
     cout << "duration_base: " << duration_base << '\n';
-    }
+  }
   Get_Graphic();
   if (!customized)
   {

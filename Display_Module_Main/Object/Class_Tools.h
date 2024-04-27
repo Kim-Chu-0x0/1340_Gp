@@ -21,21 +21,24 @@ public:
     double value = 0;
     vector<Pixel> description;
     void Input_Type(int id);
-    void Load_Tool(vector <string> input);
-    vector <string> Save_Tool();
+    void Load_Tool(vector<string> input);
+    vector<string> Save_Tool();
+
 private:
     void Generate_Description();
 };
 
-void Tool::Load_Tool(vector <string> input){
+void Tool::Load_Tool(vector<string> input)
+{
     input.erase(input.begin());
-    type=stoi(input[0]);
-    value=stoi(input[1]);
+    type = stoi(input[0]);
+    value = stoi(input[1]);
     Generate_Description();
 }
 
-vector <string> Tool::Save_Tool(){
-    vector <string> Output{"2",to_string(type),to_string(value)};
+vector<string> Tool::Save_Tool()
+{
+    vector<string> Output{"2", to_string(type), to_string(value)};
     return Output;
 }
 
@@ -72,7 +75,8 @@ void Tool::Input_Type(int id)
     Generate_Description();
 }
 
-void Tool::Generate_Description(){
+void Tool::Generate_Description()
+{
     vector<string> insert_list;
     string value_string = to_string(value).substr(0, 4);
     string raw_text = ",";
