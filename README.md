@@ -20,6 +20,12 @@ Rules:
 
 ----------------------------------------------------
 
+Link to the demonstration video:
+
+https://youtu.be/8O9HvG99Bzo
+
+----------------------------------------------------
+
 Compilation:
 
   Use 
