@@ -561,7 +561,7 @@ void Building::customized_initialize()
     io_building temp_io;
 
     temp_io.item = 16;
-    temp_io.quantity_base = -1 * (5 + rand() % 2) / (1.0 + (((Upgrade_List[10][1] / 100) - 1) / 4));
+    temp_io.quantity_base = -1 * ((5 + rand() % 2) / (1.0 + (((Upgrade_List[10][1] / 100) - 1) / 4)));
     output_list.push_back(temp_io);
 
     vector<int> element_used;
@@ -576,6 +576,7 @@ void Building::customized_initialize()
       {
         input_temp = rand() % element_used.size();
         temp_io.item = element_used[input_temp];
+        temp_io.quantity_base=0;
         element_used.erase(element_used.begin() + input_temp);
         input_list.push_back(temp_io);
       }
@@ -584,7 +585,7 @@ void Building::customized_initialize()
     while (counter > 0)
     {
       input_temp = rand() % input_list.size();
-      double cost = 1.0 * input_list[input_temp].item / no_each_tier;
+      double cost = 1.0 * (input_list[input_temp].item-(input_list[input_temp].item%no_each_tier)) / no_each_tier;
       cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
       input_list[input_temp].quantity_base++;
       counter -= cost;
@@ -608,7 +609,7 @@ void Building::customized_initialize()
     output_temp.item = 16;
     while (Out_const_temp > 0)
     {
-      double cost = 2.0;
+      double cost = 2.4;
       cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
       output_temp.quantity_base++;
       Out_const_temp -= cost;
@@ -781,7 +782,7 @@ void Building::type_process()
   while (Counter > 0)
   {
     input_temp = rand() % input_list.size();
-    double cost = 1.0 * input_list[input_temp].item / no_each_tier;
+    double cost = 1.0 * (input_list[input_temp].item-(input_list[input_temp].item%no_each_tier)) / no_each_tier;
     cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
     input_list[input_temp].quantity_base++;
     Counter -= cost;
@@ -817,7 +818,7 @@ void Building::type_process()
   while (Counter > 0)
   {
     output_temp = rand() % output_list.size();
-    double cost = 1.0 * output_list[output_temp].item / no_each_tier;
+    double cost = 1.0 * (output_list[output_temp].item-(output_list[output_temp].item%no_each_tier)) / no_each_tier;
     cost = pow(cost, (((rand() % no_each_tier) + 9) / 10));
     output_list[output_temp].quantity_base++;
     Counter -= cost;
@@ -1051,10 +1052,7 @@ vector<string> Building::Save_Building()
 
 void Building::Load_Building(vector<string> input)
 {
-  vector <string> temp1 =input;
-  temp1.erase(temp1.begin());
-  input=temp1;
-  temp1.clear();
+  input.erase(input.begin());
   name = input[0];
   type = input[1];
   customized = stoi(input[2]);

@@ -57,27 +57,27 @@ vector<int> Building_Weighting{
     // Tier 0 producer
     Weighting_Tier_List[8],
     // Tier 1 producer
-    Weighting_Tier_List[6],
+    Weighting_Tier_List[8],
     // Tier 2 producer
-    Weighting_Tier_List[4],
+    Weighting_Tier_List[5],
     // Tier 0 processor
-    Weighting_Tier_List[7],
-    // Tier 1 processor
     Weighting_Tier_List[6],
+    // Tier 1 processor
+    Weighting_Tier_List[5],
     // Tier 2 processor
     Weighting_Tier_List[4],
     // Tier 0 extractor
-    Weighting_Tier_List[6],
+    Weighting_Tier_List[5],
     // Tier 1 extractor
     Weighting_Tier_List[5],
     // Tier 2 extractor
-    Weighting_Tier_List[3],
-    // Tier 0 dismantler
-    Weighting_Tier_List[5],
-    // Tier 1 dismantler
     Weighting_Tier_List[4],
+    // Tier 0 dismantler
+    Weighting_Tier_List[4],
+    // Tier 1 dismantler
+    Weighting_Tier_List[3],
     // Tier 2 dismantler
-    Weighting_Tier_List[2],
+    Weighting_Tier_List[3],
     // Tier 0 generator
     Weighting_Tier_List[4],
     // Tier 1 generator
@@ -87,7 +87,7 @@ vector<int> Building_Weighting{
 
 vector<int> Upgrade_Weighting{
     // 0 : Extra Card per draw (Min3 Max5)
-    Weighting_Tier_List[3],
+    Weighting_Tier_List[5],
     // 1 : Extend Map Horizontaly
     Weighting_Tier_List[3],
     // 2 : Extend Map Vertically
@@ -1227,7 +1227,7 @@ void Data_Storage::Initialize()
     Upgrade_List[10][1] = 100;
     Upgrade_List[11][1] = 20;
     Upgrade_List[12][1] = 100;
-    Upgrade_List[13][1] = 14;
+    Upgrade_List[13][1] = 12;
     Upgrade_List[17][1] = 100;
     for (int id = 1; id < Production_Building_type; id++)
     {
@@ -1280,6 +1280,9 @@ void Data_Storage::Initialize()
     Load(Save_no);
 }
 
+ifstream Filei;
+ofstream Fileo;
+
 // Order:
 // int Turn_No
 // int Corruption_gap
@@ -1294,49 +1297,49 @@ void Data_Storage::Initialize()
 void Data_Storage::Save(int id)
 {
     string file_name = string("Save") + to_string(id) + ".txt";
-    ofstream File(file_name);
-    File << Turn_No << '\n'
+    Fileo.open(file_name);
+    Fileo << Turn_No << '\n'
          << '\n';
-    File << Corruption_gap << '\n'
+    Fileo << Corruption_gap << '\n'
          << '\n';
-    File << turn_counter << '\n'
+    Fileo << turn_counter << '\n'
          << '\n';
-    File << Corruption_no << '\n'
+    Fileo << Corruption_no << '\n'
          << '\n';
-    File << EGY_Energy << '\n'
+    Fileo << EGY_Energy << '\n'
          << '\n';
     for (int y = 0; y < Upgrade_List.size(); y++)
     {
-        File << Upgrade_List[y].size() << '\n';
+        Fileo << Upgrade_List[y].size() << '\n';
         for (int x = 0; x < Upgrade_List[y].size(); x++)
         {
-            File << Upgrade_List[y][x] << '\n';
+            Fileo << Upgrade_List[y][x] << '\n';
         }
     }
-    File << '\n';
+    Fileo << '\n';
     for (int y = 0; y < Other_Buffs.size(); y++)
     {
-        File << Other_Buffs[y] << '\n';
+        Fileo << Other_Buffs[y] << '\n';
     }
-    File << '\n';
+    Fileo << '\n';
     vector<string> temp = Grid_Save();
     for (int y = 0; y < temp.size(); y++)
     {
-        File << temp[y] << '\n';
+        Fileo << temp[y] << '\n';
     }
-    File << '\n';
+    Fileo << '\n';
     temp = INV_Save();
     for (int y = 0; y < temp.size(); y++)
     {
-        File << temp[y] << '\n';
+        Fileo << temp[y] << '\n';
     }
-    File << '\n';
+    Fileo << '\n';
     for (int y = 0; y < Res_Resource_List.size(); y++)
     {
-        File << Res_Resource_List[y] << '\n';
+        Fileo << Res_Resource_List[y] << '\n';
     }
     temp.clear();
-    File.close();
+    Fileo.close();
 }
 
 void Data_Storage::Load(int id)
@@ -1344,13 +1347,13 @@ void Data_Storage::Load(int id)
     if (id != -1)
     {
         string file_name = string("Save") + to_string(id) + ".txt";
-        ifstream File(file_name);
+        Filei.open(file_name);
         string Line;
         vector<string> temp;
         int counter, subcounter, gap, phase, subcounter2;
         counter = subcounter = gap = phase = subcounter2 = 0;
         int nono=0;
-        while (getline(File, Line))
+        while (getline(Filei, Line))
         {
             // int Turn_No
             if (Line.size()==0)
@@ -1475,7 +1478,7 @@ void Data_Storage::Load(int id)
                 counter++;
             }
         }
-        File.close();
+        Filei.close();
     }
 }
 
