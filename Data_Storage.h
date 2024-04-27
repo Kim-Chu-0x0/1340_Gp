@@ -263,9 +263,9 @@ private:
 
 void Data_Storage::Check_Save_Existence()
 {
-    ifstream file;
     for (int id = 0; id < 7; id++)
     {
+        ifstream file;
         string name = string("Save") + to_string(id) + ".txt";
         file.open(name);
         if (file)
@@ -276,6 +276,7 @@ void Data_Storage::Check_Save_Existence()
         {
             Save_Existence[id] = 0;
         }
+        file.close();
     }
     if (Testmod_SL){
         cout<<'\n'<<"Save_Condition: "<<'\n';
@@ -1284,6 +1285,7 @@ void Data_Storage::Initialize()
 // vector<double> Other_Buffs
 // Grid Building Data
 // INV Card Data
+// Res_Resource_List
 void Data_Storage::Save(int id)
 {
     string file_name = string("Save") + to_string(id) + ".txt";
@@ -1322,6 +1324,10 @@ void Data_Storage::Save(int id)
     for (int y = 0; y < temp.size(); y++)
     {
         File << temp[y] << '\n';
+    }
+    File << '\n';
+    for (int y = 0; y< Res_Resource_List.size();y++){
+        File << Res_Resource_List[y] << '\n';
     }
     File << '\n';
     temp.clear();
@@ -1455,6 +1461,11 @@ void Data_Storage::Load(int id)
                     temp.push_back(Line);
                     subcounter2++;
                 }
+            }
+            // Res_Resource_List
+            else if (phase == 9){
+                Res_Resource_List[counter]=stoi(Line);
+                counter++;
             }
         }
         File.close();

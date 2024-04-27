@@ -14,7 +14,7 @@ using namespace std;
 class Input
 {
 private:
-    bool I_TestMod = 0;
+    bool I_TestMod = 1;
 
 public:
     void Read_input();

@@ -13,7 +13,7 @@ using namespace std;
 class Save_UI
 {
 private:
-    bool SUI_Testmod = 0;
+    bool SUI_Testmod = 1;
 
 private:
     vector<int> SUI_highlight_id{0, 0, 0, 0};
@@ -33,6 +33,7 @@ void Save_UI::SUI_Output()
 {
     if (SUI_Testmod){
         cout<<'\n'<<"Save number: "<<Save_no<<'\n';
+        cout<<'\n'<<"Save Existence: "<<Save_Existence[Save_no]<<'\n';
     }
     string temp_string = string("000000000000000") + "0Save0Selected0" + "000000000000000";
     vector<Pixel> Output_Map;
